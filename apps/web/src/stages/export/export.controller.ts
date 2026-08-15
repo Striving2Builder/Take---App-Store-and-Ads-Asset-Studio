@@ -1,13 +1,19 @@
-/** OWNER: stages/export — PNG frame render + ZIP export + project save + motion */
+/** OWNER: stages/export — validation + ZIP export + project save + motion */
+import { getMode } from "@take/modes-sdk";
 import { screenshotCountOk } from "@take/core";
+import { motionStretchTarget } from "@take/export-presets";
 import { getTemplates, pushHistory, saveProject } from "@take/storage";
 import { currentSet, state } from "../../app/app-state";
-import { $, $$ } from "../../shared/dom";
+import { $ } from "../../shared/dom";
 import { escapeHtml } from "../../shared/escape";
 import { downloadText, downloadZip } from "../../shared/download";
 import { toast } from "../../shell/toast";
-import { EXPORT_H, EXPORT_W, renderFramePng } from "./frame-render";
+import { currentExportSize } from "./frame-render";
 import { downloadSlideshowVideo } from "./slideshow-video";
+import { applyDeviceFrame } from "../../editor/device/apply-device-frame";
+import { selectedPresetIds } from "./mount-presets";
+import { persistExportPresetIds } from "./persist-presets";
+import { buildExportFiles, currentExportPlan } from "./export-zip";
 
 export function renderValidation() {
   const set = currentSet();
@@ -19,14 +25,31 @@ export function renderValidation() {
     return;
   }
 
+  applyDeviceFrame();
+  const selected = selectedPresetIds();
+  const plan = currentExportPlan(selected, set.frames.length);
+  const { w: EXPORT_W, h: EXPORT_H } = currentExportSize();
   const count = screenshotCountOk(inf.platform, set.frames.length);
   const c = set.copy;
   const hasShots = Boolean(
     state.lastScan?.capture?.assets?.some((a) => a.kind === "screenshot")
   );
+  const hints = getMode(state.mode)?.getExportHints?.() ?? {};
   const wantsMotion =
+    hints.preferMotion ||
     state.mode === "slideshow" ||
-    $$<HTMLInputElement>("#export-presets input:checked").some((el) => el.value === "slideshow");
+    selected.includes("slideshow");
+  const extra = plan.files.filter((f) => f.fit !== "native").length;
+  const fakeNote = plan.skippedFake.length
+    ? ` · skipped FAKE ${plan.skippedFake.join(", ")}`
+    : "";
+  const dwellNote = wantsMotion
+    ? `${
+        currentSet()?.frames.some((f) => f.dwellMs)
+          ? "Motion: MediaRecorder at catalog size (per-frame dwells)"
+          : "Motion export: MediaRecorder WebM/MP4 at catalog size"
+      }${selected.includes("tiktok") ? " + TikTok 1080×1920 stretch" : ""}`
+    : `Locale pack ${inf.locale} · local-first storage`;
   const checks = [
     {
       ok: count.ok,
@@ -40,14 +63,12 @@ export function renderValidation() {
     {
       ok: true,
       text: hasShots
-        ? `Scan assets available · PNG export ${EXPORT_W}×${EXPORT_H}`
-        : `PNG export ${EXPORT_W}×${EXPORT_H} (composition render; add scan shots for photo bg)`,
+        ? `Scan assets · ZIP ${plan.files.length} PNG (${extra} extra sizes) · store ${EXPORT_W}×${EXPORT_H}${fakeNote}`
+        : `ZIP ${plan.files.length} PNG (${extra} extra sizes) · store ${EXPORT_W}×${EXPORT_H}${fakeNote}`,
     },
     {
       ok: true,
-      text: wantsMotion
-        ? "Motion export: MediaRecorder WebM/MP4 (~15s) when Slideshow preset or mode is on"
-        : `Locale pack ${inf.locale} · local-first storage`,
+      text: dwellNote,
     },
   ];
 
@@ -64,15 +85,16 @@ export async function runExport() {
     return;
   }
 
-  const selected = $$<HTMLInputElement>("#export-presets input:checked").map((el) => el.value);
-  const wantMotion = selected.includes("slideshow") || state.mode === "slideshow";
+  const selected = selectedPresetIds();
+  const hints = getMode(state.mode)?.getExportHints?.() ?? {};
+  const wantMotion =
+    selected.includes("slideshow") ||
+    state.mode === "slideshow" ||
+    Boolean(hints.preferMotion);
 
   toast("Rendering PNG frames…");
   try {
-    const files: { name: string; data: Uint8Array | string }[] = [];
-    for (let i = 0; i < set.frames.length; i++) {
-      files.push(await renderFramePng(i));
-    }
+    const { files, plan, store } = await buildExportFiles(selected);
     const stamp = new Date().toISOString().slice(0, 10);
     const slug = (inf.name || "app").toLowerCase().replace(/[^a-z0-9]+/g, "-");
     files.push({
@@ -82,12 +104,24 @@ export async function runExport() {
           app: inf.name,
           set: set.name,
           deviceId: state.deviceId,
+          fitMode: state.fitMode,
+          orientation: state.orientation,
+          shellView: state.shellView,
           locale: inf.locale,
           presets: selected,
           frameCount: set.frames.length,
-          size: { w: EXPORT_W, h: EXPORT_H },
+          size: store,
+          files: plan.files.map((f) => ({
+            path: f.path,
+            w: f.w,
+            h: f.h,
+            preset: f.presetId,
+            fit: f.fit,
+          })),
+          skippedFake: plan.skippedFake,
           stamped: stamp,
           motion: wantMotion,
+          motionStretch: wantMotion && selected.includes("tiktok") ? "tiktok-9x16" : null,
         },
         null,
         2
@@ -104,14 +138,24 @@ export async function runExport() {
     });
 
     await downloadZip(`${slug}-take-${stamp}.zip`, files);
-    pushHistory("export.zip", `${set.frames.length} png`);
-    toast(`Exported ${set.frames.length} PNG frames + manifest`);
+    pushHistory("export.zip", `${plan.files.length} png`);
+    toast(`Exported ${plan.files.length} PNG files + manifest`);
 
     if (wantMotion) {
       toast("Recording slideshow video…");
       const name = await downloadSlideshowVideo((msg) => toast(msg));
       pushHistory("export.video", name);
       toast(`Downloaded motion file ${name}`);
+      const stretch = selected.includes("tiktok") ? motionStretchTarget("tiktok") : null;
+      if (stretch) {
+        toast("Recording TikTok-sized video…");
+        const stretchName = await downloadSlideshowVideo((msg) => toast(msg), {
+          dest: stretch,
+          tag: "tiktok",
+        });
+        pushHistory("export.video.tiktok", stretchName);
+        toast(`Downloaded ${stretchName}`);
+      }
     }
 
     void saveCurrentProject();
@@ -129,6 +173,7 @@ export async function saveCurrentProject() {
   try {
     const id = state.currentProjectId || `proj-${Date.now()}`;
     state.currentProjectId = id;
+    persistExportPresetIds(selectedPresetIds());
     await saveProject({
       id,
       name: inf.name || "Untitled project",
@@ -137,6 +182,9 @@ export async function saveCurrentProject() {
         inference: inf,
         sets: state.sets,
         deviceId: state.deviceId,
+        fitMode: state.fitMode,
+        orientation: state.orientation,
+        shellView: state.shellView,
         platform: state.platform,
         mode: state.mode,
         selectedSet: state.selectedSet,
@@ -145,6 +193,8 @@ export async function saveCurrentProject() {
         lastPack: state.lastPack,
         scanPalette: state.scanPalette,
         selectedShotIds: state.selectedShotIds,
+        templateId: state.templateId || undefined,
+        exportPresetIds: selectedPresetIds(),
       },
     });
     pushHistory("project.save", id);

@@ -15,5 +15,33 @@
   background: var(--ink-2);
   border: 1px solid var(--line-strong);
   padding: 0.35rem 0.5rem;
-  max-width: 160px;
+  max-width: 200px;
+}
+
+.fit-mode-control {
+  display: inline-flex;
+  gap: 0.2rem;
+  margin-left: 0.35rem;
+}
+
+.fit-mode-btn {
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--paper-dim);
+  background: var(--ink-2);
+  border: 1px solid var(--line);
+  padding: 0.3rem 0.45rem;
+  cursor: pointer;
+}
+
+.fit-mode-btn.is-active {
+  color: var(--paper);
+  border-color: var(--line-strong);
+  background: var(--ink-3);
+}
+
+.fit-mode-btn:hover {
+  color: var(--paper);
 }

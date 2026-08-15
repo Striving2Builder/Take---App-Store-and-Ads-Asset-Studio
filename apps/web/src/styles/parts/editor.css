@@ -100,14 +100,69 @@
   padding: 2rem;
 }
 
+.phone-mock[hidden] {
+  display: none;
+}
+
 .phone-mock {
-  width: min(260px, 70vw);
+  --shell-aspect: 9 / 19.5;
+  --screen-inset-left: 0%;
+  --screen-inset-top: 0%;
+  --screen-inset-width: 100%;
+  --screen-inset-height: 100%;
+  width: min(260px, 68vw);
+  aspect-ratio: var(--shell-aspect);
+  height: auto;
   background: #0a0a0c;
   border-radius: 28px;
   padding: 10px;
   border: 2px solid #2a2d36;
   box-shadow: var(--shadow), inset 0 0 0 1px #3a3e48;
   position: relative;
+  display: grid;
+  place-items: stretch;
+  transition: aspect-ratio 0.4s var(--ease), width 0.4s var(--ease);
+}
+
+.phone-mock.is-landscape {
+  width: min(420px, 88vw);
+  border-radius: 22px;
+}
+
+.phone-mock[data-form-factor="tablet"] {
+  width: min(340px, 78vw);
+  border-radius: 18px;
+  padding: 14px;
+}
+
+.phone-mock[data-form-factor="foldable"] {
+  border-style: dashed;
+}
+
+.phone-mock.shell-chrome-off {
+  background: transparent;
+  border-color: transparent;
+  box-shadow: none;
+  padding: 0;
+}
+
+.phone-mock.has-shell-asset {
+  background: transparent;
+  border: none;
+  box-shadow: 0 28px 80px rgba(0, 0, 0, 0.65);
+  padding: 0;
+  border-radius: 0;
+}
+
+.shell-asset {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
+  pointer-events: none;
+  z-index: 0;
+  filter: drop-shadow(0 12px 28px rgba(0, 0, 0, 0.55));
 }
 
 .phone-notch {
@@ -122,12 +177,72 @@
   z-index: 2;
 }
 
+.phone-notch[hidden] {
+  display: none;
+}
+
 .phone-screen {
-  aspect-ratio: 9 / 19.5;
+  position: absolute;
+  left: var(--screen-inset-left);
+  top: var(--screen-inset-top);
+  width: var(--screen-inset-width);
+  height: var(--screen-inset-height);
   border-radius: 20px;
   overflow: hidden;
   background: linear-gradient(165deg, #1c2030 0%, #12151c 55%, #0e1014 100%);
+  z-index: 1;
+}
+
+.phone-mock.has-shell-asset .phone-screen {
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.04);
+}
+
+.phone-mock[data-form-factor="tablet"] .phone-screen {
+  border-radius: 10px;
+}
+
+.phone-mock:not(.has-shell-asset) .phone-screen {
   position: relative;
+  left: auto;
+  top: auto;
+  width: 100%;
+  height: 100%;
+}
+
+.phone-screen.is-back-view .shot-content,
+.phone-screen.is-back-view .scan-shot-fill {
+  visibility: hidden;
+}
+
+.phone-mock.is-back .phone-screen {
+  background: transparent;
+}
+
+.scan-shot-fill {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.phone-screen .shot-content {
+  position: relative;
+  z-index: 1;
+}
+
+.device-fit-hint {
+  margin: 0.35rem 1rem 0;
+  font-size: 0.65rem;
+  color: var(--paper-dim);
+  letter-spacing: 0.04em;
+}
+
+.device-fit-hint:not([hidden]) {
+  display: block;
 }
 
 .shot-content {

@@ -1,7 +1,8 @@
-/** OWNER: modes/slideshow — ordered sequence optimized for export strip */
+/** OWNER: modes/slideshow — storyboard / pacing adapter */
 import type { CreationMode } from "@take/modes-sdk";
 import { scanApp } from "@take/scan-client";
-import { generateSets } from "../wizard/sets-builder";
+import { buildSlideshowSets } from "./slideshow-builder";
+import { slideshowInspectorPlugin, slideshowReviewPlugin } from "./slideshow.plugin";
 
 export const slideshowMode: CreationMode = {
   id: "slideshow",
@@ -22,21 +23,12 @@ export const slideshowMode: CreationMode = {
     const brief = ctx.priorBrief
       ? { ...ctx.priorBrief, mode: "slideshow" as const }
       : (await scanApp(input)).brief;
-    const sets = generateSets({ ...brief, mode: "slideshow" }, 1, undefined, {
+    const sets = buildSlideshowSets(brief, {
       seedPalette: ctx.seedPalette,
+      deviceId: ctx.deviceId,
     });
-    const set = sets[0];
-    set.name = "Slideshow sequence";
-    set.styleLabel = "Slideshow · ordered beats";
-    set.blurb =
-      "Single ordered rail for PNG + motion export (WebM/MP4 via MediaRecorder). Hook → proof → close.";
-    const roles = ["HOOK", "VALUE", "PROOF", "FEATURE", "SOCIAL", "CTA"];
-    set.frames = set.frames.slice(0, roles.length).map((f, i) => ({
-      ...f,
-      role: roles[i] || f.role,
-      index: i,
-      kicker: `${String(i + 1).padStart(2, "0")} · ${roles[i] || f.role}`,
-    }));
     return { inference: { ...brief, mode: "slideshow" }, sets };
   },
+  getEditorPlugins: () => [slideshowReviewPlugin, slideshowInspectorPlugin],
+  getExportHints: () => ({ preferMotion: true, defaultPresets: ["slideshow"] }),
 };

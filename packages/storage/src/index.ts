@@ -1,7 +1,14 @@
 /** OWNER: packages/storage — public API */
 export { STORAGE_KEYS } from "./keys";
 export { loadJSON, saveJSON } from "./local-json";
-export { getTemplates, saveUserTemplate, type SavedTemplate } from "./templates.repo";
+export {
+  getTemplates,
+  saveUserTemplate,
+  updateUserTemplate,
+  listLayoutTemplates,
+  isLayoutRecipe,
+  type SavedTemplate,
+} from "./templates.repo";
 export { pushHistory } from "./history.repo";
 export {
   listProjects,

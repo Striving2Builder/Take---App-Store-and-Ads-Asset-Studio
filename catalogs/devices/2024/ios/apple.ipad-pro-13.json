@@ -1,0 +1,76 @@
+{
+  "id": "apple.ipad-pro-13",
+  "name": "iPad Pro 13",
+  "platform": "ios",
+  "formFactor": "tablet",
+  "viewportPx": {
+    "w": 1032,
+    "h": 1376
+  },
+  "exportPx": {
+    "w": 2064,
+    "h": 2752
+  },
+  "exportPxLandscape": {
+    "w": 2752,
+    "h": 2064
+  },
+  "shellPx": {
+    "w": 620,
+    "h": 820
+  },
+  "screenInset": {
+    "x": 32,
+    "y": 32,
+    "w": 556,
+    "h": 756
+  },
+  "safeArea": {
+    "top": 24,
+    "bottom": 20,
+    "left": 0,
+    "right": 0
+  },
+  "hardware": {
+    "frontCamera": {
+      "x": 306,
+      "y": 18,
+      "w": 8,
+      "h": 8
+    },
+    "rearCameras": [
+      {
+        "x": 44,
+        "y": 44,
+        "w": 56,
+        "h": 56
+      }
+    ]
+  },
+  "status": "current",
+  "releasedAt": "2024-05-07",
+  "shellKind": "asset",
+  "shellFamily": "ipad",
+  "shellAssetFront": "/devices/shells/ipad-front.svg",
+  "shellAssetBack": "/devices/shells/ipad-back.svg",
+  "storeSizeClass": "ipad-13",
+  "storeSizeNote": "App Store Connect 13-inch iPad class 2064×2752",
+  "storeTargets": [
+    "ios-screens"
+  ],
+  "source": "Apple ASC 13-inch iPad · shell family ipad (TAKE SVG)",
+  "updatedAt": "2026-08-14",
+  "version": "2026.08",
+  "shellPxLandscape": {
+    "w": 820,
+    "h": 620
+  },
+  "screenInsetLandscape": {
+    "x": 32,
+    "y": 32,
+    "w": 756,
+    "h": 556
+  },
+  "shellAssetFrontLandscape": "/devices/shells/ipad-front-landscape.svg",
+  "shellAssetBackLandscape": "/devices/shells/ipad-back-landscape.svg"
+}

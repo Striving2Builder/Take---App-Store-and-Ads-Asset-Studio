@@ -4,9 +4,20 @@ import { currentFrame, currentSet, state } from "../../app/app-state";
 import { $ } from "../../shared/dom";
 import { escapeHtml } from "../../shared/escape";
 import { renderMetaFields } from "../inspectors/copy-inspector";
-import { applyProjectAccent, renderPalette, refreshScanPaletteSlot } from "../inspectors/style-inspector";
+import {
+  applyProjectAccent,
+  renderPalette,
+  refreshScanPaletteSlot,
+} from "../inspectors/style-inspector";
 import { goalCta } from "../../modes/wizard/copy-builder";
 import { toast } from "../../shell/toast";
+import { applyDeviceFrame } from "../device/apply-device-frame";
+import { cssObjectFitForMode } from "../device/shell-composite";
+import { scanIconUrl, shotUrlAt } from "../../stages/export/selected-shots";
+import { paintStripSlice, stripRecipeOfSet } from "../../stages/export/paint-strip-slice";
+import { refreshStripPreview } from "../strip/strip-preview";
+import { syncLayoutDrag } from "../layout/layout-drag";
+import { resolveExportSize } from "@take/device-catalog";
 
 export function syncFrameFromDom() {
   const frame = currentFrame();
@@ -16,41 +27,40 @@ export function syncFrameFromDom() {
   frame.caption = ($("#shot-caption")?.textContent || "").trim();
 }
 
-function scanShotUrl(frameIndex: number): string | null {
-  const all =
-    state.lastScan?.capture?.assets?.filter((a) => a.kind === "screenshot") || [];
-  const shots = state.selectedShotIds.length
-    ? all.filter((a) => state.selectedShotIds.includes(a.id))
-    : all;
-  if (!shots.length) return null;
-  return shots[frameIndex % shots.length]?.url || null;
-}
-
-function scanIconUrl(): string | null {
-  return state.lastScan?.capture?.assets?.find((a) => a.kind === "icon")?.url || null;
-}
-
 function applyCanvasAssets(frameIndex: number) {
   const screen = $("#phone-screen") as HTMLElement | null;
   const content = $("#shot-content") as HTMLElement | null;
   if (!screen || !content) return;
 
-  const shot = scanShotUrl(frameIndex);
-  const icon = scanIconUrl();
+  const layoutOn = !!stripRecipeOfSet();
+  const shot = layoutOn ? null : shotUrlAt(frameIndex);
+  const icon = layoutOn ? null : scanIconUrl();
+  const fit = cssObjectFitForMode(state.fitMode);
 
+  let shotEl = screen.querySelector(".scan-shot-fill") as HTMLImageElement | null;
   if (shot) {
-    screen.style.backgroundImage = `linear-gradient(180deg, rgba(12,13,16,0.55) 0%, rgba(12,13,16,0.75) 100%), url("${shot}")`;
-    screen.style.backgroundSize = "cover";
-    screen.style.backgroundPosition = "center";
+    if (!shotEl) {
+      shotEl = document.createElement("img");
+      shotEl.className = "scan-shot-fill";
+      shotEl.alt = "";
+      shotEl.referrerPolicy = "no-referrer";
+      screen.insertBefore(shotEl, content);
+    }
+    shotEl.src = shot;
+    shotEl.style.objectFit = fit;
+    shotEl.hidden = false;
     screen.dataset.hasScanShot = "1";
     content.classList.add("has-scan-shot");
   } else {
-    screen.style.backgroundImage = "";
-    screen.style.backgroundSize = "";
-    screen.style.backgroundPosition = "";
+    if (shotEl) shotEl.hidden = true;
     delete screen.dataset.hasScanShot;
     content.classList.remove("has-scan-shot");
   }
+
+  // Clear legacy background-image approach
+  screen.style.backgroundImage = "";
+  screen.style.backgroundSize = "";
+  screen.style.backgroundPosition = "";
 
   let badge = content.querySelector(".scan-icon-badge") as HTMLImageElement | null;
   if (icon) {
@@ -71,6 +81,8 @@ function applyCanvasAssets(frameIndex: number) {
 export function renderEditor() {
   const set = currentSet();
   if (!set) return;
+
+  applyDeviceFrame();
 
   const list = $("#frame-list");
   if (list) {
@@ -105,6 +117,40 @@ export function renderEditor() {
   if (styleSel) styleSel.value = set.style;
   const locale = $("#export-locale");
   if (locale) locale.textContent = state.inference?.locale || "en-US";
+  void syncLayoutStage();
+  void refreshStripPreview();
+}
+
+async function syncLayoutStage() {
+  const phone = $("#phone-mock") as HTMLElement | null;
+  const stage = $("#layout-stage") as HTMLElement | null;
+  const canvas = $("#layout-slice-canvas") as HTMLCanvasElement | null;
+  const screen = $("#phone-screen") as HTMLElement | null;
+  const content = $("#shot-content") as HTMLElement | null;
+  const recipe = stripRecipeOfSet();
+  if (!phone || !stage || !canvas || !screen || !content) return;
+
+  if (recipe) {
+    phone.hidden = true;
+    stage.hidden = false;
+    stage.appendChild(content);
+    const { w, h } = resolveExportSize(state.deviceId, state.platform, state.orientation).size;
+    const cw = 264;
+    await paintStripSlice(canvas, state.activeFrame, {
+      w: cw,
+      h: Math.round(cw * (h / w)),
+      skipType: true,
+      recipe,
+      frames: currentSet()?.frames,
+      palette: currentSet()?.palette,
+    });
+    syncLayoutDrag();
+  } else {
+    phone.hidden = false;
+    stage.hidden = true;
+    screen.appendChild(content);
+    syncLayoutDrag();
+  }
 }
 
 export function addFrame() {
@@ -124,6 +170,7 @@ export function addFrame() {
     headline: "New beat",
     caption: "Edit this frame",
     cta: goalCta(state.inference?.goal || "install"),
+    dwellMs: state.mode === "slideshow" ? 2000 : undefined,
   });
   state.activeFrame = i;
   renderEditor();

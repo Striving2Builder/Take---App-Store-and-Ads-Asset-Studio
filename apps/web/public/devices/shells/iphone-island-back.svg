@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 390 844" fill="none">
+  <defs>
+    <linearGradient id="back" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#2a2e36"/>
+      <stop offset="100%" stop-color="#14161a"/>
+    </linearGradient>
+    <linearGradient id="cam" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#3a3e48"/>
+      <stop offset="100%" stop-color="#12141a"/>
+    </linearGradient>
+    <filter id="soft" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#000" flood-opacity="0.45"/>
+    </filter>
+  </defs>
+  <rect x="8" y="8" width="374" height="828" rx="58" fill="url(#back)" filter="url(#soft)" stroke="#5a606c" stroke-width="1.5"/>
+  <!-- Camera island -->
+  <rect x="28" y="36" width="128" height="128" rx="32" fill="url(#cam)" stroke="#6a7080" stroke-width="1.25"/>
+  <circle cx="68" cy="76" r="22" fill="#0c0e14" stroke="#4a5060" stroke-width="2"/>
+  <circle cx="116" cy="76" r="22" fill="#0c0e14" stroke="#4a5060" stroke-width="2"/>
+  <circle cx="68" cy="124" r="22" fill="#0c0e14" stroke="#4a5060" stroke-width="2"/>
+  <circle cx="116" cy="124" r="14" fill="#10141c" stroke="#3a4050" stroke-width="1.5"/>
+  <circle cx="68" cy="76" r="9" fill="#1a2438"/>
+  <circle cx="116" cy="76" r="9" fill="#1a2438"/>
+  <circle cx="68" cy="124" r="9" fill="#1a2438"/>
+  <!-- Center mark -->
+  <circle cx="195" cy="400" r="22" stroke="#3a3e48" stroke-width="2.5" fill="none"/>
+  <path d="M195 386c8 0 14 8 14 14s-6 14-14 14-14-8-14-14 6-14 14-14z" stroke="#3a3e48" stroke-width="1.5" fill="none" opacity="0.5"/>
+</svg>

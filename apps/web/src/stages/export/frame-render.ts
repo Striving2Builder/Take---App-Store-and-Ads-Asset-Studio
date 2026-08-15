@@ -1,40 +1,15 @@
 /** OWNER: stages/export — shared PNG frame canvas render */
+import { resolveExportSize } from "@take/device-catalog";
 import { currentSet, state } from "../../app/app-state";
 import { goalCta } from "../../modes/wizard/copy-builder";
+import { drawFittedImage, planScreenFill } from "../../editor/device/shell-composite";
+import { loadImg, wrapText } from "./canvas-text";
+import { scanIconUrl, shotUrlAt } from "./selected-shots";
+import { paintStripSlice, stripRecipeOfSet } from "./paint-strip-slice";
 
-export const EXPORT_W = 1290;
-export const EXPORT_H = 2796;
-
-function loadImg(url: string): Promise<HTMLImageElement | null> {
-  return new Promise((resolve) => {
-    const img = new Image();
-    img.crossOrigin = "anonymous";
-    img.onload = () => resolve(img);
-    img.onerror = () => resolve(null);
-    img.src = url;
-  });
-}
-
-function wrapText(
-  ctx: CanvasRenderingContext2D,
-  text: string,
-  x: number,
-  y: number,
-  maxW: number,
-  lineH: number
-) {
-  const words = text.split(/\s+/);
-  let line = "";
-  let yy = y;
-  for (const w of words) {
-    const test = line ? `${line} ${w}` : w;
-    if (ctx.measureText(test).width > maxW && line) {
-      ctx.fillText(line, x, yy);
-      line = w;
-      yy += lineH;
-    } else line = test;
-  }
-  if (line) ctx.fillText(line, x, yy);
+/** Current catalog export size for the selected device + orientation. */
+export function currentExportSize(): { w: number; h: number } {
+  return resolveExportSize(state.deviceId, state.platform, state.orientation).size;
 }
 
 /** Paint one marketing frame onto a canvas (mutates / returns same canvas). */
@@ -46,8 +21,14 @@ export async function paintExportFrame(
   const frame = set?.frames[frameIndex];
   if (!set || !frame) return false;
 
+  const { w: EXPORT_W, h: EXPORT_H } = currentExportSize();
   canvas.width = EXPORT_W;
   canvas.height = EXPORT_H;
+
+  if (stripRecipeOfSet()) {
+    return paintStripSlice(canvas, frameIndex, { w: EXPORT_W, h: EXPORT_H });
+  }
+
   const ctx = canvas.getContext("2d");
   if (!ctx) return false;
 
@@ -56,67 +37,66 @@ export async function paintExportFrame(
   ctx.fillStyle = bg;
   ctx.fillRect(0, 0, EXPORT_W, EXPORT_H);
 
-  const shots =
-    state.selectedShotIds.length
-      ? state.lastScan?.capture?.assets?.filter(
-          (a) => a.kind === "screenshot" && state.selectedShotIds.includes(a.id)
-        ) || []
-      : state.lastScan?.capture?.assets?.filter((a) => a.kind === "screenshot") || [];
-  const shotUrl = shots.length ? shots[frameIndex % shots.length].url : null;
+  const shotUrl = shotUrlAt(frameIndex);
   if (shotUrl) {
     const img = await loadImg(shotUrl);
     if (img) {
-      const scale = Math.max(EXPORT_W / img.width, EXPORT_H / img.height);
-      const w = img.width * scale;
-      const h = img.height * scale;
-      ctx.drawImage(img, (EXPORT_W - w) / 2, (EXPORT_H - h) / 2, w, h);
+      const plan = planScreenFill(img.naturalWidth || img.width, img.naturalHeight || img.height);
+      drawFittedImage(ctx, img, plan);
       ctx.fillStyle = "rgba(12,13,16,0.55)";
       ctx.fillRect(0, 0, EXPORT_W, EXPORT_H);
     }
   }
 
-  const icon = state.lastScan?.capture?.assets?.find((a) => a.kind === "icon");
-  if (icon) {
-    const img = await loadImg(icon.url);
-    if (img) ctx.drawImage(img, 96, 160, 160, 160);
+  const iconUrl = scanIconUrl();
+  if (iconUrl) {
+    const img = await loadImg(iconUrl);
+    if (img) {
+      const iconSize = Math.round(EXPORT_W * 0.124);
+      const pad = Math.round(EXPORT_W * 0.074);
+      ctx.drawImage(img, pad, Math.round(EXPORT_H * 0.057), iconSize, iconSize);
+    }
   }
 
+  const padX = Math.round(EXPORT_W * 0.074);
+  const maxTextW = EXPORT_W - padX * 2;
+  const scale = EXPORT_W / 1290;
+
   ctx.fillStyle = "#3de0ff";
-  ctx.font = "600 36px ui-monospace, monospace";
-  ctx.fillText(frame.kicker.slice(0, 48), 96, 400);
+  ctx.font = `600 ${Math.round(36 * scale)}px ui-monospace, monospace`;
+  ctx.fillText(frame.kicker.slice(0, 48), padX, Math.round(400 * (EXPORT_H / 2796)));
 
   ctx.fillStyle = "#f3f1ec";
-  ctx.font = "700 72px system-ui, sans-serif";
-  wrapText(ctx, frame.headline, 96, 500, EXPORT_W - 192, 84);
+  ctx.font = `700 ${Math.round(72 * scale)}px system-ui, sans-serif`;
+  wrapText(
+    ctx,
+    frame.headline,
+    padX,
+    Math.round(500 * (EXPORT_H / 2796)),
+    maxTextW,
+    Math.round(84 * scale)
+  );
 
   ctx.fillStyle = "#c8c4bb";
-  ctx.font = "400 40px Georgia, serif";
-  wrapText(ctx, frame.caption, 96, 900, EXPORT_W - 192, 52);
+  ctx.font = `400 ${Math.round(40 * scale)}px Georgia, serif`;
+  wrapText(
+    ctx,
+    frame.caption,
+    padX,
+    Math.round(900 * (EXPORT_H / 2796)),
+    maxTextW,
+    Math.round(52 * scale)
+  );
 
   const cta = (frame.cta || goalCta(state.inference?.goal || "install")).slice(0, 28);
+  const ctaY = EXPORT_H - Math.round(280 * (EXPORT_H / 2796));
+  const ctaH = Math.round(96 * scale);
+  const ctaW = Math.round(420 * scale);
   ctx.fillStyle = accent;
-  ctx.fillRect(96, EXPORT_H - 280, 420, 96);
+  ctx.fillRect(padX, ctaY, ctaW, ctaH);
   ctx.fillStyle = "#0c0d10";
-  ctx.font = "700 36px system-ui, sans-serif";
-  ctx.fillText(cta, 120, EXPORT_H - 218);
+  ctx.font = `700 ${Math.round(36 * scale)}px system-ui, sans-serif`;
+  ctx.fillText(cta, padX + Math.round(24 * scale), ctaY + Math.round(62 * scale));
 
   return true;
-}
-
-export async function renderFramePng(
-  frameIndex: number
-): Promise<{ name: string; data: Uint8Array }> {
-  const canvas = document.createElement("canvas");
-  const ok = await paintExportFrame(canvas, frameIndex);
-  if (!ok) throw new Error("missing frame");
-
-  const blob = await new Promise<Blob>((res, rej) =>
-    canvas.toBlob((b) => (b ? res(b) : rej(new Error("toBlob failed"))), "image/png")
-  );
-  const buf = new Uint8Array(await blob.arrayBuffer());
-  const slug = (state.inference?.name || "app").toLowerCase().replace(/[^a-z0-9]+/g, "-");
-  return {
-    name: `screens/${slug}-${String(frameIndex + 1).padStart(2, "0")}.png`,
-    data: buf,
-  };
 }

@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 832" fill="none">
+  <defs>
+    <linearGradient id="back" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#243028"/>
+      <stop offset="100%" stop-color="#121814"/>
+    </linearGradient>
+    <linearGradient id="bar" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#1a221c"/>
+      <stop offset="100%" stop-color="#0c100e"/>
+    </linearGradient>
+    <filter id="soft" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#000" flood-opacity="0.45"/>
+    </filter>
+  </defs>
+  <rect x="10" y="10" width="364" height="812" rx="42" fill="url(#back)" filter="url(#soft)" stroke="#4a5850" stroke-width="1.5"/>
+  <!-- Pixel camera bar -->
+  <rect x="36" y="32" width="312" height="56" rx="20" fill="url(#bar)" stroke="#3a4840" stroke-width="1.5"/>
+  <circle cx="78" cy="60" r="16" fill="#0c100e" stroke="#4a5850" stroke-width="2"/>
+  <circle cx="122" cy="60" r="16" fill="#0c100e" stroke="#4a5850" stroke-width="2"/>
+  <circle cx="166" cy="60" r="12" fill="#101410" stroke="#3a4840" stroke-width="1.5"/>
+  <circle cx="78" cy="60" r="6" fill="#1a2820"/>
+  <circle cx="122" cy="60" r="6" fill="#1a2820"/>
+  <!-- G cue -->
+  <rect x="168" y="380" width="48" height="18" rx="4" fill="#2a3830"/>
+</svg>

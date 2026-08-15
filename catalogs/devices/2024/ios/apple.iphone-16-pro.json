@@ -1,0 +1,93 @@
+{
+  "id": "apple.iphone-16-pro",
+  "name": "iPhone 16 Pro",
+  "platform": "ios",
+  "formFactor": "phone",
+  "viewportPx": {
+    "w": 402,
+    "h": 874
+  },
+  "exportPx": {
+    "w": 1206,
+    "h": 2622
+  },
+  "exportPxLandscape": {
+    "w": 2622,
+    "h": 1206
+  },
+  "shellPx": {
+    "w": 390,
+    "h": 844
+  },
+  "screenInset": {
+    "x": 22,
+    "y": 22,
+    "w": 346,
+    "h": 800
+  },
+  "safeArea": {
+    "top": 59,
+    "bottom": 34,
+    "left": 0,
+    "right": 0
+  },
+  "hardware": {
+    "dynamicIsland": {
+      "x": 132,
+      "y": 32,
+      "w": 126,
+      "h": 34
+    },
+    "buttons": [
+      {
+        "side": "left",
+        "y": 168,
+        "h": 32
+      },
+      {
+        "side": "left",
+        "y": 220,
+        "h": 62
+      },
+      {
+        "side": "right",
+        "y": 210,
+        "h": 78
+      }
+    ],
+    "rearCameras": [
+      {
+        "x": 28,
+        "y": 36,
+        "w": 128,
+        "h": 128
+      }
+    ]
+  },
+  "status": "current",
+  "releasedAt": "2024-09-20",
+  "shellKind": "asset",
+  "shellFamily": "iphone-island",
+  "shellAssetFront": "/devices/shells/iphone-island-front.svg",
+  "shellAssetBack": "/devices/shells/iphone-island-back.svg",
+  "shellAssetFrontLandscape": "/devices/shells/iphone-island-front-landscape.svg",
+  "shellAssetBackLandscape": "/devices/shells/iphone-island-back-landscape.svg",
+  "storeSizeClass": "iphone-6.3",
+  "storeSizeNote": "App Store Connect 6.3-inch class native 1206×2622",
+  "storeTargets": [
+    "ios-screens"
+  ],
+  "source": "Apple ASC 6.3-inch · shell family iphone-island (TAKE SVG)",
+  "updatedAt": "2026-08-14",
+  "version": "2026.08",
+  "shellPxLandscape": {
+    "w": 844,
+    "h": 390
+  },
+  "screenInsetLandscape": {
+    "x": 22,
+    "y": 22,
+    "w": 800,
+    "h": 346
+  }
+}

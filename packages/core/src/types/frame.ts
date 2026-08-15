@@ -7,4 +7,6 @@ export type StoryFrame = {
   headline: string;
   caption: string;
   cta: string;
+  /** Slideshow dwell in ms — ignored by still export */
+  dwellMs?: number;
 };

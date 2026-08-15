@@ -1,6 +1,7 @@
 /** OWNER: app/app-state — in-memory session state */
 import type { InferenceBrief, ProjectSet } from "@take/core";
 import type { CapturedPalette, ScanPack, ScanResult } from "@take/scan-client";
+import type { DeviceFitMode, DeviceOrientation, ShellView } from "@take/device-catalog";
 
 export type UploadItem = { name: string; url: string };
 
@@ -16,17 +17,19 @@ export type AppState = {
   activeFrame: number;
   filter: string;
   deviceId: string;
-  /** Last Real App Scan result (live or fallback) */
+  fitMode: DeviceFitMode;
+  orientation: DeviceOrientation;
+  shellView: ShellView;
   lastScan: ScanResult | null;
-  /** Multi-URL pack when secondary sources were scanned */
   lastPack: ScanPack | null;
-  /** Palette extracted from icon/screens after scan */
   scanPalette: CapturedPalette | null;
   scanLocked: boolean;
-  /** Screenshot asset ids selected for canvas/export (empty = all) */
   selectedShotIds: string[];
-  /** IndexedDB project id when updating an existing save */
   currentProjectId: string | null;
+  /** Library recipe armed for Template mode */
+  templateId: string;
+  /** null = use stored/defaultOn until the user changes Export checkboxes */
+  exportPresetIds: string[] | null;
 };
 
 export const state: AppState = {
@@ -40,13 +43,18 @@ export const state: AppState = {
   selectedSet: 0,
   activeFrame: 0,
   filter: "all",
-  deviceId: "apple.iphone-16-pro",
+  deviceId: "apple.iphone-16-pro-max",
+  fitMode: "cover",
+  orientation: "portrait",
+  shellView: "front",
   lastScan: null,
   lastPack: null,
   scanPalette: null,
   scanLocked: false,
   selectedShotIds: [],
   currentProjectId: null,
+  templateId: "",
+  exportPresetIds: null,
 };
 
 export function currentSet() {

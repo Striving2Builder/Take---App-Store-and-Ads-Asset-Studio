@@ -1,0 +1,58 @@
+{
+  "id": "samsung.galaxy-z-fold6",
+  "name": "Galaxy Z Fold6 (cover)",
+  "platform": "android",
+  "formFactor": "foldable",
+  "viewportPx": {
+    "w": 373,
+    "h": 831
+  },
+  "exportPx": {
+    "w": 1080,
+    "h": 2412
+  },
+  "exportPxLandscape": {
+    "w": 2412,
+    "h": 1080
+  },
+  "shellPx": {
+    "w": 320,
+    "h": 700
+  },
+  "screenInset": {
+    "x": 22,
+    "y": 22,
+    "w": 276,
+    "h": 656
+  },
+  "status": "current",
+  "releasedAt": "2024-07-24",
+  "shellKind": "asset",
+  "storeSizeClass": "play-phone",
+  "storeSizeNote": "Cover display shell — inner Fold display not modeled",
+  "storeTargets": [
+    "play-screens"
+  ],
+  "source": "Galaxy Z Fold6 cover · shell family galaxy-fold-cover (TAKE SVG)",
+  "updatedAt": "2026-08-14",
+  "version": "2026.08",
+  "shellFamily": "galaxy-fold-cover",
+  "shellAssetFront": "/devices/shells/galaxy-fold-cover-front.svg",
+  "shellAssetBack": "/devices/shells/galaxy-fold-cover-back.svg",
+  "hardware": {
+    "frontCamera": {
+      "x": 153,
+      "y": 31,
+      "w": 14,
+      "h": 14
+    },
+    "rearCameras": [
+      {
+        "x": 28,
+        "y": 36,
+        "w": 64,
+        "h": 150
+      }
+    ]
+  }
+}

@@ -1,9 +1,17 @@
 /** OWNER: stages/export — slideshow motion via MediaRecorder (WebM / MP4 if supported) */
+import type { ExportFit } from "@take/export-presets";
 import { currentSet, state } from "../../app/app-state";
 import { downloadBlob } from "../../shared/download";
-import { paintExportFrame, EXPORT_W, EXPORT_H } from "./frame-render";
+import { currentExportSize, paintExportFrame } from "./frame-render";
+import { fitCanvas } from "./fit-canvas";
+import { frameDwellMs } from "../../modes/slideshow/slideshow-builder";
 
 const TARGET_SECONDS = 15;
+
+export type SlideshowRecordOpts = {
+  dest?: { w: number; h: number; fit: ExportFit };
+  tag?: string;
+};
 
 function pickMime(): { mime: string; ext: string } {
   const candidates = [
@@ -23,7 +31,8 @@ function pickMime(): { mime: string; ext: string } {
 
 /** Record ~15s slideshow from current set frames. Returns filename + blob. */
 export async function recordSlideshowVideo(
-  onStatus?: (msg: string) => void
+  onStatus?: (msg: string) => void,
+  opts: SlideshowRecordOpts = {}
 ): Promise<{ filename: string; blob: Blob; mime: string }> {
   const set = currentSet();
   if (!set?.frames.length) throw new Error("No frames to record");
@@ -34,9 +43,17 @@ export async function recordSlideshowVideo(
   const { mime, ext } = pickMime();
   if (!mime) throw new Error("No supported video MIME type (try Chrome/Edge/Firefox)");
 
+  const catalog = currentExportSize();
+  const dest = opts.dest;
   const canvas = document.createElement("canvas");
-  canvas.width = EXPORT_W;
-  canvas.height = EXPORT_H;
+  canvas.width = dest?.w ?? catalog.w;
+  canvas.height = dest?.h ?? catalog.h;
+  const source = dest ? document.createElement("canvas") : canvas;
+  if (source !== canvas) {
+    source.width = catalog.w;
+    source.height = catalog.h;
+  }
+  const padColor = set.palette[1] || "#0c0d10";
   const stream = canvas.captureStream(30);
   const chunks: BlobPart[] = [];
   const recorder = new MediaRecorder(stream, {
@@ -57,12 +74,14 @@ export async function recordSlideshowVideo(
 
   recorder.start(200);
   const n = set.frames.length;
-  const perFrameMs = Math.max(800, Math.floor((TARGET_SECONDS * 1000) / n));
 
   for (let i = 0; i < n; i++) {
     onStatus?.(`Recording frame ${i + 1}/${n}…`);
-    await paintExportFrame(canvas, i);
-    // Hold frame for dwell time (captureStream picks up canvas updates)
+    await paintExportFrame(source, i);
+    if (dest && source !== canvas) {
+      fitCanvas(source, canvas, dest.fit, padColor);
+    }
+    const perFrameMs = frameDwellMs(set.frames[i].dwellMs, n, TARGET_SECONDS * 1000);
     await new Promise((r) => setTimeout(r, perFrameMs));
   }
 
@@ -71,17 +90,19 @@ export async function recordSlideshowVideo(
   const blob = await done;
   const slug = (state.inference?.name || "app").toLowerCase().replace(/[^a-z0-9]+/g, "-");
   const stamp = new Date().toISOString().slice(0, 10);
+  const tag = opts.tag || "slideshow";
   return {
-    filename: `${slug}-slideshow-${stamp}.${ext}`,
+    filename: `${slug}-${tag}-${stamp}.${ext}`,
     blob,
     mime,
   };
 }
 
 export async function downloadSlideshowVideo(
-  onStatus?: (msg: string) => void
+  onStatus?: (msg: string) => void,
+  opts: SlideshowRecordOpts = {}
 ): Promise<string> {
-  const { filename, blob } = await recordSlideshowVideo(onStatus);
+  const { filename, blob } = await recordSlideshowVideo(onStatus, opts);
   downloadBlob(filename, blob);
   return filename;
 }

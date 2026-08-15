@@ -1,10 +1,10 @@
 /** OWNER: stages/intake — Scan + Generate button wiring */
-import { getMode } from "@take/modes-sdk";
 import { clearScanSession, pushHistory } from "@take/storage";
 import { state } from "../../app/app-state";
 import { toast } from "../../shell/toast";
-import { $ } from "../../shared/dom";
-import { syncDevicePickerToPlatform } from "../../editor/device/device-picker";
+import { $, $$ } from "../../shared/dom";
+import { syncDevicePickerToPlatform, syncDevicePickerValue } from "../../editor/device/device-picker";
+import { syncOrientationUi } from "../../editor/device/orientation-control";
 import { runScanTheater } from "../generate/generate.controller";
 import { collectIntake } from "./intake.form";
 import { updateMissing } from "./intake.missing";
@@ -12,6 +12,8 @@ import { clearScanReceipt, renderScanReceipt } from "./scan-receipt";
 import { getScanSources, syncCompetitorsFromText } from "./scan-sources";
 import { persistScanSession } from "./persist-scan-session";
 import { finalizeScan, runIntakeScan } from "./scan-pipeline";
+import { applyModeRunResult, runActiveMode } from "../../modes/run-active-mode";
+import { syncTemplateArm } from "../../modes/template/template-arm";
 
 let scanInFlight = false;
 
@@ -120,70 +122,12 @@ export function bindIntakeActions() {
       }
     }
 
-    const mode = getMode(d.mode) || getMode("wizard");
-    if (!mode) {
-      toast("No creation mode registered");
-      return;
-    }
-    if (mode.capabilities.needsUploads && d.uploads === 0) {
-      toast("Upload wireframe / screenshot refs required for Replicator");
-      return;
-    }
-    if (!state.lastScan?.brief) {
-      const missing = mode.validateIntake(d);
-      if (missing.length) {
-        toast(missing[0]);
-        return;
-      }
-    }
-
     try {
-      const priorBrief = state.lastScan?.brief
-        ? {
-            ...state.lastScan.brief,
-            name: d.name || state.lastScan.brief.name,
-            category: d.category || state.lastScan.brief.category,
-            audience: d.audience || state.lastScan.brief.audience,
-            positioning: d.positioning || state.lastScan.brief.positioning,
-            narrative: d.narrative || state.lastScan.brief.narrative,
-            where: d.where || state.lastScan.brief.where,
-            when: d.when || state.lastScan.brief.when,
-            tone: d.tone || state.lastScan.brief.tone || "",
-            ux: d.ux || state.lastScan.brief.ux || "",
-            refs: d.refs || state.lastScan.brief.refs || "",
-            donot: d.donot || state.lastScan.brief.donot || "",
-            style: d.style,
-            platform: d.platform,
-            locale: d.locale,
-            goal: d.goal,
-            mode: d.mode,
-          }
-        : undefined;
-      const result = await mode.run(d, {
-        priorBrief,
-        seedPalette: state.scanPalette?.swatches.map((s) => s.hex),
-      });
-      state.inference = {
-        ...result.inference,
-        name: d.name || result.inference.name,
-        category: d.category || result.inference.category,
-        audience: d.audience || result.inference.audience,
-        positioning: d.positioning || result.inference.positioning,
-        narrative: d.narrative || result.inference.narrative,
-        where: d.where || result.inference.where,
-        when: d.when || result.inference.when,
-        tone: d.tone || result.inference.tone || "",
-        ux: d.ux || result.inference.ux || "",
-        refs: d.refs || result.inference.refs || "",
-        donot: d.donot || result.inference.donot || "",
-        style: d.style,
-        platform: d.platform,
-        locale: d.locale,
-        goal: d.goal,
-        mode: d.mode,
-      };
-      state.sets = result.sets || [];
-      await runScanTheater(state.inference);
+      const result = await runActiveMode();
+      applyModeRunResult(result);
+      syncDevicePickerValue();
+      syncOrientationUi();
+      await runScanTheater(state.inference!);
     } catch (err) {
       toast(err instanceof Error ? err.message : "Generate failed");
     }
@@ -200,6 +144,15 @@ export function bindIntakeActions() {
   document.querySelectorAll<HTMLInputElement>('input[name="platform"]').forEach((el) => {
     el.addEventListener("change", () => {
       if (el.checked) syncDevicePickerToPlatform(el.value);
+    });
+  });
+
+  $$<HTMLInputElement>('input[name="mode"]').forEach((el) => {
+    el.addEventListener("change", () => {
+      if (!el.checked) return;
+      state.mode = el.value;
+      syncTemplateArm();
+      updateMissing();
     });
   });
 }

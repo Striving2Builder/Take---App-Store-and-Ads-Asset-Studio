@@ -2,6 +2,7 @@
 import type { CreationMode } from "@take/modes-sdk";
 import { scanApp } from "@take/scan-client";
 import { generateSets } from "./sets-builder";
+import { wizardReviewPlugin } from "./wizard.plugin";
 
 export const wizardMode: CreationMode = {
   id: "wizard",
@@ -22,9 +23,11 @@ export const wizardMode: CreationMode = {
     const brief = ctx.priorBrief
       ? { ...ctx.priorBrief, mode: "wizard" as const }
       : (await scanApp(input)).brief;
-    const sets = generateSets(brief, input.qty, undefined, {
+    const sets = generateSets(brief, input.qty, ctx.deviceId, {
       seedPalette: ctx.seedPalette,
     });
     return { inference: { ...brief, mode: "wizard" }, sets };
   },
+  getEditorPlugins: () => [wizardReviewPlugin],
+  getExportHints: () => ({}),
 };

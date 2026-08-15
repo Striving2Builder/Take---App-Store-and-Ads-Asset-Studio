@@ -28,25 +28,25 @@ export const TRUTH_MARKS: TruthMark[] = [
   {
     sel: '[data-mode-pick="wizard"]',
     status: "partial",
-    why: "Uses scan brief when available; frame copy still rule-based",
+    why: "Uses scan brief; multi-set concepts; frame copy still rule-based",
     place: "corner",
   },
   {
     sel: '[data-mode-pick="template"]',
     status: "partial",
-    why: "Uses library template framing + scan brief — not a full drag-drop editor",
+    why: "Applies generated grammar layouts or a library recipe; drag devices on the export slice — not extra layers; not LLM",
     place: "corner",
   },
   {
     sel: '[data-mode-pick="replicator"]',
     status: "partial",
-    why: "Requires uploads; maps refs to frame rail — not pixel-perfect wireframe trace",
+    why: "Maps competitor pack or uploads to a beat rail — structure only, not pixel-trace",
     place: "corner",
   },
   {
     sel: '[data-mode-pick="slideshow"]',
     status: "partial",
-    why: "Ordered PNG + MediaRecorder motion (~15s WebM/MP4 when supported)",
+    why: "Storyboard + editable dwells; MediaRecorder motion when supported",
     place: "corner",
   },
 
@@ -112,15 +112,21 @@ export const TRUTH_MARKS: TruthMark[] = [
     place: "after",
   },
   {
+    sel: "#template-arm",
+    status: "partial",
+    why: "Arms a library recipe + catalog device. Generate still builds a new layout; Apply library keeps the card.",
+    place: "corner",
+  },
+  {
     sel: "#qty-control",
     status: "real",
-    why: "Controls how many local concept sets are built",
+    why: "Controls Wizard concept-set count or Template generated-layout count",
     place: "after",
   },
   {
     sel: "#btn-generate",
     status: "partial",
-    why: "Uses scan brief + Advanced; frame copy still rule-based (not creative AI)",
+    why: "Scan brief + mode.run; Template Generate = grammar layouts (not LLM); copy still rule-based",
     place: "after",
   },
 
@@ -130,16 +136,17 @@ export const TRUTH_MARKS: TruthMark[] = [
     status: "partial",
     why: "Shows Captured / Inferred / Missing honestly; still animated presentation",
     place: "corner",
-  },  {
+  },
+  {
     sel: "#set-rail",
     status: "partial",
-    why: "Sets are selectable; content is rule-based filler",
+    why: "Template layouts paint strip slices; Wizard thumbs are placeholders",
     place: "corner",
   },
   {
     sel: "#btn-regen-all",
     status: "partial",
-    why: "Re-rolls local templates — not real creative AI",
+    why: "Re-runs the armed mode. Template: new generateLayout seed. Refresh copy is a separate inspector action.",
     place: "after",
   },
 
@@ -147,14 +154,26 @@ export const TRUTH_MARKS: TruthMark[] = [
   {
     sel: "#device-picker",
     status: "partial",
-    why: "Picker works from seed catalog; shells are not real device assets yet",
+    why: "Catalog + TAKE SVG shell families (island/punch/fold/flip); not photoreal product photos",
     place: "after",
   },
   {
     sel: "#phone-mock",
     status: "partial",
-    why: "Shows scan screenshots/icon when capture has assets; else CSS mock",
+    why: "Wizard / no-recipe copy edit. Layout recipes use #layout-stage (the export slice) instead",
     place: "corner",
+  },
+  {
+    sel: "#layout-stage",
+    status: "real",
+    why: "Export slice canvas + overlay copy; drag/resize/rotate device slots; type is not double-painted",
+    place: "after",
+  },
+  {
+    sel: "#strip-preview",
+    status: "real",
+    why: "Joined strip rail shares paintStripSlice with export — bleed is a real world clip",
+    place: "after",
   },
   {
     sel: "#shot-headline",
@@ -171,19 +190,19 @@ export const TRUTH_MARKS: TruthMark[] = [
   {
     sel: "#btn-add-copy",
     status: "fake",
-    why: "Toast only — does not add a layer",
+    why: "Toast only — extra copy blocks are not a slot (device drag is real on #layout-stage)",
     place: "after",
   },
   {
     sel: "#btn-add-visual",
     status: "fake",
-    why: "Toast only — does not add a visual",
+    why: "Toast only — extra visuals are not a slot (device drag is real on #layout-stage)",
     place: "after",
   },
   {
     sel: "#btn-save-template",
     status: "real",
-    why: "Saves to localStorage",
+    why: "Save as new, or Update armed user recipe; lockBrand stamps the palette on Generate",
     place: "after",
   },
 
@@ -191,13 +210,13 @@ export const TRUTH_MARKS: TruthMark[] = [
   {
     sel: "#export-presets",
     status: "partial",
-    why: "Checklist recorded in ZIP manifest; frames always PNG-rendered",
+    why: "Checked presets emit PNG at listed WxH; TikTok+motion adds 1080×1920 video; layered/bundle stay FAKE",
     place: "corner",
   },
   {
     sel: "#btn-export",
     status: "partial",
-    why: "PNG ZIP always; motion WebM/MP4 when Slideshow preset/mode — not App Store QA",
+    why: "ZIP: store at catalog exportPx plus extra sizes from checked presets; layered/bundle skipped",
     place: "after",
   },
   {
@@ -207,9 +226,21 @@ export const TRUTH_MARKS: TruthMark[] = [
     place: "after",
   },
   {
+    sel: "#catalog-wizard",
+    status: "partial",
+    why: "Propose→Review→Apply session catalog; evidence required; download pack for CLI publish — not live sync",
+    place: "corner",
+  },
+  {
+    sel: "#btn-device-preview",
+    status: "real",
+    why: "Opens Edit with stub set — no Generate required",
+    place: "after",
+  },
+  {
     sel: "#validation-card",
     status: "partial",
-    why: "Char/count checks run; notes PNG export size",
+    why: "Char/count checks; notes ZIP PNG count, catalog store WxH, skipped FAKE presets",
     place: "corner",
   },
 
@@ -217,7 +248,7 @@ export const TRUTH_MARKS: TruthMark[] = [
   {
     sel: ".library-layout .stage-label, #stage-library .stage-label",
     status: "partial",
-    why: "Templates + local projects open; Use arms Template mode",
+    why: "Use arms Template mode; Refresh copy rewrites user cards (system cards: duplicate first)",
     place: "after",
   },
 ];

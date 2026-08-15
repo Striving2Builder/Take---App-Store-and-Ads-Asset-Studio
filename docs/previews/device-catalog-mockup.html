@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>TAKE · Device Catalog mockup</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fragment+Mono:wght@400&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;1,6..72,400&family=Syne:wght@600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --ink: #0c0d10;
+      --ink-2: #15171d;
+      --ink-3: #1e2129;
+      --paper: #f3f1ec;
+      --paper-dim: #c8c4bb;
+      --signal: #ff4d1a;
+      --cyan: #3de0ff;
+      --line: rgba(243, 241, 236, 0.12);
+      --line-strong: rgba(243, 241, 236, 0.28);
+      --shadow: 0 24px 80px rgba(0, 0, 0, 0.55);
+      --font-display: "Syne", system-ui, sans-serif;
+      --font-body: "Newsreader", Georgia, serif;
+      --font-mono: "Fragment Mono", ui-monospace, monospace;
+      --ease: cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        radial-gradient(ellipse 80% 50% at 20% 0%, rgba(255, 77, 26, 0.12), transparent 55%),
+        radial-gradient(ellipse 60% 40% at 90% 10%, rgba(61, 224, 255, 0.08), transparent 50%),
+        var(--ink);
+      color: var(--paper);
+      font-family: var(--font-body);
+    }
+
+    .top {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 1.5rem clamp(1rem, 4vw, 2.5rem) 0.75rem;
+      border-bottom: 1px solid var(--line);
+    }
+    .brand {
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: 1.75rem;
+      letter-spacing: -0.04em;
+      margin: 0;
+    }
+    .brand em {
+      font-style: normal;
+      color: var(--signal);
+    }
+    .meta {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--paper-dim);
+    }
+    .badge {
+      display: inline-block;
+      margin-left: 0.5rem;
+      padding: 0.15rem 0.4rem;
+      border: 1px solid var(--line-strong);
+      font-size: 0.55rem;
+      color: var(--cyan);
+    }
+
+    .intro {
+      max-width: 42rem;
+      margin: 1rem clamp(1rem, 4vw, 2.5rem) 0;
+      color: var(--paper-dim);
+      font-size: 1.05rem;
+      line-height: 1.45;
+    }
+    .intro strong { color: var(--paper); font-weight: 600; }
+
+    /* Editor stage mock */
+    .stage {
+      margin: 1.5rem clamp(1rem, 4vw, 2.5rem) 3rem;
+      border: 1px solid var(--line);
+      background: var(--ink-2);
+    }
+
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.75rem 1rem;
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid var(--line);
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--paper-dim);
+    }
+    .toolbar .frame-label {
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--cyan);
+      margin-right: auto;
+    }
+    .picker-wrap, .fit-wrap {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    select {
+      font-family: var(--font-display);
+      font-size: 0.8rem;
+      color: var(--paper);
+      background: var(--ink-3);
+      border: 1px solid var(--line-strong);
+      padding: 0.4rem 0.55rem;
+      max-width: 240px;
+    }
+    .fit-btn {
+      font-family: var(--font-mono);
+      font-size: 0.58rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--paper-dim);
+      background: var(--ink-3);
+      border: 1px solid var(--line);
+      padding: 0.35rem 0.5rem;
+      cursor: pointer;
+      transition: border-color 0.2s var(--ease), color 0.2s var(--ease);
+    }
+    .fit-btn.is-active {
+      color: var(--paper);
+      border-color: var(--line-strong);
+    }
+    .fit-btn:hover { color: var(--paper); }
+
+    .hint {
+      margin: 0;
+      padding: 0.4rem 1rem;
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.04em;
+      color: var(--warn, #ffc857);
+      border-bottom: 1px solid var(--line);
+      background: rgba(255, 200, 87, 0.06);
+    }
+    .hint[hidden] { display: none; }
+
+    .canvas {
+      position: relative;
+      min-height: 560px;
+      display: grid;
+      place-items: center;
+      padding: 2rem;
+      background:
+        linear-gradient(var(--line) 1px, transparent 1px) 0 0 / 24px 24px,
+        linear-gradient(90deg, var(--line) 1px, transparent 1px) 0 0 / 24px 24px,
+        var(--ink);
+    }
+
+    .phone {
+      --shell-aspect: 1320 / 2868;
+      width: min(260px, 68vw);
+      aspect-ratio: var(--shell-aspect);
+      background: #0a0a0c;
+      border-radius: 28px;
+      padding: 10px;
+      border: 2px solid #2a2d36;
+      box-shadow: var(--shadow), inset 0 0 0 1px #3a3e48;
+      transition: aspect-ratio 0.45s var(--ease), width 0.45s var(--ease), border-radius 0.3s var(--ease);
+      position: relative;
+    }
+    .phone.is-tablet {
+      width: min(340px, 78vw);
+      border-radius: 18px;
+      padding: 14px;
+    }
+    .phone.shell-off {
+      background: transparent;
+      border-color: transparent;
+      box-shadow: none;
+      padding: 0;
+    }
+
+    .screen {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      border-radius: 20px;
+      overflow: hidden;
+      background: linear-gradient(165deg, #1c2030 0%, #12151c 55%, #0e1014 100%);
+    }
+    .phone.is-tablet .screen { border-radius: 10px; }
+
+    .shot {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      transition: object-fit 0.2s;
+    }
+    .shot.is-contain { object-fit: contain; background: #0c0d10; }
+
+    .overlay {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      padding: 2.4rem 1rem 1.2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.55rem;
+      background: linear-gradient(180deg, rgba(12,13,16,0.45) 0%, rgba(12,13,16,0.72) 100%);
+    }
+    .kicker {
+      margin: 0;
+      font-family: var(--font-mono);
+      font-size: 0.55rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--cyan);
+    }
+    .headline {
+      margin: 0;
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: 1.25rem;
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+    }
+    .ui-block {
+      flex: 1;
+      margin: 0.35rem 0;
+      border: 1px solid var(--line-strong);
+      background:
+        linear-gradient(135deg, rgba(255,77,26,0.22), transparent 50%),
+        linear-gradient(#1e2129, #15171d);
+      min-height: 4rem;
+    }
+    .caption {
+      margin: 0;
+      font-size: 0.85rem;
+      color: var(--paper-dim);
+    }
+
+    .side {
+      display: grid;
+      gap: 0.5rem;
+      padding: 1rem;
+      border-top: 1px solid var(--line);
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      color: var(--paper-dim);
+    }
+    .side row, .kv {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+    .kv span:last-child { color: var(--paper); }
+
+    /* Gallery */
+    .gallery-head {
+      margin: 0 clamp(1rem, 4vw, 2.5rem) 0.75rem;
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 1.15rem;
+      letter-spacing: -0.02em;
+    }
+    .gallery-sub {
+      margin: 0 clamp(1rem, 4vw, 2.5rem) 1rem;
+      color: var(--paper-dim);
+      font-size: 0.95rem;
+    }
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 1.25rem;
+      padding: 0 clamp(1rem, 4vw, 2.5rem) 3rem;
+    }
+    .card {
+      text-align: center;
+      cursor: pointer;
+      border: 1px solid transparent;
+      padding: 0.75rem 0.5rem 1rem;
+      transition: border-color 0.2s var(--ease), background 0.2s var(--ease);
+    }
+    .card:hover, .card.is-selected {
+      border-color: var(--line-strong);
+      background: rgba(243, 241, 236, 0.03);
+    }
+    .card .mini {
+      --a: 9 / 19.5;
+      width: 72px;
+      aspect-ratio: var(--a);
+      margin: 0 auto 0.65rem;
+      background: #0a0a0c;
+      border-radius: 10px;
+      padding: 4px;
+      border: 1.5px solid #2a2d36;
+      transition: aspect-ratio 0.35s var(--ease);
+    }
+    .card .mini-screen {
+      width: 100%;
+      height: 100%;
+      border-radius: 7px;
+      overflow: hidden;
+      background: linear-gradient(160deg, #2a3144, #12151c);
+    }
+    .card .mini-screen span {
+      display: block;
+      height: 100%;
+      background:
+        linear-gradient(180deg, transparent 40%, rgba(12,13,16,0.7)),
+        repeating-linear-gradient(
+          -12deg,
+          transparent,
+          transparent 8px,
+          rgba(61, 224, 255, 0.06) 8px,
+          rgba(61, 224, 255, 0.06) 9px
+        );
+    }
+    .card .name {
+      font-family: var(--font-display);
+      font-size: 0.75rem;
+      font-weight: 700;
+      margin: 0 0 0.2rem;
+    }
+    .card .size {
+      font-family: var(--font-mono);
+      font-size: 0.55rem;
+      color: var(--paper-dim);
+      letter-spacing: 0.04em;
+    }
+    .card .group {
+      font-family: var(--font-mono);
+      font-size: 0.5rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--cyan);
+      margin-top: 0.35rem;
+    }
+
+    .foot {
+      padding: 1rem clamp(1rem, 4vw, 2.5rem) 2.5rem;
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
+      color: var(--paper-dim);
+      border-top: 1px solid var(--line);
+    }
+  </style>
+</head>
+<body>
+  <header class="top">
+    <h1 class="brand">TAKE <em>·</em> Device Catalog</h1>
+    <p class="meta">Phase 2 mockup <span class="badge">PARTIAL shells</span></p>
+  </header>
+
+  <p class="intro">
+    Standalone preview of the Editor device chrome — <strong>not</strong> the live app.
+    Switch devices to see catalog export sizes and geometric frames. Fit modes are Cover / Contain / Safe-area (geometry only).
+  </p>
+
+  <section class="stage" aria-label="Editor mock">
+    <div class="toolbar">
+      <span class="frame-label">Frame 01 · Hook</span>
+      <label class="picker-wrap">
+        Device
+        <select id="device" aria-label="Device shell"></select>
+      </label>
+      <div class="fit-wrap" role="group" aria-label="Screenshot fit">
+        <button type="button" class="fit-btn is-active" data-fit="cover">Cover</button>
+        <button type="button" class="fit-btn" data-fit="contain">Contain</button>
+        <button type="button" class="fit-btn" data-fit="safe-area">Safe-area</button>
+      </div>
+    </div>
+    <p class="hint" id="cross-hint" hidden>Cross-OS geometric fit — not OS UI conversion</p>
+    <div class="canvas">
+      <div class="phone" id="phone">
+        <div class="screen">
+          <!-- Fake “scan screenshot” via CSS art -->
+          <div class="shot" id="shot" role="img" aria-label="Mock screenshot"></div>
+          <div class="overlay">
+            <p class="kicker">01 · Hook</p>
+            <h3 class="headline">Clarity before the scroll</h3>
+            <div class="ui-block"></div>
+            <p class="caption">One calm ritual. Zero noise.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="side">
+      <div class="kv"><span>deviceId</span><span id="out-id">—</span></div>
+      <div class="kv"><span>exportPx</span><span id="out-size">—</span></div>
+      <div class="kv"><span>store class</span><span id="out-class">—</span></div>
+      <div class="kv"><span>fitMode</span><span id="out-fit">cover</span></div>
+      <div class="kv"><span>shell</span><span>geometric frame (no photoreal asset)</span></div>
+    </div>
+  </section>
+
+  <h2 class="gallery-head">Catalog strip</h2>
+  <p class="gallery-sub">Current (≤3y) and Older in catalog (3–5y). Click a card to select.</p>
+  <div class="gallery" id="gallery"></div>
+
+  <footer class="foot">
+    docs/previews/device-catalog-mockup.html · mirrors Phase 2 catalog sizes · open this file in a browser
+  </footer>
+
+  <script>
+    const DEVICES = [
+      { id: "apple.iphone-16-pro-max", name: "iPhone 16 Pro Max", platform: "ios", form: "phone", w: 1320, h: 2868, cls: "iphone-6.9", group: "current", released: "2024-09-20" },
+      { id: "apple.iphone-16-pro", name: "iPhone 16 Pro", platform: "ios", form: "phone", w: 1206, h: 2622, cls: "iphone-6.3", group: "current", released: "2024-09-20" },
+      { id: "apple.iphone-15-plus", name: "iPhone 15 Plus", platform: "ios", form: "phone", w: 1290, h: 2796, cls: "iphone-6.7", group: "current", released: "2023-09-22" },
+      { id: "apple.ipad-pro-13", name: "iPad Pro 13", platform: "ios", form: "tablet", w: 2064, h: 2752, cls: "ipad-13", group: "current", released: "2024-05-07" },
+      { id: "google.pixel-9", name: "Pixel 9", platform: "android", form: "phone", w: 1080, h: 2424, cls: "play-phone", group: "current", released: "2024-08-22" },
+      { id: "samsung.galaxy-s24", name: "Galaxy S24", platform: "android", form: "phone", w: 1080, h: 2340, cls: "play-phone", group: "current", released: "2024-01-31" },
+      { id: "apple.iphone-14-pro", name: "iPhone 14 Pro", platform: "ios", form: "phone", w: 1179, h: 2556, cls: "iphone-6.1", group: "older", released: "2022-09-16" },
+      { id: "google.pixel-7", name: "Pixel 7", platform: "android", form: "phone", w: 1080, h: 2400, cls: "play-phone", group: "older", released: "2022-10-13" },
+    ];
+
+    /** Simulated intake platform — flip to see cross-OS hint */
+    const INTAKE_PLATFORM = "ios";
+
+    const shotGradients = {
+      ios: "linear-gradient(165deg, #1a2744 0%, #0e1524 45%, #1c1030 100%), repeating-linear-gradient(90deg, transparent, transparent 40px, rgba(61,224,255,0.05) 40px, rgba(61,224,255,0.05) 41px)",
+      android: "linear-gradient(165deg, #14241c 0%, #0c1410 50%, #1a2010 100%), repeating-linear-gradient(0deg, transparent, transparent 28px, rgba(109,255,176,0.05) 28px, rgba(109,255,176,0.05) 29px)",
+    };
+
+    const select = document.getElementById("device");
+    const phone = document.getElementById("phone");
+    const shot = document.getElementById("shot");
+    const hint = document.getElementById("cross-hint");
+    const gallery = document.getElementById("gallery");
+
+    const current = DEVICES.filter((d) => d.group === "current");
+    const older = DEVICES.filter((d) => d.group === "older");
+
+    function optgroup(label, list) {
+      const g = document.createElement("optgroup");
+      g.label = label;
+      list.forEach((d) => {
+        const o = document.createElement("option");
+        o.value = d.id;
+        o.textContent = `${d.name} · ${d.w}×${d.h}`;
+        g.appendChild(o);
+      });
+      return g;
+    }
+    select.appendChild(optgroup("Current (≤3y)", current));
+    select.appendChild(optgroup("Older in catalog (3–5y)", older));
+
+    function apply(id) {
+      const d = DEVICES.find((x) => x.id === id) || DEVICES[0];
+      select.value = d.id;
+      phone.style.setProperty("--shell-aspect", `${d.w} / ${d.h}`);
+      phone.classList.toggle("is-tablet", d.form === "tablet");
+      shot.style.background = shotGradients[d.platform] || shotGradients.ios;
+      document.getElementById("out-id").textContent = d.id;
+      document.getElementById("out-size").textContent = `${d.w}×${d.h}`;
+      document.getElementById("out-class").textContent = d.cls;
+      const mismatch = INTAKE_PLATFORM !== "both" && INTAKE_PLATFORM !== d.platform;
+      hint.hidden = !mismatch;
+      gallery.querySelectorAll(".card").forEach((c) => {
+        c.classList.toggle("is-selected", c.dataset.id === d.id);
+      });
+    }
+
+    select.addEventListener("change", () => apply(select.value));
+
+    document.querySelectorAll(".fit-btn").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".fit-btn").forEach((b) => b.classList.remove("is-active"));
+        btn.classList.add("is-active");
+        const mode = btn.dataset.fit;
+        document.getElementById("out-fit").textContent = mode;
+        shot.classList.toggle("is-contain", mode === "contain");
+      });
+    });
+
+    DEVICES.forEach((d) => {
+      const card = document.createElement("button");
+      card.type = "button";
+      card.className = "card";
+      card.dataset.id = d.id;
+      card.innerHTML = `
+        <div class="mini" style="--a: ${d.w} / ${d.h}"><div class="mini-screen"><span></span></div></div>
+        <p class="name">${d.name}</p>
+        <p class="size">${d.w}×${d.h}</p>
+        <p class="group">${d.group === "current" ? "Current" : "Older"}</p>
+      `;
+      card.addEventListener("click", () => apply(d.id));
+      gallery.appendChild(card);
+    });
+
+    apply("apple.iphone-16-pro-max");
+  </script>
+</body>
+</html>

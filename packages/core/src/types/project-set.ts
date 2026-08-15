@@ -12,4 +12,11 @@ export type ProjectSet = {
   copy: StoreCopy;
   palette: string[];
   deviceId?: string;
+  /** isolated = one canvas per PNG; strip = shared world clipped per slice */
+  composition?: "isolated" | "strip";
+  /** Layout recipe snapshot for strip/isolated paint (TemplateRecord JSON) */
+  layout?: {
+    composition: "isolated" | "strip";
+    recipe: unknown;
+  };
 };

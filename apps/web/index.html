@@ -23,6 +23,8 @@
       <nav class="top-nav">
         <button type="button" class="nav-link" data-jump="library">Library</button>
         <button type="button" class="nav-link" data-jump="modes">Modes</button>
+        <button type="button" class="nav-link" id="btn-device-preview-nav">Devices</button>
+        <button type="button" class="nav-link" data-jump="catalog">Catalog sync</button>
         <button type="button" class="nav-link ghost" data-jump="intake">Open studio</button>
       </nav>
     </header>
@@ -107,13 +109,13 @@
       <article class="mode-panel" data-mode-pick="template">
         <span class="mode-num mono">02</span>
         <h2>Template</h2>
-        <p>Drop assets into living layouts. Edit type, spacing, shells, and style. Save forever to your library.</p>
-        <span class="mode-tag">Drag · Edit · Reuse</span>
+        <p>Apply a library recipe or generate a legal layout, then drag devices on the export slice. Save x/y/w/h back to your library. Not a Figma — extra copy/visual layers stay out.</p>
+        <span class="mode-tag">Recipe · Drag slots · Reuse</span>
       </article>
       <article class="mode-panel" data-mode-pick="replicator">
         <span class="mode-num mono">03</span>
         <h2>Replicator</h2>
-        <p>Trace structure from any ad or listing — wireframe only. Swap in your UI, copy, and brand. Never clone protected art.</p>
+        <p>Map beat structure from competitor listings or upload refs. Your brand and UI stay yours — never clone protected art.</p>
         <span class="mode-tag">Structure · Not theft</span>
       </article>
       <article class="mode-panel" data-mode-pick="slideshow">
@@ -215,7 +217,7 @@
             <output id="qty-value">3</output>
             <button type="button" data-qty="1" aria-label="More sets">+</button>
           </div>
-          <p class="hint tight">Each set is a full story sequence (5–12 frames) plus store copy.</p>
+          <p class="hint tight">Wizard: concept sets. Template: generated layouts (grammar, not LLM). Each is a 5–10 frame sequence.</p>
         </fieldset>
 
         <fieldset class="control-block">
@@ -226,6 +228,14 @@
             <label class="seg-opt"><input type="radio" name="mode" value="replicator" /><span>Replicator</span></label>
             <label class="seg-opt"><input type="radio" name="mode" value="slideshow" /><span>Slideshow</span></label>
           </div>
+        </fieldset>
+
+        <fieldset class="control-block" id="template-arm" hidden>
+          <legend class="mono">TEMPLATE RECIPE</legend>
+          <label>Library recipe
+            <select id="template-pick" aria-label="Library recipe"></select>
+          </label>
+          <p class="hint tight" id="template-arm-hint"></p>
         </fieldset>
 
         <fieldset class="control-block optional-fields">
@@ -262,6 +272,9 @@
         <button type="button" class="btn primary block" id="btn-generate">
           Generate asset sets
           <span class="btn-arrow">→</span>
+        </button>
+        <button type="button" class="btn ghost block" id="btn-device-preview" style="margin-top:0.5rem">
+          Preview devices (skip Generate)
         </button>
       </aside>
     </div>
@@ -302,6 +315,7 @@
         <span class="pip on">Edit</span>
         <span class="pip">Export</span>
       </div>
+      <span class="stage-label mono" data-mode-chrome>WIZARD</span>
       <div class="top-actions">
         <button type="button" class="btn ghost small" id="btn-regen-all">Refresh all sets</button>
         <button type="button" class="btn primary small" id="btn-to-edit">Open selected →</button>
@@ -310,11 +324,13 @@
 
     <div class="review-head">
       <div>
-        <h2 class="section-title">Choose a concept</h2>
+        <h2 class="section-title" id="review-title">Choose a concept</h2>
         <p class="section-sub" id="review-sub">Three directed takes. Pick the story that fits.</p>
       </div>
       <div class="infer-chips" id="infer-chips"></div>
     </div>
+
+    <div id="mode-review-slot" class="mode-review-slot" hidden></div>
 
     <div class="set-rail" id="set-rail" role="listbox" aria-label="Generated sets"></div>
   </section>
@@ -330,6 +346,7 @@
         <span class="pip">Export</span>
       </div>
       <div class="top-actions">
+        <span class="mono" data-mode-chrome></span>
         <button type="button" class="btn ghost small" id="btn-save-template">Save as template</button>
         <button type="button" class="btn primary small" id="btn-to-export">Export →</button>
       </div>
@@ -345,6 +362,7 @@
         <button type="button" class="meta-link is-active" data-panel="copy">Store copy</button>
         <button type="button" class="meta-link" data-panel="layers">Layers</button>
         <button type="button" class="meta-link" data-panel="style">Style & palette</button>
+        <button type="button" class="meta-link" data-panel="mode" id="mode-panel-link" hidden>Mode</button>
       </aside>
 
       <div class="edit-canvas-wrap">
@@ -354,14 +372,19 @@
             Device
             <select id="device-picker" aria-label="Device shell"></select>
           </label>
+          <div class="fit-mode-control" id="shell-view-control" role="group" aria-label="Shell view"></div>
+          <div class="fit-mode-control" id="orientation-control" role="group" aria-label="Orientation"></div>
+          <div class="fit-mode-control" id="fit-mode-control" role="group" aria-label="Screenshot fit"></div>
           <div class="tool-group">
             <button type="button" class="icon-btn" id="btn-regen-frame" title="Regenerate frame">↻</button>
             <button type="button" class="icon-btn" id="btn-remove-frame" title="Remove frame">✕</button>
           </div>
         </div>
+        <p class="device-fit-hint mono" id="device-fit-hint" hidden></p>
         <div class="edit-canvas" id="edit-canvas">
           <div class="phone-mock" id="phone-mock">
-            <div class="phone-notch"></div>
+            <img class="shell-asset" id="shell-asset" alt="" hidden />
+            <div class="phone-notch" hidden></div>
             <div class="phone-screen" id="phone-screen">
               <div class="shot-content" id="shot-content">
                 <p class="shot-kicker" contenteditable="true" id="shot-kicker">Meet your morning edge</p>
@@ -371,8 +394,17 @@
               </div>
             </div>
           </div>
+          <div id="layout-stage" class="layout-stage" hidden>
+            <canvas id="layout-slice-canvas" aria-label="Export slice preview"></canvas>
+            <div id="layout-handles" class="layout-handles" hidden></div>
+          </div>
+          <p class="mono layout-stage-hint" id="layout-stage-hint" hidden>Drag devices · corners resize · Alt-drag rotate · arrows nudge</p>
           <div class="crop tl"></div><div class="crop tr"></div>
           <div class="crop bl"></div><div class="crop br"></div>
+        </div>
+        <div id="strip-preview" class="strip-preview" hidden>
+          <p class="mono strip-preview-label">STRIP PREVIEW · joined world · no gap — this is the export</p>
+          <div id="strip-preview-rail" class="strip-preview-rail"></div>
         </div>
       </div>
 
@@ -410,6 +442,10 @@
           </label>
           <button type="button" class="btn ghost small block" id="btn-refresh-variant">Refresh structural variant</button>
         </div>
+        <div class="panel" data-panel-view="mode" hidden>
+          <h3 class="inspector-title" id="mode-inspector-title">Mode</h3>
+          <div id="mode-inspector-slot"></div>
+        </div>
       </aside>
     </div>
   </section>
@@ -432,20 +468,7 @@
         <h2 class="section-title">Ship the take</h2>
         <p class="section-sub">Production-ready files with platform labels, sizes, and filenames. Bundle stays on this device.</p>
 
-        <div class="export-presets" id="export-presets">
-          <label class="preset"><input type="checkbox" checked value="ios-screens" /><span>iOS App Store screenshots</span><em class="mono">1290×2796</em></label>
-          <label class="preset"><input type="checkbox" checked value="ios-feature" /><span>iOS feature graphic</span><em class="mono">1024×1024</em></label>
-          <label class="preset"><input type="checkbox" checked value="play-screens" /><span>Google Play screenshots</span><em class="mono">1080×1920</em></label>
-          <label class="preset"><input type="checkbox" value="play-feature" /><span>Play feature graphic</span><em class="mono">1024×500</em></label>
-          <label class="preset"><input type="checkbox" value="ig" /><span>Instagram feed / stories</span><em class="mono">1080×1350 · 1080×1920</em></label>
-          <label class="preset"><input type="checkbox" value="tiktok" /><span>TikTok / Reels / Shorts</span><em class="mono">1080×1920</em></label>
-          <label class="preset"><input type="checkbox" value="yt" /><span>YouTube thumb</span><em class="mono">1280×720</em></label>
-          <label class="preset"><input type="checkbox" value="pin" /><span>Pinterest</span><em class="mono">1000×1500</em></label>
-          <label class="preset"><input type="checkbox" value="iab" /><span>IAB display units</span><em class="mono">300×250 · 728×90 · 160×600</em></label>
-          <label class="preset"><input type="checkbox" value="slideshow" /><span>Slideshow / promo video</span><em class="mono">WebM/MP4 · ~15s</em></label>
-          <label class="preset"><input type="checkbox" value="layered" /><span>Layered editable pack</span><em class="mono">JSON + PNG layers</em></label>
-          <label class="preset"><input type="checkbox" value="bundle" /><span>Full project bundle</span><em class="mono">Local ZIP manifest</em></label>
-        </div>
+        <div class="export-presets" id="export-presets"></div>
 
         <div class="export-actions">
           <button type="button" class="btn primary" id="btn-export">Download PNG ZIP</button>
@@ -491,9 +514,43 @@
         <button type="button" class="filter" data-filter="mine">My templates</button>
         <hr class="divider" />
         <p class="mono">DEVICE SHELLS</p>
-        <p class="hint tight">iPhone 16 Pro · iPad Pro · Pixel 9 · Galaxy Tab — maintainable sync layer for new releases.</p>
+        <p class="hint tight">Front/back SVG families · sizes from catalog · Sync via Catalog sync (human review).</p>
+        <button type="button" class="btn ghost small block" id="btn-device-preview-lib">Preview devices</button>
+        <button type="button" class="btn ghost small block" data-jump="catalog">Open catalog sync</button>
       </aside>
       <div class="library-grid" id="library-grid"></div>
+    </div>
+  </section>
+
+  <!-- ── CATALOG SYNC (device update wizard) ── -->
+  <section id="stage-catalog" class="stage stage-catalog" data-stage="catalog" hidden>
+    <header class="topbar compact">
+      <button type="button" class="back-link" data-jump="library">← Library</button>
+      <span class="stage-label mono">DEVICE CATALOG SYNC</span>
+      <button type="button" class="btn small primary" id="btn-device-preview-cat">Preview devices</button>
+    </header>
+    <div class="catalog-wizard" id="catalog-wizard">
+      <h2 class="section-title">Update device catalog</h2>
+      <p class="section-sub">Propose → Review → Apply (session). Human gate required — never auto-published, never "synced" from the web.</p>
+      <div class="catalog-steps mono" id="catalog-steps">
+        <span data-cat-step="import" class="is-on">1 Import</span>
+        <span data-cat-step="review">2 Review</span>
+        <span data-cat-step="apply">3 Apply (session)</span>
+      </div>
+      <label class="block-label">Proposal pack (CatalogPack JSON or device array)
+        <textarea id="catalog-pack-input" rows="10" placeholder='{ "version": "1", "updatedAt": "2026-08-15", "devices": [], "proposals": [{ "id": "p1", "proposed": { "id": "vendor.device", "name": "…" }, "evidence": [{ "url": "https://developer.apple.com/…" }], "confidence": "high", "reviewStatus": "pending", "createdAt": "2026-08-15" }] }'></textarea>
+      </label>
+      <label class="block-label">Open proposal file
+        <input type="file" id="catalog-pack-file" accept="application/json,.json" />
+      </label>
+      <div class="catalog-actions">
+        <button type="button" class="btn primary" id="btn-catalog-parse">Parse proposals</button>
+        <button type="button" class="btn ghost" id="btn-catalog-approve-all" disabled>Approve all valid</button>
+        <button type="button" class="btn ghost" id="btn-catalog-apply" disabled>Apply to session catalog</button>
+        <button type="button" class="btn ghost" id="btn-catalog-export" disabled>Download approved pack</button>
+      </div>
+      <p class="hint tight" id="catalog-status">Proposed — paste or open a proposal pack. Apply is session-only. Not live web sync.</p>
+      <ul class="catalog-proposal-list" id="catalog-proposal-list"></ul>
     </div>
   </section>
 
@@ -506,9 +563,10 @@
       <h3>Save to library</h3>
       <label>Template name<input id="tpl-name" type="text" required placeholder="Morning Ritual · Bold" /></label>
       <label>Tags<input id="tpl-tags" type="text" placeholder="ios, premium, fitness" /></label>
-      <label class="check"><input type="checkbox" id="tpl-lock-brand" checked /> Lock brand elements</label>
+      <label class="check"><input type="checkbox" id="tpl-lock-brand" /> Lock brand palette on Generate</label>
       <div class="modal-actions">
-        <button type="submit" class="btn primary" value="save">Save template</button>
+        <button type="submit" class="btn primary" value="new">Save as new</button>
+        <button type="button" class="btn ghost" id="tpl-update" hidden>Update armed recipe</button>
         <button type="button" class="btn ghost" id="tpl-cancel">Cancel</button>
       </div>
     </form>

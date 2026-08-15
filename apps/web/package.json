@@ -15,7 +15,8 @@
     "@take/modes-sdk": "*",
     "@take/scan-client": "*",
     "@take/storage": "*",
-    "@take/template-engine": "*"
+    "@take/template-engine": "*",
+    "@take/device-sync": "*"
   },
   "devDependencies": {
     "typescript": "^5.9.2",

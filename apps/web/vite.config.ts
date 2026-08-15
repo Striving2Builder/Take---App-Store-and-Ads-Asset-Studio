@@ -4,6 +4,8 @@ import { fileURLToPath, URL } from "node:url";
 const root = fileURLToPath(new URL(".", import.meta.url));
 const pkg = (name: string) =>
   fileURLToPath(new URL(`../../packages/${name}/src/index.ts`, import.meta.url));
+const svc = (name: string) =>
+  fileURLToPath(new URL(`../../services/${name}/src/index.ts`, import.meta.url));
 
 export default defineConfig({
   root,
@@ -16,6 +18,7 @@ export default defineConfig({
       "@take/storage": pkg("storage"),
       "@take/template-engine": pkg("template-engine"),
       "@take/export-presets": pkg("export-presets"),
+      "@take/device-sync": svc("device-sync"),
     },
   },
   server: {

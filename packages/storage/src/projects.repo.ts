@@ -10,6 +10,9 @@ export type ProjectRecord = {
     inference: unknown;
     sets: unknown;
     deviceId: string;
+    fitMode?: string;
+    orientation?: string;
+    shellView?: string;
     platform: string;
     mode: string;
     selectedSet: number;
@@ -18,6 +21,8 @@ export type ProjectRecord = {
     lastPack: unknown;
     scanPalette: unknown;
     selectedShotIds?: string[];
+    templateId?: string;
+    exportPresetIds?: string[];
   };
 };
 

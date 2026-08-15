@@ -1,8 +1,11 @@
-/** OWNER: modes/template — uses saved library templates when present */
+/** OWNER: modes/template — generateLayout × qty; library apply is the inspector */
 import type { CreationMode } from "@take/modes-sdk";
-import { getTemplates } from "@take/storage";
 import { scanApp } from "@take/scan-client";
-import { generateSets } from "../wizard/sets-builder";
+import { generateLayout } from "@take/template-engine";
+import { resolveTemplateBind } from "./template-bind";
+import { pickTemplate } from "./template-pick";
+import { projectSetFromRecipe } from "./template-set";
+import { templateInspectorPlugin, templateReviewPlugin } from "./template.plugin";
 
 export const templateMode: CreationMode = {
   id: "template",
@@ -23,24 +26,39 @@ export const templateMode: CreationMode = {
     const brief = ctx.priorBrief
       ? { ...ctx.priorBrief, mode: "template" as const }
       : (await scanApp(input)).brief;
-    const tpl = getTemplates().find((t) => t.kind === "user") || getTemplates()[0];
-    const qty = Math.min(5, Math.max(1, input.qty));
-    const sets = generateSets(brief, qty, undefined, {
-      seedPalette: ctx.seedPalette,
+    const tpl = pickTemplate(ctx.templateId);
+    const bind = resolveTemplateBind(tpl);
+    const deviceId = bind?.deviceId || ctx.deviceId || "apple.iphone-16-pro-max";
+    const orientation = bind?.orientation || ctx.orientation || "portrait";
+    const qty = Math.min(5, Math.max(1, input.qty || 1));
+    const shotCount = ctx.shotCount && ctx.shotCount > 0 ? ctx.shotCount : 5;
+    const lockBrand = !!tpl?.lockBrand;
+    const palette = lockBrand && tpl?.palette?.length ? tpl.palette : ctx.seedPalette;
+    const baseSeed = `${Date.now().toString(16)}-${Math.floor(Math.random() * 0xffffffff).toString(16)}`;
+    const sets = Array.from({ length: qty }, (_, i) => {
+      const recipe = generateLayout({
+        deviceId,
+        orientation,
+        platform: brief.platform || "ios",
+        shotCount,
+        seed: qty === 1 ? baseSeed : `${baseSeed}:${i}`,
+        palette,
+        lockBrand,
+        name: brief.name ? `${brief.name} · layout ${i + 1}` : undefined,
+      });
+      return projectSetFromRecipe(recipe, brief, {
+        deviceId,
+        seedPalette: lockBrand ? undefined : ctx.seedPalette,
+        index: i,
+      });
     });
-    if (tpl) {
-      sets.forEach((s, i) => {
-        s.name = i === 0 ? tpl.name : `${tpl.name} · ${s.name}`;
-        s.style = (tpl.style as typeof s.style) || s.style;
-        s.styleLabel = `Template · ${tpl.name}`;
-        s.blurb = `Built from library template “${tpl.name}” + scan brief.`;
-      });
-    } else {
-      sets.forEach((s) => {
-        s.styleLabel = "Template · default layout";
-        s.blurb = "No saved template yet — using scan brief with template mode framing.";
-      });
-    }
-    return { inference: { ...brief, mode: "template" }, sets };
+    return {
+      inference: { ...brief, mode: "template" },
+      sets,
+      deviceId,
+      orientation,
+    };
   },
+  getEditorPlugins: () => [templateReviewPlugin, templateInspectorPlugin],
+  getExportHints: () => ({}),
 };

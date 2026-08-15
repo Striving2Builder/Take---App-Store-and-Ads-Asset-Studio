@@ -1,0 +1,88 @@
+{
+  "id": "google.pixel-9",
+  "name": "Pixel 9",
+  "platform": "android",
+  "formFactor": "phone",
+  "viewportPx": {
+    "w": 412,
+    "h": 915
+  },
+  "exportPx": {
+    "w": 1080,
+    "h": 2424
+  },
+  "exportPxLandscape": {
+    "w": 2424,
+    "h": 1080
+  },
+  "shellPx": {
+    "w": 384,
+    "h": 832
+  },
+  "screenInset": {
+    "x": 22,
+    "y": 22,
+    "w": 340,
+    "h": 788
+  },
+  "safeArea": {
+    "top": 48,
+    "bottom": 32,
+    "left": 0,
+    "right": 0
+  },
+  "hardware": {
+    "frontCamera": {
+      "x": 182,
+      "y": 32,
+      "w": 20,
+      "h": 20
+    },
+    "buttons": [
+      {
+        "side": "right",
+        "y": 180,
+        "h": 48
+      },
+      {
+        "side": "right",
+        "y": 248,
+        "h": 72
+      }
+    ],
+    "rearCameras": [
+      {
+        "x": 36,
+        "y": 32,
+        "w": 312,
+        "h": 56
+      }
+    ]
+  },
+  "status": "current",
+  "releasedAt": "2024-08-22",
+  "shellKind": "asset",
+  "shellFamily": "pixel-punch",
+  "shellAssetFront": "/devices/shells/pixel-punch-front.svg",
+  "shellAssetBack": "/devices/shells/pixel-punch-back.svg",
+  "shellAssetFrontLandscape": "/devices/shells/pixel-punch-front-landscape.svg",
+  "storeSizeClass": "play-phone",
+  "storeSizeNote": "Google Play phone screenshots (1080×2424 native)",
+  "storeTargets": [
+    "play-screens"
+  ],
+  "source": "Pixel 9 1080×2424 · shell family pixel-punch (TAKE SVG)",
+  "updatedAt": "2026-08-14",
+  "version": "2026.08",
+  "shellPxLandscape": {
+    "w": 832,
+    "h": 384
+  },
+  "screenInsetLandscape": {
+    "x": 22,
+    "y": 22,
+    "w": 788,
+    "h": 340
+  },
+  "shellAssetBackLandscape": "/devices/shells/pixel-punch-back-landscape.svg"
+}

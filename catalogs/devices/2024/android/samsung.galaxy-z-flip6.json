@@ -1,0 +1,58 @@
+{
+  "id": "samsung.galaxy-z-flip6",
+  "name": "Galaxy Z Flip6",
+  "platform": "android",
+  "formFactor": "foldable",
+  "viewportPx": {
+    "w": 412,
+    "h": 915
+  },
+  "exportPx": {
+    "w": 1080,
+    "h": 2640
+  },
+  "exportPxLandscape": {
+    "w": 2640,
+    "h": 1080
+  },
+  "shellPx": {
+    "w": 300,
+    "h": 720
+  },
+  "screenInset": {
+    "x": 22,
+    "y": 22,
+    "w": 256,
+    "h": 676
+  },
+  "status": "current",
+  "releasedAt": "2024-07-24",
+  "shellKind": "asset",
+  "storeSizeClass": "play-phone",
+  "storeSizeNote": "Flip main display shell — hinge illustrative",
+  "storeTargets": [
+    "play-screens"
+  ],
+  "source": "Galaxy Z Flip6 · shell family galaxy-flip (TAKE SVG)",
+  "updatedAt": "2026-08-14",
+  "version": "2026.08",
+  "shellFamily": "galaxy-flip",
+  "shellAssetFront": "/devices/shells/galaxy-flip-front.svg",
+  "shellAssetBack": "/devices/shells/galaxy-flip-back.svg",
+  "hardware": {
+    "frontCamera": {
+      "x": 144,
+      "y": 34,
+      "w": 12,
+      "h": 12
+    },
+    "rearCameras": [
+      {
+        "x": 128,
+        "y": 98,
+        "w": 44,
+        "h": 44
+      }
+    ]
+  }
+}

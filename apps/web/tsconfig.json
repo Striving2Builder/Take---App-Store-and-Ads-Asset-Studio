@@ -5,6 +5,7 @@
     "moduleResolution": "Bundler",
     "strict": true,
     "skipLibCheck": true,
+    "resolveJsonModule": true,
     "noEmit": true,
     "lib": ["ES2022", "DOM", "DOM.Iterable"],
     "types": ["vite/client"],
@@ -16,7 +17,8 @@
       "@take/scan-client": ["../../packages/scan-client/src/index.ts"],
       "@take/storage": ["../../packages/storage/src/index.ts"],
       "@take/template-engine": ["../../packages/template-engine/src/index.ts"],
-      "@take/export-presets": ["../../packages/export-presets/src/index.ts"]
+      "@take/export-presets": ["../../packages/export-presets/src/index.ts"],
+      "@take/device-sync": ["../../services/device-sync/src/index.ts"]
     }
   },
   "include": ["src/**/*.ts", "src/**/*.d.ts"]

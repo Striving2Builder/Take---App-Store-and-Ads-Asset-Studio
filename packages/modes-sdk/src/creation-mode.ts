@@ -1,5 +1,7 @@
 /** OWNER: packages/modes-sdk — CreationMode contract */
 import type { IntakeInput, InferenceBrief, ProjectSet } from "@take/core";
+import type { ModeContext } from "./context";
+import type { ModeEditorPlugin, ModeExportHints } from "./plugins";
 
 export type ModeCapabilities = {
   needsUrl: boolean;
@@ -12,16 +14,9 @@ export type ModeCapabilities = {
 export type ModeRunResult = {
   inference: InferenceBrief;
   sets: ProjectSet[];
-};
-
-export type ModeContext = {
-  signal?: AbortSignal;
-  /** When set, adapters skip network scan and build from this brief */
-  priorBrief?: InferenceBrief;
-  /** Hex swatches from scan palette extract */
-  seedPalette?: string[];
-  /** Injected services grow here without breaking adapters */
-  scan?: (input: IntakeInput) => Promise<InferenceBrief>;
+  /** Catalog consume — shell applies after run */
+  deviceId?: string;
+  orientation?: "portrait" | "landscape";
 };
 
 export interface CreationMode {
@@ -30,4 +25,9 @@ export interface CreationMode {
   capabilities: ModeCapabilities;
   validateIntake(input: IntakeInput): string[];
   run(input: IntakeInput, ctx: ModeContext): Promise<ModeRunResult>;
+  getEditorPlugins?(): ModeEditorPlugin[];
+  getExportHints?(): ModeExportHints;
 }
+
+export type { ModeContext } from "./context";
+export type { ModeEditorPlugin, ModeExportHints } from "./plugins";

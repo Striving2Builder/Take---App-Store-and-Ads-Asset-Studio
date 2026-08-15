@@ -1,13 +1,16 @@
 /** OWNER: stages/library — templates + saved projects */
 import {
   getTemplates,
+  listLayoutTemplates,
   saveUserTemplate,
+  updateUserTemplate,
   pushHistory,
   listProjects,
   getProject,
   type SavedTemplate,
 } from "@take/storage";
 import type { InferenceBrief, ProjectSet } from "@take/core";
+import { recipeFromSaved, refreshCopy } from "@take/template-engine";
 import type { CapturedPalette, ScanPack, ScanResult } from "@take/scan-client";
 import { state } from "../../app/app-state";
 import { showStage } from "../../app/stage-machine";
@@ -16,9 +19,13 @@ import { escapeHtml } from "../../shared/escape";
 import { toast } from "../../shell/toast";
 import { renderReview } from "../review/review.render";
 import { renderEditor } from "../../editor/canvas/edit-canvas";
+import { syncTemplateArm } from "../../modes/template/template-arm";
+import { mountModePlugins } from "../../modes/mode-plugins";
+import { persistExportPresetIds } from "../export/persist-presets";
+import { syncExportPresetChecks } from "../export/mount-presets";
 
 export async function renderLibrary() {
-  const all = getTemplates();
+  const all = listLayoutTemplates();
   const filtered = all.filter((t) => {
     if (state.filter === "all") return true;
     if (state.filter === "mine") return t.kind === "user";
@@ -87,6 +94,12 @@ export async function handleLibraryAction(id: string, action: string) {
     state.inference = p.inference as InferenceBrief;
     state.sets = p.sets as ProjectSet[];
     state.deviceId = p.deviceId;
+    state.fitMode =
+      p.fitMode === "contain" || p.fitMode === "safe-area" || p.fitMode === "cover"
+        ? p.fitMode
+        : "cover";
+    state.orientation = p.orientation === "landscape" ? "landscape" : "portrait";
+    state.shellView = p.shellView === "back" ? "back" : "front";
     state.platform = p.platform;
     state.mode = p.mode;
     state.selectedSet = p.selectedSet;
@@ -95,9 +108,15 @@ export async function handleLibraryAction(id: string, action: string) {
     state.lastPack = p.lastPack as ScanPack | null;
     state.scanPalette = p.scanPalette as CapturedPalette | null;
     state.selectedShotIds = Array.isArray(p.selectedShotIds) ? [...p.selectedShotIds] : [];
+    state.templateId = typeof p.templateId === "string" ? p.templateId : "";
     state.currentProjectId = id;
+    if (Array.isArray(p.exportPresetIds)) {
+      persistExportPresetIds(p.exportPresetIds);
+      syncExportPresetChecks();
+    }
     renderReview();
     renderEditor();
+    mountModePlugins();
     showStage("edit");
     toast(`Opened project “${proj.name}”`);
     pushHistory("project.open", id);
@@ -111,7 +130,9 @@ export async function handleLibraryAction(id: string, action: string) {
     ) as HTMLInputElement | null;
     if (radio) radio.checked = true;
     state.mode = "template";
+    state.templateId = id;
     showStage("intake");
+    syncTemplateArm();
     toast(
       tpl
         ? `Template “${tpl.name}” armed — scan then Generate in Template mode`
@@ -119,7 +140,39 @@ export async function handleLibraryAction(id: string, action: string) {
     );
     pushHistory("template.use", id);
   } else if (action === "refresh") {
-    toast("Re-generate from Template mode for a fresh structural variant");
+    const src = getTemplates().find((t) => t.id === id);
+    if (!src) return;
+    const brief = (src.prompt as InferenceBrief | undefined) || state.inference;
+    if (!brief) {
+      toast("No brief on this card — scan, then Refresh copy in Template inspector");
+      return;
+    }
+    if (src.kind !== "user") {
+      toast("Duplicate a system card first — Refresh copy writes to your library");
+      return;
+    }
+    const recipe = recipeFromSaved({ ...src, layout: src.layout });
+    const applied = refreshCopy(recipe, brief);
+    if (
+      !updateUserTemplate({
+        ...src,
+        frameData: applied.frames,
+        layout: applied.recipe,
+        prompt: brief,
+        updated: new Date().toISOString().slice(0, 10),
+      })
+    ) {
+      toast("Could not update that library card");
+      return;
+    }
+    const set = state.sets[state.selectedSet];
+    if (state.templateId === id && set) {
+      set.frames = applied.frames;
+      if (set.layout) set.layout.recipe = applied.recipe;
+      renderEditor();
+    }
+    await renderLibrary();
+    toast("Copy refreshed — layout unchanged");
     pushHistory("template.refresh", id);
   } else if (action === "dupe") {
     const src = getTemplates().find((t) => t.id === id);

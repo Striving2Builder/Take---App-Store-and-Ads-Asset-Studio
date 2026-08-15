@@ -15,6 +15,13 @@
     "test:merge": "tsx packages/scan-client/src/merge-pack.test.ts",
     "test:gold-client": "tsx packages/scan-client/src/gold-client.test.ts",
     "test:smoke": "tsx scripts/scan-smoke.ts",
+    "test:devices": "tsx packages/device-catalog/src/fit-screenshot.test.ts && tsx packages/device-catalog/src/catalog-smoke.test.ts",
+    "test:export": "tsx packages/export-presets/src/plan-export.test.ts",
+    "test:sync": "tsx services/device-sync/src/sync.test.ts && tsx services/device-sync/src/write-barrel.test.ts && tsx services/device-sync/src/node/publish-pack.test.ts && tsx services/device-sync/src/node/file-gate.test.ts",
+    "sync:devices": "tsx services/device-sync/src/node/cli-sync.ts",
+    "catalog:publish": "tsx services/device-sync/src/node/cli-publish.ts",
+    "test:templates": "tsx packages/template-engine/src/constraints/bleed.test.ts && tsx packages/template-engine/src/apply/map-shots.test.ts && tsx packages/template-engine/src/apply/apply-template.test.ts && tsx packages/template-engine/src/generate/generate-layout.test.ts && tsx packages/template-engine/src/constraints/hit-device.test.ts",
+    "test:modes": "tsx packages/modes-sdk/src/registry.test.ts && tsx apps/web/src/modes/replicator/competitor-beats.test.ts && tsx apps/web/src/modes/slideshow/slideshow-builder.test.ts && tsx apps/web/src/modes/template/template-bind.test.ts",
     "test:gold": "npm run test:merge && npm run test:gold-client && npm run test:smoke"
   },
   "devDependencies": {

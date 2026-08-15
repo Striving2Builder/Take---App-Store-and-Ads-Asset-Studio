@@ -1,0 +1,9 @@
+{
+  "grammarVersion": "2026.08",
+  "composition": { "isolated": 0.42, "strip": 0.58 },
+  "typeFamily": { "top": 0.5, "bottom": 0.35, "split": 0.15 },
+  "typeScale": { "s": 0.22, "m": 0.56, "l": 0.22 },
+  "bleedBudget": { "0": 0.2, "1": 0.55, "2": 0.25 },
+  "isolatedPlacement": { "center": 0.5, "left": 0.25, "right": 0.25 },
+  "stripLocalPlacement": { "center": 0.5, "left": 0.25, "right": 0.25 }
+}

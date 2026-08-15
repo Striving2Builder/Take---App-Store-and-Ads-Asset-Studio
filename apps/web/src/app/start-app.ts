@@ -24,7 +24,14 @@ import {
 import { bindMetaFields } from "../editor/inspectors/copy-inspector";
 import { bindStyleInspector } from "../editor/inspectors/style-inspector";
 import { bindLayerToggles } from "../editor/layers/layer-toggles";
-import { mountDevicePicker } from "../editor/device/device-picker";
+import { bindLayoutDrag } from "../editor/layout/layout-drag";
+import { mountDevicePicker, syncDevicePickerValue } from "../editor/device/device-picker";
+import { mountFitControl, syncFitControlUi } from "../editor/device/fit-control";
+import { mountOrientationControl, syncOrientationUi } from "../editor/device/orientation-control";
+import { mountShellViewControl, syncShellViewUi } from "../editor/device/shell-view-control";
+import { openDevicePreview } from "../editor/device/preview-devices";
+import { mountCatalogWizard } from "../stages/catalog/catalog-wizard";
+import { mountExportPresets } from "../stages/export/mount-presets";
 import {
   exportLibrary,
   renderValidation,
@@ -35,7 +42,10 @@ import { handleLibraryAction, renderLibrary } from "../stages/library/library.re
 import { bindTemplateModal, openSaveTemplateModal } from "../library-ui/template-save";
 import { mountTruthLayer, mountTruthBadges } from "../shell/truth-layer";
 import { registerModes } from "../modes/register-modes";
-import { generateSets } from "../modes/wizard/sets-builder";
+import { applyModeRunResult, runActiveMode } from "../modes/run-active-mode";
+import { mountModePlugins, syncModePluginHighlights } from "../modes/mode-plugins";
+import { applyExportHints } from "../modes/apply-export-hints";
+import { bindTemplateArm, syncTemplateArm } from "../modes/template/template-arm";
 
 function bindGlobalClicks() {
   document.addEventListener("click", (e) => {
@@ -48,6 +58,8 @@ function bindGlobalClicks() {
       if (radio) radio.checked = true;
       state.mode = m;
       showStage("intake");
+      syncTemplateArm();
+      updateMissing();
       toast(`${modePick.querySelector("h2")?.textContent || m} mode armed`);
       return;
     }
@@ -64,6 +76,7 @@ function bindGlobalClicks() {
       syncFrameFromDom();
       state.activeFrame = Number(frameBtn.dataset.frame);
       renderEditor();
+      syncModePluginHighlights();
       return;
     }
 
@@ -100,17 +113,22 @@ function bindGlobalClicks() {
 function bindEditorActions() {
   $("#btn-to-edit")?.addEventListener("click", () => {
     renderEditor();
+    mountModePlugins();
     showStage("edit");
   });
   $("#btn-regen-all")?.addEventListener("click", async () => {
     if (!state.inference) return;
-    toast("Refreshing all structural variants…");
-    state.sets = generateSets(state.inference, state.qty, state.deviceId, {
-      seedPalette: state.scanPalette?.swatches.map((s) => s.hex),
-    });
-    state.selectedSet = 0;
-    renderReview();
-    pushHistory("regen.all", "sets");
+    toast("Refreshing…");
+    try {
+      const result = await runActiveMode();
+      applyModeRunResult(result);
+      syncDevicePickerValue();
+      syncOrientationUi();
+      renderReview();
+      pushHistory("regen.all", "sets");
+    } catch (err) {
+      toast(err instanceof Error ? err.message : "Regenerate failed");
+    }
   });
   $("#btn-regen-frame")?.addEventListener("click", regenFrame);
   $("#btn-remove-frame")?.addEventListener("click", removeFrame);
@@ -121,18 +139,28 @@ function bindEditorActions() {
   $("#btn-add-visual")?.addEventListener("click", () =>
     toast("Visual element slot added — drop an asset anytime")
   );
-  $("#btn-refresh-variant")?.addEventListener("click", () => {
+  $("#btn-refresh-variant")?.addEventListener("click", async () => {
     const set = state.sets[state.selectedSet];
     if (!set || !state.inference) return;
-    const next = generateSets(state.inference, 1, state.deviceId, {
-      seedPalette: state.scanPalette?.swatches.map((s) => s.hex),
-    })[0];
-    set.frames = next.frames;
-    set.palette = next.palette;
-    set.blurb = "Refreshed structural variant — same brief, new composition.";
-    state.activeFrame = 0;
-    renderEditor();
-    toast("Structural variant refreshed");
+    toast("Refreshing variant…");
+    try {
+      const result = await runActiveMode();
+      const next = result.sets[state.selectedSet] || result.sets[0];
+      if (!next) return;
+      set.frames = next.frames;
+      set.palette = next.palette;
+      set.blurb = next.blurb;
+      set.styleLabel = next.styleLabel;
+      set.name = next.name;
+      set.composition = next.composition;
+      set.layout = next.layout;
+      state.activeFrame = 0;
+      renderEditor();
+      mountModePlugins();
+      toast("Structural variant refreshed");
+    } catch (err) {
+      toast(err instanceof Error ? err.message : "Refresh failed");
+    }
   });
   ["#shot-kicker", "#shot-headline", "#shot-caption"].forEach((sel) => {
     $(sel)?.addEventListener("blur", syncFrameFromDom);
@@ -168,8 +196,28 @@ export function startApp() {
   bindStyleInspector();
   bindScanReceiptTabs();
   bindLayerToggles();
+  bindLayoutDrag();
   bindTemplateModal();
-  mountDevicePicker();
+  bindTemplateArm();
+  mountDevicePicker({
+    onChange: () => {
+      renderEditor();
+      renderValidation();
+    },
+  });
+  const onDeviceUi = () => {
+    renderEditor();
+    renderValidation();
+  };
+  mountFitControl({ onChange: onDeviceUi });
+  mountOrientationControl({ onChange: onDeviceUi });
+  mountShellViewControl({ onChange: onDeviceUi });
+  mountCatalogWizard();
+  mountExportPresets({ onChange: renderValidation });
+  $("#btn-device-preview")?.addEventListener("click", () => openDevicePreview());
+  $("#btn-device-preview-nav")?.addEventListener("click", () => openDevicePreview());
+  $("#btn-device-preview-lib")?.addEventListener("click", () => openDevicePreview());
+  $("#btn-device-preview-cat")?.addEventListener("click", () => openDevicePreview());
   mountLocaleSwitcher();
   mountScanSources();
   hydrateScanSession();
@@ -181,16 +229,27 @@ export function startApp() {
       void renderLibrary();
       mountTruthBadges();
     }
+    if (name === "catalog") mountTruthBadges();
     if (name === "export") {
-      if (state.mode === "slideshow") {
-        const box = $$<HTMLInputElement>("#export-presets input").find(
-          (el) => el.value === "slideshow"
-        );
-        if (box) box.checked = true;
-      }
+      applyExportHints();
       renderValidation();
     }
-    if (name === "review" || name === "edit") mountTruthBadges();
+    if (name === "edit") {
+      syncDevicePickerValue();
+      syncFitControlUi();
+      syncOrientationUi();
+      syncShellViewUi();
+      mountModePlugins();
+      const modeLink = $("#mode-panel-link") as HTMLElement | null;
+      if (modeLink && !modeLink.hidden && state.mode !== "wizard") {
+        modeLink.click();
+      }
+      mountTruthBadges();
+    }
+    if (name === "review") {
+      mountModePlugins();
+      mountTruthBadges();
+    }
   });
 
   document.documentElement.style.setProperty("--signal", "#ff4d1a");

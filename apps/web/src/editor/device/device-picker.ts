@@ -1,29 +1,88 @@
 /** OWNER: editor/device — device picker (NOT style/palette) */
-import { listDevices, getDevice, resolveDefaultDevice } from "@take/device-catalog";
+import {
+  getDevice,
+  listDevices,
+  resolveDefaultDevice,
+  resolvePickerGroup,
+} from "@take/device-catalog";
 import { state } from "../../app/app-state";
 import { $ } from "../../shared/dom";
+import { toast } from "../../shell/toast";
+import { applyDeviceFrame } from "./apply-device-frame";
 
-export function mountDevicePicker() {
+export type DevicePickerCallbacks = {
+  onChange?: () => void;
+};
+
+function optionHtml(id: string, name: string, w: number, h: number, extra = "") {
+  return `<option value="${id}">${name} · ${w}×${h}${extra}</option>`;
+}
+
+function sortPlatformFirst<T extends { platform: string; formFactor: string }>(
+  list: T[],
+  platform: string
+): T[] {
+  const pref = platform === "android" ? "android" : "ios";
+  return [...list].sort((a, b) => {
+    const ap = a.platform === pref ? 0 : 1;
+    const bp = b.platform === pref ? 0 : 1;
+    if (ap !== bp) return ap - bp;
+    const af = a.formFactor === "foldable" ? 1 : 0;
+    const bf = b.formFactor === "foldable" ? 1 : 0;
+    return af - bf;
+  });
+}
+
+export function mountDevicePicker(cbs?: DevicePickerCallbacks) {
   const select = $("#device-picker") as HTMLSelectElement | null;
   if (!select) return;
 
-  const devices = listDevices();
-  select.innerHTML = devices
-    .map(
-      (d) =>
-        `<option value="${d.id}">${d.name} · ${d.exportPx.w}×${d.exportPx.h}</option>`
-    )
-    .join("");
+  const asOf = new Date();
+  const devices = sortPlatformFirst(listDevices({ asOf }), state.platform);
+  const current = devices.filter((d) => resolvePickerGroup(d, asOf) === "current");
+  const older = devices.filter((d) => resolvePickerGroup(d, asOf) === "older");
+
+  const parts: string[] = [];
+  if (current.length) {
+    parts.push(
+      `<optgroup label="Current (≤3y)">${current
+        .map((d) =>
+          optionHtml(
+            d.id,
+            d.name,
+            d.exportPx.w,
+            d.exportPx.h,
+            d.formFactor === "foldable" ? " · stub" : ""
+          )
+        )
+        .join("")}</optgroup>`
+    );
+  }
+  if (older.length) {
+    parts.push(
+      `<optgroup label="Older in catalog (3–5y)">${older
+        .map((d) => optionHtml(d.id, d.name, d.exportPx.w, d.exportPx.h))
+        .join("")}</optgroup>`
+    );
+  }
+  select.innerHTML = parts.join("");
 
   if (!getDevice(state.deviceId)) {
-    state.deviceId = resolveDefaultDevice(state.platform)?.id || devices[0]?.id || "";
+    const def = resolveDefaultDevice(state.platform);
+    if (state.deviceId) {
+      toast(`Unknown device — using ${def?.name || "default"}`);
+    }
+    state.deviceId = def?.id || devices[0]?.id || "";
   }
   select.value = state.deviceId;
+  applyDeviceFrame();
 
   select.addEventListener("change", () => {
     state.deviceId = select.value;
     const set = state.sets[state.selectedSet];
     if (set) set.deviceId = state.deviceId;
+    applyDeviceFrame();
+    cbs?.onChange?.();
   });
 }
 
@@ -32,5 +91,15 @@ export function syncDevicePickerToPlatform(platform: string) {
   if (!def) return;
   state.deviceId = def.id;
   const select = $("#device-picker") as HTMLSelectElement | null;
-  if (select) select.value = def.id;
+  if (select && getDevice(def.id)) select.value = def.id;
+  applyDeviceFrame();
+}
+
+export function syncDevicePickerValue() {
+  const select = $("#device-picker") as HTMLSelectElement | null;
+  if (!select) return;
+  if (getDevice(state.deviceId)) {
+    select.value = state.deviceId;
+  }
+  applyDeviceFrame();
 }

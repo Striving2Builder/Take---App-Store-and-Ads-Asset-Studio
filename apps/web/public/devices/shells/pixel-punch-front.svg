@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 832" fill="none">
+  <defs>
+    <linearGradient id="bezel" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#3e444c"/>
+      <stop offset="50%" stop-color="#1a1e24"/>
+      <stop offset="100%" stop-color="#2a3038"/>
+    </linearGradient>
+    <filter id="soft" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#000" flood-opacity="0.45"/>
+    </filter>
+  </defs>
+  <rect x="10" y="10" width="364" height="812" rx="42" fill="url(#bezel)" filter="url(#soft)" stroke="#5a626e" stroke-width="1.5"/>
+  <rect x="16" y="16" width="352" height="800" rx="36" fill="#0a0c10"/>
+  <rect x="22" y="22" width="340" height="788" rx="30" fill="#12151c"/>
+  <!-- Center punch -->
+  <circle cx="192" cy="42" r="10" fill="#000" stroke="#2a3038" stroke-width="1.5"/>
+  <circle cx="192" cy="42" r="4" fill="#1a2430"/>
+  <!-- Power / volume right -->
+  <rect x="372" y="180" width="7" height="48" rx="2" fill="#5a5e68"/>
+  <rect x="372" y="248" width="7" height="72" rx="2" fill="#5a5e68"/>
+</svg>

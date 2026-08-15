@@ -81,7 +81,7 @@ apps/web/
     │   ├── review/
     │   │   ├── review.html.ts
     │   │   ├── review.controller.ts
-    │   │   ├── review.render.ts
+    │   │   ├── review.render.ts        # layout thumbs via paintStripSlice
     │   │   └── review.css
     │   ├── edit/
     │   │   ├── edit.html.ts
@@ -89,34 +89,64 @@ apps/web/
     │   │   └── edit.css
     │   ├── export/
     │   │   ├── export.controller.ts
+    │   │   ├── export-zip.ts            # plan + paint + extra sizes
+    │   │   ├── mount-presets.ts         # #export-presets from package
+    │   │   ├── persist-presets.ts       # localStorage + session ids
+    │   │   ├── fit-canvas.ts            # cover / contain draw
     │   │   ├── frame-render.ts
+    │   │   ├── paint-strip-slice.ts     # world clip → PNG (shared with preview)
+    │   │   ├── selected-shots.ts        # ordered 1:1, no modulo
+    │   │   ├── canvas-text.ts
     │   │   ├── slideshow-video.ts
     │   │   └── …
-    │   └── library/
-    │       ├── library.html.ts
-    │       ├── library.controller.ts
-    │       ├── library.render.ts
-    │       └── library.css
+    │   ├── library/
+    │   │   ├── library.html.ts
+    │   │   ├── library.controller.ts
+    │   │   ├── library.render.ts
+    │   │   └── library.css
+    │   └── catalog/
+    │       └── catalog-wizard.ts       # ReviewGate + session apply; disk is CLI
     │
     ├── modes/                          # MODE plugins (UI adapters)
-    │   ├── register-modes.ts           # register all modes at boot
+    │   ├── register-modes.ts
+    │   ├── run-active-mode.ts          # shared Generate / regen path
+    │   ├── mode-plugins.ts             # Review / Edit plugin host
+    │   ├── apply-export-hints.ts
     │   ├── wizard/
-    │   │   └── wizard.adapter.ts
+    │   │   ├── wizard.adapter.ts
+    │   │   └── wizard.plugin.ts
     │   ├── template/
-    │   │   └── template.adapter.ts
+    │   │   ├── template.adapter.ts
+    │   │   ├── template-bind.ts
+    │   │   ├── template-arm.ts
+    │   │   ├── template-pick.ts
+    │   │   ├── template-set.ts
+    │   │   └── template.plugin.ts
     │   ├── replicator/
-    │   │   └── replicator.adapter.ts
+    │   │   ├── replicator.adapter.ts
+    │   │   ├── replicator-builder.ts
+    │   │   ├── competitor-beats.ts
+    │   │   ├── replicator-ready.ts
+    │   │   └── replicator.plugin.ts
     │   └── slideshow/
-    │       └── slideshow.adapter.ts
+    │       ├── slideshow.adapter.ts
+    │       ├── slideshow-builder.ts
+    │       └── slideshow.plugin.ts
     │
     ├── editor/                         # EDITOR layer (not “style = device”)
     │   ├── frame-list.ts
     │   ├── canvas/
-    │   │   ├── edit-canvas.ts
-    │   │   ├── phone-mock.ts
+    │   │   ├── edit-canvas.ts          # #layout-stage = export slice when recipe has devices
     │   │   └── shot-content.ts         # contenteditable sync
+    │   ├── layout/
+    │   │   └── layout-drag.ts          # device move / resize / rotate on export slice
+    │   ├── strip/
+    │   │   └── strip-preview.ts        # joined rail; shares paintStripSlice
     │   ├── device/
-    │   │   └── device-picker.ts        # phone/tablet selector (NEW home)
+    │   │   ├── device-picker.ts        # phone/tablet selector (optgroups)
+    │   │   ├── fit-control.ts          # cover / contain / safe-area
+    │   │   ├── apply-device-frame.ts   # aspect + inset CSS vars
+    │   │   └── shell-composite.ts      # shared fit plan for export
     │   ├── layers/
     │   │   └── layer-toggles.ts
     │   └── inspectors/
@@ -125,7 +155,7 @@ apps/web/
     │       └── style-inspector.ts      # palette + style family ONLY
     │
     ├── library-ui/                     # personal library actions beyond stage
-    │   └── template-save.ts
+    │   └── template-save.ts            # Save as new / Update armed user recipe + lockBrand
     │
     └── shared/
         ├── dom.ts                      # $, $$
@@ -165,12 +195,19 @@ packages/
 │   │   └── context.ts                # ModeContext type
 │   └── package.json
 │
-├── template-engine/
+├── template-engine/                  # layout recipes + generateLayout
 │   ├── src/
 │   │   ├── index.ts
 │   │   ├── template.types.ts
-│   │   ├── variant.ts                # refresh structural variant
-│   │   └── batch.ts
+│   │   ├── apply/                    # applyTemplate, map-shots, from-saved
+│   │   ├── constraints/              # aabb, world, bleed, type-band, validate, hit-device, transform-device
+│   │   ├── seeds/strip-bleed-hook.ts
+│   │   ├── grammar/                  # load 2026.08 JSON
+│   │   ├── rng/seed.ts
+│   │   ├── score/score-layout.ts
+│   │   ├── generate/                 # set-plan, place, fallback, orchestrate
+│   │   ├── variant.ts                # refreshCopy (geometry unchanged)
+│   │   └── batch.ts                  # STUB
 │   └── package.json
 │
 ├── device-catalog/                   # NOT style/palette
@@ -178,8 +215,14 @@ packages/
 │   │   ├── index.ts
 │   │   ├── device.types.ts
 │   │   ├── catalog.ts                # load/query devices
+│   │   ├── load-catalog.ts           # explicit JSON imports (Vite)
 │   │   ├── resolve-default.ts        # platform → default device
-│   │   └── validate-device.ts
+│   │   ├── resolve-export-size.ts    # single WxH source of truth
+│   │   ├── fit-screenshot.ts         # pure cover/contain/safe-area
+│   │   ├── filter-age.ts             # 3y / 5y helpers
+│   │   ├── validate-device.ts
+│   │   ├── fit-screenshot.test.ts
+│   │   └── catalog-smoke.test.ts
 │   └── package.json
 │
 ├── scan-client/
@@ -201,11 +244,14 @@ packages/
 ├── export-presets/
 │   ├── src/
 │   │   ├── index.ts
-│   │   ├── preset.types.ts
+│   │   ├── preset.types.ts          # targets[] + kind
 │   │   ├── ios.presets.ts
 │   │   ├── play.presets.ts
 │   │   ├── social.presets.ts
-│   │   └── iab.presets.ts
+│   │   ├── iab.presets.ts
+│   │   ├── fit-rect.ts              # cover / contain math
+│   │   ├── plan-export.ts           # ZIP file list (no paint)
+│   │   └── resolve-ids.ts           # session vs stored vs defaultOn
 │   └── package.json
 │
 └── storage/
@@ -226,17 +272,18 @@ packages/
 ```
 catalogs/
 ├── devices/
-│   ├── manifest.json
-│   └── 2026.08/
-│       ├── apple.iphone-16-pro.json
-│       ├── apple.ipad-pro-13.json
-│       ├── google.pixel-9.json
-│       └── shells/                   # svg/webp (add as assets land)
+│   ├── manifest.json                 # cutoff years + device ids
+│   ├── 2024/ios/ · 2024/android/
+│   ├── 2023/ios/
+│   └── 2022/ios/ · 2022/android/     # curated size-class JSON
 ├── templates/
-│   └── system/
-│       └── .gitkeep
+│   ├── manifest.json                 # grammarVersion + seed ids
+│   └── 2026.08/grammar/
+│       ├── tokens.json               # AABB + rotation ranges
+│       └── productions.json          # set-plan weights
+│   └── seeds stay in template-engine TS + storage SEED
 └── export-specs/
-    └── store-rules.json
+    └── store-rules.json              # optional / future
 ```
 
 ---
@@ -273,9 +320,25 @@ services/
 ├── device-sync/
 │   ├── package.json
 │   ├── src/
-│   │   ├── job.ts
-│   │   └── publishers/
-│   │       └── catalog-publisher.ts
+│   │   ├── index.ts                  # browser-safe API
+│   │   ├── types.ts                  # DeviceProposal / CatalogPack
+│   │   ├── evidence.ts               # https evidence required
+│   │   ├── parse-pack.ts
+│   │   ├── review-gate.ts            # memory gate; approve needs evidence
+│   │   ├── materialize.ts
+│   │   ├── diff-catalog.ts
+│   │   ├── allowlist.ts              # Device Sync hosts (not App Scan)
+│   │   ├── job.ts                    # runDeviceSync — no fetch
+│   │   ├── publish-check.ts          # refuse unapproved packs
+│   │   ├── write-barrel.ts           # generate load-catalog.ts source
+│   │   ├── publishers/catalog-publisher.ts  # browser noop
+│   │   └── node/                     # CLI only (fs)
+│   │       ├── cli-sync.ts
+│   │       ├── cli-publish.ts
+│   │       ├── disk-write.ts
+│   │       ├── fetch-json.ts         # DEVICE_SYNC_FETCH=1 JSON only
+│   │       ├── file-gate.ts          # .take-sync/queue.json persist
+│   │       └── resolve-host.ts       # DNS private-IP block
 │   └── README.md
 └── render-worker/
     ├── package.json
@@ -302,19 +365,27 @@ services/
 ### Modes layer owns → separate files per mode
 | Mode | File |
 |------|------|
-| Contract | `packages/modes-sdk/src/creation-mode.ts` |
+| Contract | `packages/modes-sdk/src/creation-mode.ts` + `context.ts` + `plugins.ts` |
 | Registry | `packages/modes-sdk/src/registry.ts` |
-| Wizard | `apps/web/src/modes/wizard/wizard.adapter.ts` + package pipeline later |
-| Template | `…/template/template.adapter.ts` |
-| Replicator | `…/replicator/replicator.adapter.ts` |
-| Slideshow | `…/slideshow/slideshow.adapter.ts` |
+| Run path | `apps/web/src/modes/run-active-mode.ts` |
+| Plugin host | `apps/web/src/modes/mode-plugins.ts` |
+| Wizard | `…/wizard/wizard.adapter.ts` + `wizard.plugin.ts` |
+| Template | `…/template/template.adapter.ts` + bind/arm/plugin |
+| Replicator | `…/replicator/replicator.adapter.ts` + builder/beats/plugin |
+| Slideshow | `…/slideshow/slideshow.adapter.ts` + builder/plugin |
 
 ### Device catalog owns (not Style inspector)
 | Item | File |
 |------|------|
 | Types | `packages/device-catalog/src/device.types.ts` |
 | Query API | `packages/device-catalog/src/catalog.ts` |
+| Export size | `packages/device-catalog/src/resolve-export-size.ts` |
+| Fit math | `packages/device-catalog/src/fit-screenshot.ts` |
 | Picker UI | `apps/web/src/editor/device/device-picker.ts` |
+| Fit control | `apps/web/src/editor/device/fit-control.ts` |
+| Frame CSS | `apps/web/src/editor/device/apply-device-frame.ts` |
+| Export composite | `apps/web/src/editor/device/shell-composite.ts` |
+| Extra ZIP sizes | `packages/export-presets/src/plan-export.ts` + `apps/web/src/stages/export/export-zip.ts` |
 | Device JSON | `catalogs/devices/...` |
 
 ### Style inspector owns (creative only)

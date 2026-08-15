@@ -110,12 +110,19 @@
   font-size: 0.45rem;
   letter-spacing: 0.06em;
   color: var(--cyan);
+  z-index: 1;
+}
+
+.story-frame canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
 }
 
 .story-frame .sf-fill {
   position: absolute;
   inset: 18% 12% 22%;
-  background: linear-gradient(160deg, var(--signal-soft), rgba(61,224,255,0.1));
+  background: var(--signal-soft);
 }
 
 .set-blurb {
