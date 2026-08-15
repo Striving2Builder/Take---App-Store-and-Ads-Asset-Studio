@@ -1,0 +1,10 @@
+{
+  "version": "2026.08",
+  "updatedAt": "2026-08-14",
+  "devices": [
+    "apple.iphone-16-pro",
+    "apple.ipad-pro-13",
+    "google.pixel-9"
+  ],
+  "note": "Published device pack. Device Sync job will refresh this manifest."
+}

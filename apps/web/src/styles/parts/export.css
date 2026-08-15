@@ -1,0 +1,68 @@
+/* ── EXPORT ── */
+.export-layout {
+  display: grid;
+  grid-template-columns: 1.4fr 0.7fr;
+  gap: 2rem;
+  padding-bottom: 3rem;
+}
+
+.export-presets {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  margin: 1.5rem 0;
+  border: 1px solid var(--line);
+}
+
+.preset {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 0.85rem;
+  align-items: center;
+  padding: 0.85rem 1rem;
+  border-bottom: 1px solid var(--line);
+  cursor: pointer;
+  background: var(--ink-2);
+  transition: background 0.2s;
+}
+
+.preset:last-child { border-bottom: none; }
+.preset:hover { background: var(--ink-3); }
+
+.preset span { font-family: var(--font-display); font-weight: 600; font-size: 0.95rem; }
+.preset em { font-style: normal; color: var(--paper-dim); }
+
+.export-actions { display: flex; flex-wrap: wrap; gap: 0.75rem; }
+
+.export-log {
+  margin-top: 1.25rem;
+  padding: 1rem;
+  border: 1px solid var(--good);
+  background: rgba(109, 255, 176, 0.05);
+  color: var(--good);
+  white-space: pre-wrap;
+  line-height: 1.7;
+}
+
+.compliance-card,
+.validation-card {
+  border: 1px solid var(--line);
+  background: var(--ink-2);
+  padding: 1.15rem;
+  margin-bottom: 1rem;
+}
+
+.compliance-card p,
+.validation-card p { color: var(--cyan); margin: 0 0 0.75rem; }
+
+.compliance-card ul,
+.validation-card ul {
+  margin: 0;
+  padding-left: 1.1rem;
+  color: var(--paper-dim);
+  font-size: 0.92rem;
+}
+
+.validation-card li.ok { color: var(--good); }
+.validation-card li.warn { color: var(--warn); }
+

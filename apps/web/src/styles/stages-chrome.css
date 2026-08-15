@@ -1,0 +1,15 @@
+/* OWNER: styles/stages-chrome.css */
+/* Stages */
+.stage {
+  min-height: 100dvh;
+  position: relative;
+  padding: 0 var(--pad) var(--pad);
+  animation: stageIn 0.55s var(--ease);
+}
+
+.stage[hidden] { display: none !important; }
+
+@keyframes stageIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: none; }
+}

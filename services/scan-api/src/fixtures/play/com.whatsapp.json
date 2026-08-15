@@ -1,0 +1,9 @@
+{
+  "packageId": "com.whatsapp",
+  "notes": "Gold-set fixture expectation for Play adapter happy path",
+  "expect": {
+    "ok": true,
+    "fields": ["name", "description", "bundleId", "icon"],
+    "minScreenshots": 1
+  }
+}

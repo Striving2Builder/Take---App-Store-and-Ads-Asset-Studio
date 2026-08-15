@@ -1,0 +1,24 @@
+/* OWNER: styles/tokens.css */
+:root {
+  --ink: #0c0d10;
+  --ink-2: #15171d;
+  --ink-3: #1e2129;
+  --paper: #f3f1ec;
+  --paper-dim: #c8c4bb;
+  --signal: #ff4d1a;
+  --signal-soft: rgba(255, 77, 26, 0.18);
+  --project-accent: #ff4d1a;
+  --cyan: #3de0ff;
+  --cyan-dim: rgba(61, 224, 255, 0.35);
+  --good: #6dffb0;
+  --warn: #ffc857;
+  --line: rgba(243, 241, 236, 0.12);
+  --line-strong: rgba(243, 241, 236, 0.28);
+  --shadow: 0 24px 80px rgba(0, 0, 0, 0.55);
+  --radius: 2px;
+  --font-display: "Syne", system-ui, sans-serif;
+  --font-body: "Newsreader", Georgia, serif;
+  --font-mono: "Fragment Mono", ui-monospace, monospace;
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --pad: clamp(1rem, 3vw, 2.5rem);
+}

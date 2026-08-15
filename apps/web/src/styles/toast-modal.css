@@ -1,0 +1,58 @@
+/* OWNER: styles/toast-modal.css */
+/* Toast + Modal */
+.toast {
+  position: fixed;
+  bottom: 1.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-weight: 700;
+  padding: 0.85rem 1.35rem;
+  box-shadow: var(--shadow);
+  animation: toastIn 0.35s var(--ease);
+}
+
+@keyframes toastIn {
+  from { opacity: 0; transform: translate(-50%, 12px); }
+  to { opacity: 1; transform: translate(-50%, 0); }
+}
+
+.modal {
+  border: 1px solid var(--line-strong);
+  background: var(--ink-2);
+  color: var(--paper);
+  padding: 1.5rem;
+  max-width: 400px;
+  width: calc(100% - 2rem);
+}
+
+.modal::backdrop { background: rgba(0, 0, 0, 0.72); }
+
+.modal h3 {
+  font-family: var(--font-display);
+  font-weight: 800;
+  margin: 0 0 1rem;
+}
+
+.modal label { margin-bottom: 0.85rem; }
+.modal label.check {
+  flex-direction: row;
+  align-items: center;
+  gap: 0.5rem;
+  text-transform: none;
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  letter-spacing: normal;
+  color: var(--paper);
+}
+
+.modal-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+/* Responsive */

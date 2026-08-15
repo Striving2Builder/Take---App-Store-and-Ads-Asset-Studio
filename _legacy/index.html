@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TAKE — App Store Asset Studio</title>
+  <meta name="description" content="Scan your app. Sequence the story. Ship store-ready visuals and copy for iOS and Android." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fragment+Mono:wght@400;500&family=Syne:wght@500;600;700;800&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;1,6..72,400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/take.css" />
+</head>
+<body>
+  <div class="noise" aria-hidden="true"></div>
+  <div class="scanline" aria-hidden="true"></div>
+
+  <!-- ── LANDING ── -->
+  <section id="stage-landing" class="stage stage-landing is-active" data-stage="landing">
+    <header class="topbar">
+      <div class="brand-mark" aria-label="TAKE">
+        <span class="brand-glyph">T</span>
+        <span class="brand-word">TAKE</span>
+      </div>
+      <nav class="top-nav">
+        <button type="button" class="nav-link" data-jump="library">Library</button>
+        <button type="button" class="nav-link" data-jump="modes">Modes</button>
+        <button type="button" class="nav-link ghost" data-jump="intake">Open studio</button>
+      </nav>
+    </header>
+
+    <div class="landing-grid">
+      <div class="landing-copy">
+        <p class="eyebrow mono">APP STORE · PLAY · SOCIAL · ADS</p>
+        <h1 class="hero-brand">TAKE</h1>
+        <p class="hero-line">Paste a link. Get a store story.</p>
+        <p class="hero-sub">Scan · Sequence · Ship — visuals, metadata, and motion that feel directed, not templated.</p>
+        <div class="hero-cta">
+          <button type="button" class="btn primary" data-jump="intake">
+            <span>Start a take</span>
+            <span class="btn-arrow" aria-hidden="true">→</span>
+          </button>
+          <button type="button" class="btn ghost" data-jump="modes">See modes</button>
+        </div>
+      </div>
+
+      <div class="landing-stage" aria-hidden="true">
+        <div class="device-stack">
+          <div class="frame-shell frame-a">
+            <div class="frame-chrome mono">01 · HOOK</div>
+            <div class="frame-screen">
+              <div class="fake-ui">
+                <div class="fake-bar"></div>
+                <div class="fake-card pulse"></div>
+                <div class="fake-row"></div>
+                <div class="fake-row short"></div>
+              </div>
+            </div>
+            <div class="crop tl"></div><div class="crop tr"></div>
+            <div class="crop bl"></div><div class="crop br"></div>
+          </div>
+          <div class="frame-shell frame-b">
+            <div class="frame-chrome mono">02 · PROOF</div>
+            <div class="frame-screen alt">
+              <div class="fake-ui">
+                <div class="fake-circle"></div>
+                <div class="fake-row"></div>
+                <div class="fake-row short"></div>
+              </div>
+            </div>
+          </div>
+          <div class="frame-shell frame-c">
+            <div class="frame-chrome mono">03 · CLOSE</div>
+            <div class="frame-screen warm">
+              <div class="fake-ui">
+                <div class="fake-cta"></div>
+                <div class="fake-row short"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="perforation" aria-hidden="true"></div>
+      </div>
+    </div>
+
+    <footer class="landing-foot mono">
+      <span>LOCAL-FIRST</span>
+      <span class="dot">·</span>
+      <span>NO CLOUD SYNC</span>
+      <span class="dot">·</span>
+      <span>PLATFORM-COMPLIANT EXPORTS</span>
+    </footer>
+  </section>
+
+  <!-- ── MODES OVERVIEW ── -->
+  <section id="stage-modes" class="stage stage-modes" data-stage="modes" hidden>
+    <header class="topbar compact">
+      <button type="button" class="back-link" data-jump="landing">← TAKE</button>
+      <span class="stage-label mono">CREATION MODES</span>
+      <button type="button" class="btn small primary" data-jump="intake">Begin</button>
+    </header>
+    <div class="modes-rail">
+      <article class="mode-panel" data-mode-pick="wizard">
+        <span class="mode-num mono">01</span>
+        <h2>Wizard</h2>
+        <p>Scan a URL or upload. TAKE infers who, what, where, when, how — then builds linked 5–12 frame story sets.</p>
+        <span class="mode-tag">Magical · Fast · Intelligent</span>
+      </article>
+      <article class="mode-panel" data-mode-pick="template">
+        <span class="mode-num mono">02</span>
+        <h2>Template</h2>
+        <p>Drop assets into living layouts. Edit type, spacing, shells, and style. Save forever to your library.</p>
+        <span class="mode-tag">Drag · Edit · Reuse</span>
+      </article>
+      <article class="mode-panel" data-mode-pick="replicator">
+        <span class="mode-num mono">03</span>
+        <h2>Replicator</h2>
+        <p>Trace structure from any ad or listing — wireframe only. Swap in your UI, copy, and brand. Never clone protected art.</p>
+        <span class="mode-tag">Structure · Not theft</span>
+      </article>
+      <article class="mode-panel" data-mode-pick="slideshow">
+        <span class="mode-num mono">04</span>
+        <h2>Slideshow</h2>
+        <p>Sequence device frames into short promo motion. Export for TikTok, Reels, Shorts, and store previews.</p>
+        <span class="mode-tag">Motion · Mockups · Cut</span>
+      </article>
+    </div>
+  </section>
+
+  <!-- ── INTAKE ── -->
+  <section id="stage-intake" class="stage stage-intake" data-stage="intake" hidden>
+    <header class="topbar compact">
+      <button type="button" class="back-link" data-jump="landing">← TAKE</button>
+      <div class="progress-pips" aria-label="Progress">
+        <span class="pip on" data-pip="1">Scan</span>
+        <span class="pip" data-pip="2">Generate</span>
+        <span class="pip" data-pip="3">Edit</span>
+        <span class="pip" data-pip="4">Export</span>
+      </div>
+      <span class="stage-label mono">INTAKE</span>
+    </header>
+
+    <div class="intake-layout">
+      <div class="intake-primary">
+        <label class="field-label" for="app-url">App marketing URL</label>
+        <div class="url-shell">
+          <span class="url-prefix mono">https://</span>
+          <input id="app-url" type="url" placeholder="apps.apple.com/…  or  play.google.com/…  or your site" autocomplete="off" />
+          <button type="button" class="btn primary" id="btn-scan">Scan</button>
+        </div>
+        <p class="hint" id="scan-hint">Paste App Store, Google Play, marketing page, or competitor URL. TAKE reads positioning — not private data.</p>
+
+        <div class="upload-strip" id="upload-strip">
+          <label class="upload-tile">
+            <input type="file" accept="image/*" multiple hidden id="upload-shots" />
+            <span class="upload-icon">▣</span>
+            <span>Screenshots</span>
+          </label>
+          <label class="upload-tile">
+            <input type="file" accept="image/*" hidden id="upload-icon" />
+            <span class="upload-icon">◉</span>
+            <span>App icon</span>
+          </label>
+          <label class="upload-tile">
+            <input type="file" accept="image/*" multiple hidden id="upload-brand" />
+            <span class="upload-icon">◈</span>
+            <span>Brand kit</span>
+          </label>
+          <label class="upload-tile">
+            <input type="file" accept="image/*" multiple hidden id="upload-comp" />
+            <span class="upload-icon">◇</span>
+            <span>Competitor refs</span>
+          </label>
+        </div>
+        <div class="upload-preview" id="upload-preview" hidden></div>
+
+        <details class="advanced" id="advanced-panel">
+          <summary>
+            <span>Advanced guidance</span>
+            <span class="mono subtle">OPTIONAL · SHAPES THE NARRATIVE</span>
+          </summary>
+          <div class="advanced-grid">
+            <label>Positioning<textarea id="f-positioning" rows="2" placeholder="e.g. The calm counter to noisy habit trackers"></textarea></label>
+            <label>Desired narrative<textarea id="f-narrative" rows="2" placeholder="e.g. Morning ritual → clarity → streak pride"></textarea></label>
+            <label>UX direction<textarea id="f-ux" rows="2" placeholder="e.g. Soft surfaces, large type, one action per screen"></textarea></label>
+            <label>Tone of voice<textarea id="f-tone" rows="2" placeholder="e.g. Direct, warm, zero hype"></textarea></label>
+            <label>Creative references<textarea id="f-refs" rows="2" placeholder="e.g. Film stills, editorial layouts — structure only"></textarea></label>
+            <label>Do not use<textarea id="f-donot" rows="2" placeholder="e.g. No neon purple, no stock handshake photos, no competitor logos"></textarea></label>
+          </div>
+        </details>
+      </div>
+
+      <aside class="intake-side">
+        <fieldset class="control-block">
+          <legend class="mono">PLATFORM</legend>
+          <div class="seg" role="radiogroup" aria-label="Platform">
+            <label class="seg-opt"><input type="radio" name="platform" value="ios" checked /><span>iOS</span></label>
+            <label class="seg-opt"><input type="radio" name="platform" value="android" /><span>Android</span></label>
+            <label class="seg-opt"><input type="radio" name="platform" value="both" /><span>Both</span></label>
+          </div>
+        </fieldset>
+
+        <fieldset class="control-block">
+          <legend class="mono">OUTPUT SETS</legend>
+          <div class="qty" id="qty-control">
+            <button type="button" data-qty="-1" aria-label="Fewer sets">−</button>
+            <output id="qty-value">3</output>
+            <button type="button" data-qty="1" aria-label="More sets">+</button>
+          </div>
+          <p class="hint tight">Each set is a full story sequence (5–12 frames) plus store copy.</p>
+        </fieldset>
+
+        <fieldset class="control-block">
+          <legend class="mono">MODE</legend>
+          <div class="seg wrap" role="radiogroup" aria-label="Creation mode">
+            <label class="seg-opt"><input type="radio" name="mode" value="wizard" checked /><span>Wizard</span></label>
+            <label class="seg-opt"><input type="radio" name="mode" value="template" /><span>Template</span></label>
+            <label class="seg-opt"><input type="radio" name="mode" value="replicator" /><span>Replicator</span></label>
+            <label class="seg-opt"><input type="radio" name="mode" value="slideshow" /><span>Slideshow</span></label>
+          </div>
+        </fieldset>
+
+        <fieldset class="control-block optional-fields">
+          <legend class="mono">OPTIONAL</legend>
+          <label>App name<input id="f-name" type="text" placeholder="Displayed brand name" /></label>
+          <label>Category<input id="f-category" type="text" placeholder="Health & Fitness" /></label>
+          <label>Audience<input id="f-audience" type="text" placeholder="Busy professionals 25–40" /></label>
+          <label>Locale / language<input id="f-locale" type="text" placeholder="en-US" value="en-US" /></label>
+          <label>Competitor URLs<input id="f-competitors" type="text" placeholder="Comma-separated links" /></label>
+          <label>Primary conversion goal
+            <select id="f-goal">
+              <option value="install">Install</option>
+              <option value="trial">Start free trial</option>
+              <option value="subscribe">Subscribe</option>
+              <option value="engage">Re-engage existing users</option>
+            </select>
+          </label>
+          <label>Visual style
+            <select id="f-style">
+              <option value="realistic">Realistic</option>
+              <option value="premium">Premium</option>
+              <option value="minimal">Minimal</option>
+              <option value="playful">Playful</option>
+              <option value="bold">Bold</option>
+            </select>
+          </label>
+        </fieldset>
+
+        <div class="missing-box" id="missing-box" hidden>
+          <p class="mono">MISSING FOR BEST RESULTS</p>
+          <ul id="missing-list"></ul>
+        </div>
+
+        <button type="button" class="btn primary block" id="btn-generate">
+          Generate asset sets
+          <span class="btn-arrow">→</span>
+        </button>
+      </aside>
+    </div>
+  </section>
+
+  <!-- ── GENERATE (scan theater) ── -->
+  <section id="stage-generate" class="stage stage-generate" data-stage="generate" hidden>
+    <header class="topbar compact">
+      <button type="button" class="back-link" data-jump="intake">← Intake</button>
+      <div class="progress-pips">
+        <span class="pip done" data-pip="1">Scan</span>
+        <span class="pip on" data-pip="2">Generate</span>
+        <span class="pip" data-pip="3">Edit</span>
+        <span class="pip" data-pip="4">Export</span>
+      </div>
+      <span class="stage-label mono">SCANNING</span>
+    </header>
+    <div class="generate-theater">
+      <div class="radar" aria-hidden="true">
+        <div class="radar-ring"></div>
+        <div class="radar-ring delay"></div>
+        <div class="radar-beam"></div>
+      </div>
+      <div class="infer-feed" id="infer-feed" aria-live="polite">
+        <p class="mono feed-title">INFERENCE</p>
+      </div>
+      <p class="generate-status" id="generate-status">Reading signal…</p>
+    </div>
+  </section>
+
+  <!-- ── REVIEW SETS ── -->
+  <section id="stage-review" class="stage stage-review" data-stage="review" hidden>
+    <header class="topbar compact">
+      <button type="button" class="back-link" data-jump="intake">← Intake</button>
+      <div class="progress-pips">
+        <span class="pip done">Scan</span>
+        <span class="pip done">Generate</span>
+        <span class="pip on">Edit</span>
+        <span class="pip">Export</span>
+      </div>
+      <div class="top-actions">
+        <button type="button" class="btn ghost small" id="btn-regen-all">Refresh all sets</button>
+        <button type="button" class="btn primary small" id="btn-to-edit">Open selected →</button>
+      </div>
+    </header>
+
+    <div class="review-head">
+      <div>
+        <h2 class="section-title">Choose a concept</h2>
+        <p class="section-sub" id="review-sub">Three directed takes. Pick the story that fits.</p>
+      </div>
+      <div class="infer-chips" id="infer-chips"></div>
+    </div>
+
+    <div class="set-rail" id="set-rail" role="listbox" aria-label="Generated sets"></div>
+  </section>
+
+  <!-- ── EDITOR ── -->
+  <section id="stage-edit" class="stage stage-edit" data-stage="edit" hidden>
+    <header class="topbar compact">
+      <button type="button" class="back-link" data-jump="review">← Concepts</button>
+      <div class="progress-pips">
+        <span class="pip done">Scan</span>
+        <span class="pip done">Generate</span>
+        <span class="pip on">Edit</span>
+        <span class="pip">Export</span>
+      </div>
+      <div class="top-actions">
+        <button type="button" class="btn ghost small" id="btn-save-template">Save as template</button>
+        <button type="button" class="btn primary small" id="btn-to-export">Export →</button>
+      </div>
+    </header>
+
+    <div class="edit-layout">
+      <aside class="edit-nav">
+        <p class="mono nav-head">SEQUENCE</p>
+        <ol class="frame-list" id="frame-list"></ol>
+        <button type="button" class="btn ghost small block" id="btn-add-frame">+ Add frame</button>
+        <hr class="divider" />
+        <p class="mono nav-head">METADATA</p>
+        <button type="button" class="meta-link is-active" data-panel="copy">Store copy</button>
+        <button type="button" class="meta-link" data-panel="layers">Layers</button>
+        <button type="button" class="meta-link" data-panel="style">Style & palette</button>
+      </aside>
+
+      <div class="edit-canvas-wrap">
+        <div class="canvas-toolbar">
+          <span class="mono" id="canvas-label">FRAME 01 · HOOK</span>
+          <div class="tool-group">
+            <button type="button" class="icon-btn" id="btn-regen-frame" title="Regenerate frame">↻</button>
+            <button type="button" class="icon-btn" id="btn-remove-frame" title="Remove frame">✕</button>
+          </div>
+        </div>
+        <div class="edit-canvas" id="edit-canvas">
+          <div class="phone-mock" id="phone-mock">
+            <div class="phone-notch"></div>
+            <div class="phone-screen" id="phone-screen">
+              <div class="shot-content" id="shot-content">
+                <p class="shot-kicker" contenteditable="true" id="shot-kicker">Meet your morning edge</p>
+                <h3 class="shot-headline" contenteditable="true" id="shot-headline">Clarity before the scroll</h3>
+                <div class="shot-ui-block"></div>
+                <p class="shot-caption" contenteditable="true" id="shot-caption">One calm ritual. Zero noise.</p>
+              </div>
+            </div>
+          </div>
+          <div class="crop tl"></div><div class="crop tr"></div>
+          <div class="crop bl"></div><div class="crop br"></div>
+        </div>
+      </div>
+
+      <aside class="edit-inspector" id="edit-inspector">
+        <div class="panel is-active" data-panel-view="copy">
+          <h3 class="inspector-title">Store metadata</h3>
+          <p class="hint tight">Character-aware. Edit freely — validation updates live.</p>
+          <div class="meta-fields" id="meta-fields"></div>
+        </div>
+        <div class="panel" data-panel-view="layers" hidden>
+          <h3 class="inspector-title">Layers</h3>
+          <ul class="layer-list" id="layer-list">
+            <li><label><input type="checkbox" checked data-layer="bg" /> Background</label></li>
+            <li><label><input type="checkbox" checked data-layer="shell" /> Device shell</label></li>
+            <li><label><input type="checkbox" checked data-layer="ui" /> App UI</label></li>
+            <li><label><input type="checkbox" checked data-layer="type" /> Headline / caption</label></li>
+            <li><label><input type="checkbox" checked data-layer="badge" /> Badge / overlay</label></li>
+          </ul>
+          <button type="button" class="btn ghost small block" id="btn-add-copy">+ Add copy block</button>
+          <button type="button" class="btn ghost small block" id="btn-add-visual">+ Add visual element</button>
+        </div>
+        <div class="panel" data-panel-view="style" hidden>
+          <h3 class="inspector-title">Style & palette</h3>
+          <div class="palette" id="palette"></div>
+          <p class="hint tight">Extracted from your references. Click a swatch to lock brand color.</p>
+          <label class="block-label">Style family
+            <select id="edit-style">
+              <option value="realistic">Realistic</option>
+              <option value="premium">Premium</option>
+              <option value="minimal">Minimal</option>
+              <option value="playful">Playful</option>
+              <option value="bold">Bold</option>
+            </select>
+          </label>
+          <button type="button" class="btn ghost small block" id="btn-refresh-variant">Refresh structural variant</button>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <!-- ── EXPORT ── -->
+  <section id="stage-export" class="stage stage-export" data-stage="export" hidden>
+    <header class="topbar compact">
+      <button type="button" class="back-link" data-jump="edit">← Editor</button>
+      <div class="progress-pips">
+        <span class="pip done">Scan</span>
+        <span class="pip done">Generate</span>
+        <span class="pip done">Edit</span>
+        <span class="pip on">Export</span>
+      </div>
+      <span class="stage-label mono">EXPORT</span>
+    </header>
+
+    <div class="export-layout">
+      <div class="export-main">
+        <h2 class="section-title">Ship the take</h2>
+        <p class="section-sub">Production-ready files with platform labels, sizes, and filenames. Bundle stays on this device.</p>
+
+        <div class="export-presets" id="export-presets">
+          <label class="preset"><input type="checkbox" checked value="ios-screens" /><span>iOS App Store screenshots</span><em class="mono">1290×2796</em></label>
+          <label class="preset"><input type="checkbox" checked value="ios-feature" /><span>iOS feature graphic</span><em class="mono">1024×1024</em></label>
+          <label class="preset"><input type="checkbox" checked value="play-screens" /><span>Google Play screenshots</span><em class="mono">1080×1920</em></label>
+          <label class="preset"><input type="checkbox" value="play-feature" /><span>Play feature graphic</span><em class="mono">1024×500</em></label>
+          <label class="preset"><input type="checkbox" value="ig" /><span>Instagram feed / stories</span><em class="mono">1080×1350 · 1080×1920</em></label>
+          <label class="preset"><input type="checkbox" value="tiktok" /><span>TikTok / Reels / Shorts</span><em class="mono">1080×1920</em></label>
+          <label class="preset"><input type="checkbox" value="yt" /><span>YouTube thumb</span><em class="mono">1280×720</em></label>
+          <label class="preset"><input type="checkbox" value="pin" /><span>Pinterest</span><em class="mono">1000×1500</em></label>
+          <label class="preset"><input type="checkbox" value="iab" /><span>IAB display units</span><em class="mono">300×250 · 728×90 · 160×600</em></label>
+          <label class="preset"><input type="checkbox" value="slideshow" /><span>Slideshow / promo video</span><em class="mono">MP4 · 15s</em></label>
+          <label class="preset"><input type="checkbox" value="layered" /><span>Layered editable pack</span><em class="mono">JSON + PNG layers</em></label>
+          <label class="preset"><input type="checkbox" value="bundle" /><span>Full project bundle</span><em class="mono">Local ZIP manifest</em></label>
+        </div>
+
+        <div class="export-actions">
+          <button type="button" class="btn primary" id="btn-export">Download selected</button>
+          <button type="button" class="btn ghost" id="btn-export-library">Export template library</button>
+        </div>
+        <div class="export-log mono" id="export-log" hidden></div>
+      </div>
+
+      <aside class="export-side">
+        <div class="compliance-card">
+          <p class="mono">COMPLIANCE</p>
+          <ul>
+            <li>Structural tracing only — no protected brand copy</li>
+            <li>Store dimension & count validation on</li>
+            <li>Locale pack: <span id="export-locale">en-US</span></li>
+            <li>Storage: local-first · no cloud sync</li>
+          </ul>
+        </div>
+        <div class="validation-card" id="validation-card">
+          <p class="mono">VALIDATION</p>
+          <ul id="validation-list"></ul>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <!-- ── LIBRARY ── -->
+  <section id="stage-library" class="stage stage-library" data-stage="library" hidden>
+    <header class="topbar compact">
+      <button type="button" class="back-link" data-jump="landing">← TAKE</button>
+      <span class="stage-label mono">TEMPLATE LIBRARY</span>
+      <button type="button" class="btn small primary" data-jump="intake">New take</button>
+    </header>
+    <div class="library-layout">
+      <aside class="library-filters">
+        <p class="mono">FILTER</p>
+        <button type="button" class="filter on" data-filter="all">All</button>
+        <button type="button" class="filter" data-filter="ios">iOS</button>
+        <button type="button" class="filter" data-filter="android">Android</button>
+        <button type="button" class="filter" data-filter="social">Social</button>
+        <button type="button" class="filter" data-filter="ads">Ads</button>
+        <button type="button" class="filter" data-filter="mine">My templates</button>
+        <hr class="divider" />
+        <p class="mono">DEVICE SHELLS</p>
+        <p class="hint tight">iPhone 16 Pro · iPad Pro · Pixel 9 · Galaxy Tab — maintainable sync layer for new releases.</p>
+      </aside>
+      <div class="library-grid" id="library-grid"></div>
+    </div>
+  </section>
+
+  <!-- Toast -->
+  <div class="toast" id="toast" hidden role="status"></div>
+
+  <!-- Save template modal -->
+  <dialog id="template-modal" class="modal">
+    <form method="dialog" id="template-form">
+      <h3>Save to library</h3>
+      <label>Template name<input id="tpl-name" type="text" required placeholder="Morning Ritual · Bold" /></label>
+      <label>Tags<input id="tpl-tags" type="text" placeholder="ios, premium, fitness" /></label>
+      <label class="check"><input type="checkbox" id="tpl-lock-brand" checked /> Lock brand elements</label>
+      <div class="modal-actions">
+        <button type="submit" class="btn primary" value="save">Save template</button>
+        <button type="button" class="btn ghost" id="tpl-cancel">Cancel</button>
+      </div>
+    </form>
+  </dialog>
+
+  <script src="js/take.js"></script>
+</body>
+</html>

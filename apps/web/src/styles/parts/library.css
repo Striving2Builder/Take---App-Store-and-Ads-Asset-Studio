@@ -1,0 +1,109 @@
+/* ── LIBRARY ── */
+.library-layout {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  gap: 1.5rem;
+  padding-bottom: 3rem;
+}
+
+.library-filters {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  position: sticky;
+  top: 4.5rem;
+  height: fit-content;
+}
+
+.filter {
+  text-align: left;
+  padding: 0.5rem 0.65rem;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--paper-dim);
+  border: 1px solid transparent;
+}
+.filter.on,
+.filter:hover {
+  color: var(--paper);
+  border-color: var(--line-strong);
+  background: var(--ink-2);
+}
+.filter.on { border-color: var(--signal); color: var(--signal); }
+
+.library-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1rem;
+}
+
+.tpl-card {
+  border: 1px solid var(--line);
+  background: var(--ink-2);
+  overflow: hidden;
+  text-align: left;
+  color: inherit;
+  width: 100%;
+  cursor: pointer;
+  transition: border-color 0.2s, transform 0.2s;
+}
+
+.tpl-card:hover {
+  border-color: var(--signal);
+  transform: translateY(-2px);
+}
+
+.tpl-preview {
+  aspect-ratio: 4/5;
+  background:
+    linear-gradient(145deg, rgba(255,77,26,0.2), transparent 50%),
+    var(--ink);
+  position: relative;
+  border-bottom: 1px solid var(--line);
+}
+
+.tpl-preview .tpl-mark {
+  position: absolute;
+  left: 10px;
+  bottom: 10px;
+  font-family: var(--font-mono);
+  font-size: 0.55rem;
+  letter-spacing: 0.1em;
+  color: var(--cyan);
+}
+
+.tpl-body { padding: 0.85rem; }
+
+.tpl-body h3 {
+  margin: 0 0 0.35rem;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.tpl-meta {
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--paper-dim);
+}
+
+.tpl-actions {
+  display: flex;
+  gap: 0.35rem;
+  margin-top: 0.65rem;
+}
+
+.tpl-actions button {
+  flex: 1;
+  padding: 0.4rem;
+  border: 1px solid var(--line);
+  font-family: var(--font-mono);
+  font-size: 0.55rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--paper-dim);
+}
+.tpl-actions button:hover { color: var(--signal); border-color: var(--signal); }

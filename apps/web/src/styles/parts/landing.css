@@ -1,0 +1,188 @@
+/* ── LANDING ── */
+.stage-landing {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+  background:
+    radial-gradient(ellipse 80% 50% at 75% 40%, rgba(255, 77, 26, 0.12), transparent 55%),
+    radial-gradient(ellipse 40% 40% at 10% 80%, rgba(61, 224, 255, 0.06), transparent 50%),
+    var(--ink);
+}
+
+.landing-grid {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 1.05fr;
+  gap: clamp(1.5rem, 4vw, 4rem);
+  align-items: center;
+  padding: 1rem 0 2rem;
+}
+
+.eyebrow {
+  color: var(--cyan);
+  margin: 0 0 1rem;
+}
+
+.hero-brand {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(4.5rem, 14vw, 9.5rem);
+  line-height: 0.85;
+  letter-spacing: -0.04em;
+  background: linear-gradient(135deg, var(--paper) 40%, var(--signal) 120%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: brandPulse 6s ease-in-out infinite;
+}
+
+@keyframes brandPulse {
+  0%, 100% { filter: drop-shadow(0 0 0 transparent); }
+  50% { filter: drop-shadow(0 0 24px rgba(255, 77, 26, 0.25)); }
+}
+
+.hero-line {
+  margin: 1.25rem 0 0.5rem;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(1.35rem, 2.8vw, 2rem);
+  letter-spacing: -0.02em;
+  max-width: 18ch;
+}
+
+.hero-sub {
+  margin: 0 0 1.75rem;
+  color: var(--paper-dim);
+  max-width: 36ch;
+  font-size: 1.05rem;
+}
+
+.hero-cta { display: flex; flex-wrap: wrap; gap: 0.75rem; }
+
+.landing-stage {
+  position: relative;
+  min-height: 420px;
+  display: grid;
+  place-items: center;
+}
+
+.device-stack {
+  position: relative;
+  width: min(100%, 480px);
+  height: 460px;
+}
+
+.frame-shell {
+  position: absolute;
+  width: 200px;
+  background: var(--ink-2);
+  border: 1px solid var(--line-strong);
+  box-shadow: var(--shadow);
+  padding: 0.5rem;
+}
+
+.frame-a {
+  left: 8%;
+  top: 8%;
+  z-index: 3;
+  animation: floatA 7s var(--ease) infinite;
+}
+.frame-b {
+  left: 38%;
+  top: 22%;
+  z-index: 2;
+  width: 180px;
+  animation: floatB 8s var(--ease) infinite;
+  opacity: 0.92;
+}
+.frame-c {
+  right: 4%;
+  top: 40%;
+  z-index: 1;
+  width: 160px;
+  animation: floatC 6.5s var(--ease) infinite;
+  opacity: 0.85;
+}
+
+@keyframes floatA {
+  0%, 100% { transform: translateY(0) rotate(-2deg); }
+  50% { transform: translateY(-14px) rotate(-1deg); }
+}
+@keyframes floatB {
+  0%, 100% { transform: translateY(0) rotate(3deg); }
+  50% { transform: translateY(10px) rotate(4deg); }
+}
+@keyframes floatC {
+  0%, 100% { transform: translateY(0) rotate(-4deg); }
+  50% { transform: translateY(-8px) rotate(-3deg); }
+}
+
+.frame-chrome {
+  color: var(--cyan);
+  margin-bottom: 0.35rem;
+  opacity: 0.8;
+}
+
+.frame-screen {
+  aspect-ratio: 9 / 16;
+  background: linear-gradient(160deg, #1a1d28, #0e1016);
+  border: 1px solid var(--line);
+  overflow: hidden;
+  position: relative;
+}
+.frame-screen.alt { background: linear-gradient(160deg, #221810, #120e0c); }
+.frame-screen.warm { background: linear-gradient(160deg, #1a2218, #0c120e); }
+
+.fake-ui { padding: 12% 10%; display: flex; flex-direction: column; gap: 8%; height: 100%; }
+.fake-bar { height: 6%; width: 40%; background: var(--signal); opacity: 0.9; }
+.fake-card {
+  flex: 1;
+  background: linear-gradient(135deg, rgba(255,77,26,0.25), rgba(61,224,255,0.12));
+  border: 1px solid var(--line-strong);
+}
+.fake-card.pulse { animation: pulseCard 2.8s ease-in-out infinite; }
+@keyframes pulseCard {
+  0%, 100% { opacity: 0.7; }
+  50% { opacity: 1; }
+}
+.fake-row { height: 5%; background: var(--paper); opacity: 0.2; width: 80%; }
+.fake-row.short { width: 50%; }
+.fake-circle {
+  width: 36%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  border: 2px solid var(--cyan);
+  margin: 10% auto;
+  box-shadow: 0 0 24px var(--cyan-dim);
+}
+.fake-cta {
+  margin-top: auto;
+  height: 12%;
+  background: var(--signal);
+  clip-path: polygon(0 0, 100% 0, 100% 70%, 92% 100%, 0 100%);
+}
+
+.perforation {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -8px;
+  height: 18px;
+  background:
+    radial-gradient(circle at 10px 50%, var(--ink) 5px, transparent 6px) 0 0 / 24px 18px,
+    linear-gradient(var(--ink-3), var(--ink-3));
+  opacity: 0.7;
+  mask: linear-gradient(90deg, transparent, #000 20%, #000 80%, transparent);
+}
+
+.landing-foot {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  color: var(--paper-dim);
+  opacity: 0.55;
+  padding-bottom: 0.5rem;
+}
+.landing-foot .dot { opacity: 0.4; }
+

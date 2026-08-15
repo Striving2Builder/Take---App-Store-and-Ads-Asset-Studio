@@ -1,0 +1,107 @@
+/* OWNER: styles/shell.css */
+/* Topbar */
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.25rem 0;
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: linear-gradient(to bottom, var(--ink) 60%, transparent);
+}
+
+.topbar.compact { padding-top: 1rem; }
+
+.brand-mark {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.brand-glyph {
+  width: 2rem;
+  height: 2rem;
+  display: grid;
+  place-items: center;
+  background: var(--signal);
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.1rem;
+  clip-path: polygon(0 0, 100% 0, 100% 70%, 70% 100%, 0 100%);
+}
+
+.brand-word {
+  font-family: var(--font-display);
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  font-size: 0.95rem;
+}
+
+.top-nav { display: flex; gap: 0.35rem; align-items: center; }
+
+.nav-link {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 0.55rem 0.85rem;
+  color: var(--paper-dim);
+  border: 1px solid transparent;
+  transition: color 0.2s, border-color 0.2s, background 0.2s;
+}
+
+.nav-link:hover { color: var(--paper); }
+.nav-link.ghost {
+  border-color: var(--line-strong);
+  color: var(--paper);
+}
+.nav-link.ghost:hover { border-color: var(--signal); color: var(--signal); }
+
+.back-link {
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--paper-dim);
+  transition: color 0.2s;
+}
+.back-link:hover { color: var(--signal); }
+
+.stage-label { color: var(--cyan); opacity: 0.85; }
+
+.top-actions { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+
+.progress-pips {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.pip {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--paper-dim);
+  opacity: 0.45;
+  position: relative;
+  padding-left: 0.9rem;
+}
+
+.pip::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+  transform: translateY(-50%);
+}
+
+.pip.on { color: var(--signal); opacity: 1; }
+.pip.done { color: var(--good); opacity: 0.9; }

@@ -1,0 +1,24 @@
+{
+  "name": "take",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*",
+    "services/*"
+  ],
+  "scripts": {
+    "dev": "concurrently -n web,scan -c cyan,magenta \"npm run dev -w @take/web\" \"npm run dev -w @take/scan-api\"",
+    "dev:web": "npm run dev -w @take/web",
+    "dev:scan": "npm run dev -w @take/scan-api",
+    "build": "npm run build -w @take/web",
+    "preview": "npm run preview -w @take/web",
+    "test:merge": "tsx packages/scan-client/src/merge-pack.test.ts",
+    "test:gold-client": "tsx packages/scan-client/src/gold-client.test.ts",
+    "test:smoke": "tsx scripts/scan-smoke.ts",
+    "test:gold": "npm run test:merge && npm run test:gold-client && npm run test:smoke"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1",
+    "tsx": "^4.20.5"
+  }
+}

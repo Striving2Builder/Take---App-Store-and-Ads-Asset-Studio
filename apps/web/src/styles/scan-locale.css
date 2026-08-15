@@ -1,0 +1,27 @@
+/* OWNER: styles — scan locale switcher */
+.scan-locale-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.55rem;
+  margin-bottom: 0.75rem;
+}
+
+.scan-locale-label {
+  color: var(--cyan);
+}
+
+#scan-locale {
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  color: var(--paper);
+  background: var(--ink-2);
+  border: 1px solid var(--line-strong);
+  padding: 0.45rem 0.65rem;
+  min-width: 200px;
+}
+
+.scan-locale-hint {
+  margin: 0;
+  opacity: 0.7;
+}

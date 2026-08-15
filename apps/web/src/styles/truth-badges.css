@@ -1,0 +1,118 @@
+/* OWNER: styles/truth-badges.css — Real / Partial / Fake honesty markers */
+
+.truth-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-size: 0.55rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-weight: 500;
+  padding: 0.2rem 0.4rem;
+  border: 1px solid currentColor;
+  line-height: 1;
+  vertical-align: middle;
+  margin-left: 0.4rem;
+  white-space: nowrap;
+  cursor: help;
+  user-select: none;
+}
+
+.truth-real {
+  color: var(--good);
+  background: rgba(109, 255, 176, 0.08);
+}
+
+.truth-partial {
+  color: var(--warn);
+  background: rgba(255, 200, 87, 0.1);
+}
+
+.truth-fake {
+  color: var(--signal);
+  background: var(--signal-soft);
+}
+
+.truth-corner {
+  position: absolute;
+  top: 0.45rem;
+  right: 0.45rem;
+  margin: 0;
+  z-index: 5;
+}
+
+.truth-legend {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 90;
+  background: rgba(12, 13, 16, 0.94);
+  border-top: 1px solid var(--line-strong);
+  backdrop-filter: blur(10px);
+  padding: 0.55rem var(--pad);
+}
+
+.truth-legend-inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.45rem 0.65rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.truth-legend-title {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.12em;
+  color: var(--cyan);
+  margin-right: 0.35rem;
+}
+
+.truth-legend-def {
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.04em;
+  color: var(--paper-dim);
+  margin-right: 0.5rem;
+}
+
+.truth-legend .truth-badge {
+  margin-left: 0;
+}
+
+.truth-legend-toggle {
+  margin-left: auto;
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--paper-dim);
+  border: 1px solid var(--line-strong);
+  padding: 0.35rem 0.55rem;
+}
+
+.truth-legend-toggle:hover {
+  color: var(--paper);
+  border-color: var(--paper-dim);
+}
+
+body.truth-hidden .truth-badge:not(.truth-legend .truth-badge) {
+  display: none !important;
+}
+
+/* Keep page content clear of bottom legend */
+body {
+  padding-bottom: 3.25rem;
+}
+
+@media (max-width: 720px) {
+  .truth-legend-def {
+    display: none;
+  }
+  .truth-legend-toggle {
+    margin-left: 0;
+  }
+}

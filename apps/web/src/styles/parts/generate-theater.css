@@ -1,0 +1,94 @@
+/* ── GENERATE THEATER ── */
+.stage-generate {
+  display: flex;
+  flex-direction: column;
+  background:
+    radial-gradient(circle at 50% 45%, rgba(255, 77, 26, 0.1), transparent 45%),
+    var(--ink);
+}
+
+.generate-theater {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  padding: 2rem 0 4rem;
+  position: relative;
+  min-height: 70vh;
+}
+
+.radar {
+  position: relative;
+  width: min(280px, 60vw);
+  aspect-ratio: 1;
+}
+
+.radar-ring {
+  position: absolute;
+  inset: 0;
+  border: 1px solid var(--cyan-dim);
+  border-radius: 50%;
+  animation: ringOut 2.4s var(--ease) infinite;
+}
+.radar-ring.delay { animation-delay: 1.2s; inset: 18%; }
+
+@keyframes ringOut {
+  0% { transform: scale(0.6); opacity: 0.8; }
+  100% { transform: scale(1.15); opacity: 0; }
+}
+
+.radar-beam {
+  position: absolute;
+  inset: 10%;
+  border-radius: 50%;
+  background: conic-gradient(from 0deg, transparent 0deg, var(--signal-soft) 40deg, transparent 80deg);
+  animation: spin 2.2s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.infer-feed {
+  width: min(520px, 92vw);
+  border: 1px solid var(--line-strong);
+  background: rgba(12, 13, 16, 0.85);
+  padding: 1.25rem 1.5rem;
+  min-height: 200px;
+  backdrop-filter: blur(8px);
+}
+
+.feed-title { color: var(--cyan); margin: 0 0 0.85rem; }
+
+.feed-line {
+  margin: 0.4rem 0;
+  font-size: 1.05rem;
+  opacity: 0;
+  animation: feedIn 0.45s var(--ease) forwards;
+  border-left: 2px solid var(--signal);
+  padding-left: 0.75rem;
+}
+
+.feed-line .k {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--signal);
+  display: block;
+  margin-bottom: 0.15rem;
+}
+
+@keyframes feedIn {
+  from { opacity: 0; transform: translateX(-8px); }
+  to { opacity: 1; transform: none; }
+}
+
+.generate-status {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--paper-dim);
+}
+

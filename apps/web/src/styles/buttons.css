@@ -1,0 +1,39 @@
+/* OWNER: styles/buttons.css */
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  padding: 0.85rem 1.35rem;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.92rem;
+  letter-spacing: 0.02em;
+  border: 1px solid transparent;
+  transition: transform 0.2s var(--ease), background 0.2s, color 0.2s, border-color 0.2s;
+}
+
+.btn:active { transform: scale(0.98); }
+.btn.primary { background: var(--signal); color: var(--ink); }
+.btn.primary:hover { background: #ff6a3d; }
+.btn.ghost {
+  border-color: var(--line-strong);
+  color: var(--paper);
+  background: transparent;
+}
+.btn.ghost:hover { border-color: var(--paper); }
+.btn.small { padding: 0.55rem 0.9rem; font-size: 0.8rem; }
+.btn.block { width: 100%; }
+.btn-arrow { transition: transform 0.25s var(--ease); display: inline-block; }
+.btn:hover .btn-arrow { transform: translateX(4px); }
+
+.icon-btn {
+  width: 2rem;
+  height: 2rem;
+  border: 1px solid var(--line-strong);
+  color: var(--paper-dim);
+  font-size: 0.9rem;
+  transition: color 0.2s, border-color 0.2s;
+}
+.icon-btn:hover { color: var(--signal); border-color: var(--signal); }

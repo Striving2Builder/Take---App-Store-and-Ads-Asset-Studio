@@ -1,0 +1,19 @@
+/* OWNER: styles — device picker in editor toolbar */
+.device-picker-wrap {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  color: var(--paper-dim);
+}
+
+.device-picker-wrap select {
+  font-family: var(--font-display);
+  font-size: 0.75rem;
+  letter-spacing: normal;
+  text-transform: none;
+  color: var(--paper);
+  background: var(--ink-2);
+  border: 1px solid var(--line-strong);
+  padding: 0.35rem 0.5rem;
+  max-width: 160px;
+}

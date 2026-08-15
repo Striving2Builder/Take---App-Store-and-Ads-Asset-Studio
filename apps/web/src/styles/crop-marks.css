@@ -1,0 +1,12 @@
+/* OWNER: styles/crop-marks.css */
+/* Crop marks */
+.crop {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  pointer-events: none;
+}
+.crop.tl { top: -2px; left: -2px; border-top: 1px solid var(--cyan); border-left: 1px solid var(--cyan); }
+.crop.tr { top: -2px; right: -2px; border-top: 1px solid var(--cyan); border-right: 1px solid var(--cyan); }
+.crop.bl { bottom: -2px; left: -2px; border-bottom: 1px solid var(--cyan); border-left: 1px solid var(--cyan); }
+.crop.br { bottom: -2px; right: -2px; border-bottom: 1px solid var(--cyan); border-right: 1px solid var(--cyan); }
