@@ -1,0 +1,15 @@
+{
+  "id": "youtube.bumper-16x9",
+  "label": "YouTube Bumper",
+  "family": "video-landscape",
+  "kind": "video",
+  "context": "video",
+  "exportPx": { "w": 1920, "h": 1080 },
+  "platform": "YouTube",
+  "maxDurationMs": 6000,
+  "iabName": "YouTube bumper — non-skippable, ≤6s",
+  "status": "current",
+  "source": "YouTube Ads Help — Bumper ads, non-skippable ≤6 seconds",
+  "updatedAt": "2026-08-24",
+  "version": "1"
+}

@@ -49,7 +49,7 @@ inputs: brief, selectedShots[], deviceId, orientation, qty, optional seed
    • visibleFrac(device ∩ slice) ≥ 0.28 for every slice it touches
    • bleed only if shell AABB crosses x = i·W  (integer boundary)
    • type band ∩ screenInset = ∅  (or type-family flips)
-   • max 2 device instances per slice
+   • max 3 device instances per slice (fan); empty slice legal iff extras ≥ 1
    • z: background < bleeder < local device < type
    • catalog screenInset fully inside shell quad (rotation accounted)
 

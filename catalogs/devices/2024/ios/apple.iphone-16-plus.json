@@ -1,0 +1,102 @@
+{
+  "id": "apple.iphone-16-plus",
+  "name": "iPhone 16 Plus",
+  "platform": "ios",
+  "formFactor": "phone",
+  "releasedAt": "2024-09-20",
+  "status": "current",
+  "source": "ASC 6.9-inch lists iPhone 16 Plus with 16 Pro Max / 17 Pro Max · inferredFrom: apple.iphone-15-plus (family chrome, not SKU-measured) · store class iphone-6.9",
+  "updatedAt": "2026-08-16",
+  "version": "2026.08",
+  "exportPx": {
+    "w": 1320,
+    "h": 2868
+  },
+  "exportPxLandscape": {
+    "w": 2868,
+    "h": 1320
+  },
+  "storeSizeClass": "iphone-6.9",
+  "storeSizeNote": "App Store Connect 6.9-inch class native 1320×2868",
+  "storeTargets": [
+    "ios-screens"
+  ],
+  "viewportPx": {
+    "w": 430,
+    "h": 932
+  },
+  "shellPx": {
+    "w": 390,
+    "h": 844
+  },
+  "screenInset": {
+    "x": 22,
+    "y": 22,
+    "w": 346,
+    "h": 800
+  },
+  "safeArea": {
+    "top": 59,
+    "bottom": 34,
+    "left": 0,
+    "right": 0
+  },
+  "hardware": {
+    "dynamicIsland": {
+      "x": 132,
+      "y": 32,
+      "w": 126,
+      "h": 34
+    },
+    "buttons": [
+      {
+        "side": "left",
+        "y": 148,
+        "h": 18,
+        "kind": "action"
+      },
+      {
+        "side": "left",
+        "y": 220,
+        "h": 62,
+        "kind": "volume"
+      },
+      {
+        "side": "right",
+        "y": 210,
+        "h": 78,
+        "kind": "power"
+      }
+    ],
+    "rearCameras": [
+      {
+        "x": 28,
+        "y": 36,
+        "w": 128,
+        "h": 128
+      }
+    ],
+    "homeIndicator": {
+      "x": 132,
+      "y": 792,
+      "w": 126,
+      "h": 5
+    }
+  },
+  "shellKind": "asset",
+  "shellFamily": "iphone-island",
+  "shellAssetFront": "/devices/shells/iphone-island-front.svg",
+  "shellAssetBack": "/devices/shells/iphone-island-back.svg",
+  "shellAssetFrontLandscape": "/devices/shells/iphone-island-front-landscape.svg",
+  "shellAssetBackLandscape": "/devices/shells/iphone-island-back-landscape.svg",
+  "shellPxLandscape": {
+    "w": 844,
+    "h": 390
+  },
+  "screenInsetLandscape": {
+    "x": 22,
+    "y": 22,
+    "w": 800,
+    "h": 346
+  }
+}

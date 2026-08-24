@@ -1,0 +1,14 @@
+{
+  "id": "iab.leaderboard-728x90",
+  "label": "Leaderboard",
+  "family": "leaderboard",
+  "kind": "display",
+  "context": "desktop-web",
+  "exportPx": { "w": 728, "h": 90 },
+  "platform": "Generic / IAB",
+  "iabName": "Leaderboard",
+  "status": "current",
+  "source": "IAB Display Advertising Portfolio — Leaderboard",
+  "updatedAt": "2026-08-24",
+  "version": "1"
+}

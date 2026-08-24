@@ -1,0 +1,93 @@
+{
+  "id": "sys-ios-isolated-5",
+  "name": "iOS · isolated 5",
+  "tags": [
+    "ios",
+    "isolated",
+    "screenshots",
+    "needs-polish"
+  ],
+  "version": 1,
+  "composition": "isolated",
+  "deviceId": "apple.iphone-16-pro-max",
+  "defaultOrientation": "portrait",
+  "frameCount": 5,
+  "typeFamily": "top",
+  "typeScale": "m",
+  "background": {
+    "kind": "gradient",
+    "colorA": "#0c0d10",
+    "colorB": "#1a1030"
+  },
+  "devices": [
+    {
+      "id": "iso-0",
+      "x": 0.5,
+      "y": 0.52,
+      "w": 0.58,
+      "h": 1.255179487179487,
+      "rotationDeg": 0,
+      "z": 1,
+      "shotIndex": 0,
+      "placement": "center"
+    },
+    {
+      "id": "iso-1",
+      "x": 1.5,
+      "y": 0.52,
+      "w": 0.58,
+      "h": 1.255179487179487,
+      "rotationDeg": 0,
+      "z": 1,
+      "shotIndex": 1,
+      "placement": "center"
+    },
+    {
+      "id": "iso-2",
+      "x": 2.5,
+      "y": 0.52,
+      "w": 0.58,
+      "h": 1.255179487179487,
+      "rotationDeg": 0,
+      "z": 1,
+      "shotIndex": 2,
+      "placement": "center"
+    },
+    {
+      "id": "iso-3",
+      "x": 3.5,
+      "y": 0.52,
+      "w": 0.58,
+      "h": 1.255179487179487,
+      "rotationDeg": 0,
+      "z": 1,
+      "shotIndex": 3,
+      "placement": "center"
+    },
+    {
+      "id": "iso-4",
+      "x": 4.5,
+      "y": 0.52,
+      "w": 0.58,
+      "h": 1.255179487179487,
+      "rotationDeg": 0,
+      "z": 1,
+      "shotIndex": 4,
+      "placement": "center"
+    }
+  ],
+  "extras": [],
+  "lockBrand": false,
+  "style": "premium",
+  "palette": [
+    "#ff4d1a",
+    "#0c0d10",
+    "#f3f1ec",
+    "#3de0ff",
+    "#1e2129"
+  ],
+  "provenance": {
+    "source": "seed",
+    "grammarVersion": "2026.08"
+  }
+}

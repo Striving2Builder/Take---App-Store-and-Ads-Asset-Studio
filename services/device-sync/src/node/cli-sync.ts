@@ -1,12 +1,17 @@
-/** OWNER: services/device-sync/node — npm run sync:devices [-- --input pack.json --evidence url] */
+/** OWNER: services/device-sync/node — npm run sync:devices [-- --discover snapshots] */
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { loadCatalogDevices } from "@take/device-catalog";
-import { parseProposalInput } from "../parse-pack";
+import { parseSnapshotFile } from "../adapters/snapshots";
+import { parseWikidataBindings, wikidataSparqlUrl } from "../adapters/wikidata-parse";
+import type { NormalizedCandidate } from "../discover.types";
 import { runDeviceSync } from "../job";
+import { parseProposalInput } from "../parse-pack";
+import { normalizeDiscoveries } from "../run-discover";
 import { fetchAllowlistedJson, fetchSourceUrls } from "./fetch-json";
 import { createFileReviewGate } from "./file-gate";
+import { loadSnapshotJson } from "./load-snapshots";
 import type { DeviceProfile } from "@take/device-catalog";
 
 function arg(name: string): string | undefined {
@@ -21,7 +26,15 @@ const evidence = arg("--evidence") || "";
 const outPath = arg("--out") || join(repo, ".take-sync", "proposals.json");
 const queuePath = arg("--queue") || join(repo, ".take-sync", "queue.json");
 const deprecateMissing = process.argv.includes("--deprecate-missing");
+const discoverArg = arg("--discover");
+const adapters = new Set(
+  (discoverArg ?? (inputPath ? "" : "snapshots"))
+    .split(",")
+    .map((s) => s.trim())
+    .filter((s) => s && s !== "none")
+);
 
+const current = loadCatalogDevices();
 let candidates: DeviceProfile[] = [];
 if (inputPath) {
   const parsed = parseProposalInput(JSON.parse(readFileSync(inputPath, "utf8")));
@@ -37,7 +50,7 @@ if (inputPath) {
 const fetchedSources: { url: string; json: unknown }[] = [];
 if (process.env.DEVICE_SYNC_FETCH === "1") {
   const urls = fetchSourceUrls();
-  if (!urls.length) {
+  if (!urls.length && !adapters.has("wikidata")) {
     console.warn("DEVICE_SYNC_FETCH=1 but DEVICE_SYNC_SOURCES is empty — skipping fetch");
   }
   for (const url of urls) {
@@ -50,11 +63,35 @@ if (process.env.DEVICE_SYNC_FETCH === "1") {
   }
 }
 
+const normalized: NormalizedCandidate[] = [];
+if (adapters.has("snapshots")) {
+  const run = normalizeDiscoveries(parseSnapshotFile(loadSnapshotJson()), current);
+  normalized.push(...run.candidates);
+  for (const w of run.warnings) console.warn(w);
+  console.log(`snapshots: ${run.candidates.length} normalized (${run.warnings.length} skipped)`);
+}
+if (adapters.has("wikidata")) {
+  if (process.env.DEVICE_SYNC_FETCH !== "1") {
+    console.warn("wikidata skipped — set DEVICE_SYNC_FETCH=1 (allowlisted SPARQL JSON, not HTML)");
+  } else {
+    try {
+      const json = await fetchAllowlistedJson(wikidataSparqlUrl());
+      const run = normalizeDiscoveries(parseWikidataBindings(json), current);
+      normalized.push(...run.candidates);
+      for (const w of run.warnings) console.warn(w);
+      console.log(`wikidata: ${run.candidates.length} normalized (${run.warnings.length} skipped)`);
+    } catch (err) {
+      console.warn(err instanceof Error ? err.message : String(err));
+    }
+  }
+}
+
 const result = runDeviceSync({
-  current: loadCatalogDevices(),
+  current,
   candidates,
   evidenceUrl: evidence,
   fetchedSources,
+  normalized,
   deprecateMissing,
 });
 mkdirSync(dirname(outPath), { recursive: true });

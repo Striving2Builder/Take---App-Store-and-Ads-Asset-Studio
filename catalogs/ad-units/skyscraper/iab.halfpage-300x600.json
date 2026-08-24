@@ -1,0 +1,14 @@
+{
+  "id": "iab.halfpage-300x600",
+  "label": "Half Page",
+  "family": "skyscraper",
+  "kind": "display",
+  "context": "desktop-web",
+  "exportPx": { "w": 300, "h": 600 },
+  "platform": "Generic / IAB",
+  "iabName": "Half Page",
+  "status": "current",
+  "source": "IAB Display Advertising Portfolio — Half Page",
+  "updatedAt": "2026-08-24",
+  "version": "1"
+}

@@ -1,0 +1,127 @@
+{
+  "tags": [
+    "mobile",
+    "layout",
+    "screenshots"
+  ],
+  "version": 1,
+  "deviceId": "apple.iphone-16-pro-max",
+  "defaultOrientation": "portrait",
+  "typeScale": "m",
+  "lockBrand": false,
+  "provenance": {
+    "source": "seed",
+    "grammarVersion": "2026.08"
+  },
+  "id": "layout-bleed-illust-5",
+  "name": "Layout · bleed + plate",
+  "composition": "strip",
+  "frameCount": 5,
+  "typeFamily": "top",
+  "style": "premium",
+  "background": {
+    "kind": "gradient",
+    "colorA": "#1a1440",
+    "colorB": "#0b1020"
+  },
+  "palette": [
+    "#e8dff5",
+    "#1a1440",
+    "#7b6cff",
+    "#f3f1ec",
+    "#ffffff"
+  ],
+  "devices": [
+    {
+      "id": "bi-bleed",
+      "x": 1,
+      "y": 0.62,
+      "w": 0.72,
+      "h": 1.558153846153846,
+      "rotationDeg": 0,
+      "rotateYDeg": 18,
+      "depth": 0.045,
+      "z": 1,
+      "shotIndex": 0,
+      "placement": "bleed-next",
+      "authored": true
+    },
+    {
+      "id": "bi-1",
+      "x": 1.5,
+      "y": 0.56,
+      "w": 0.48,
+      "h": 1.0387692307692307,
+      "rotationDeg": 0,
+      "z": 2,
+      "shotIndex": 1,
+      "placement": "center",
+      "authored": true
+    },
+    {
+      "id": "bi-2",
+      "x": 2.5,
+      "y": 0.56,
+      "w": 0.56,
+      "h": 1.211897435897436,
+      "rotationDeg": 0,
+      "z": 1,
+      "shotIndex": 2,
+      "placement": "center",
+      "authored": true
+    },
+    {
+      "id": "bi-3",
+      "x": 3.5,
+      "y": 0.56,
+      "w": 0.56,
+      "h": 1.211897435897436,
+      "rotationDeg": 0,
+      "z": 1,
+      "shotIndex": 3,
+      "placement": "center",
+      "authored": true
+    },
+    {
+      "id": "bi-4",
+      "x": 4.5,
+      "y": 0.56,
+      "w": 0.56,
+      "h": 1.211897435897436,
+      "rotationDeg": 0,
+      "z": 1,
+      "shotIndex": 4,
+      "placement": "center",
+      "authored": true
+    }
+  ],
+  "extras": [
+    {
+      "id": "illust",
+      "kind": "visual",
+      "sliceIndex": 2,
+      "x": 2.5,
+      "y": 0.2,
+      "w": 0.7,
+      "h": 0.22,
+      "rotationDeg": 0,
+      "z": 12,
+      "fill": "rgba(243,241,236,0.22)",
+      "authored": true
+    },
+    {
+      "id": "illust-hint",
+      "kind": "copy",
+      "sliceIndex": 2,
+      "x": 2.5,
+      "y": 0.88,
+      "w": 0.84,
+      "h": 0.12,
+      "rotationDeg": 0,
+      "z": 22,
+      "fill": "#f3f1ec",
+      "text": "Your illustration ++here++",
+      "authored": true
+    }
+  ]
+}

@@ -19,7 +19,8 @@ export type ScreenFillPlan = {
 
 /**
  * Plan how to fill the store screenshot canvas with a source image.
- * Export path: screen === exportPx (no device bezel baked in).
+ * Export path without a layout recipe: screen === exportPx (full-bleed shot).
+ * With a recipe: paintStripSlice geometric shells + hardware chrome.
  */
 export function planScreenFill(
   srcW: number,

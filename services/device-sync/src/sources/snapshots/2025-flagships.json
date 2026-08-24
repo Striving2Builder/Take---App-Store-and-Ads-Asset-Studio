@@ -1,0 +1,83 @@
+{
+  "version": "2026.08",
+  "note": "Cited identity + ASC/Play size class. Shell chrome is inherited from a catalog sibling — not SKU-measured. Do not treat inferred hardware as a unique front.",
+  "devices": [
+    {
+      "id": "apple.iphone-16",
+      "name": "iPhone 16",
+      "platform": "ios",
+      "formFactor": "phone",
+      "releasedAt": "2024-09-20",
+      "storeSizeClass": "iphone-6.3",
+      "inheritFrom": "apple.iphone-15-pro",
+      "evidenceUrl": "https://developer.apple.com/help/app-store-connect/reference/app-information/screenshot-specifications/",
+      "evidenceNote": "ASC 6.3-inch lists iPhone 16 with 16 Pro / 17 / 17 Pro"
+    },
+    {
+      "id": "apple.iphone-16-plus",
+      "name": "iPhone 16 Plus",
+      "platform": "ios",
+      "formFactor": "phone",
+      "releasedAt": "2024-09-20",
+      "storeSizeClass": "iphone-6.9",
+      "inheritFrom": "apple.iphone-15-plus",
+      "evidenceUrl": "https://developer.apple.com/help/app-store-connect/reference/app-information/screenshot-specifications/",
+      "evidenceNote": "ASC 6.9-inch lists iPhone 16 Plus with 16 Pro Max / 17 Pro Max"
+    },
+    {
+      "id": "apple.iphone-17",
+      "name": "iPhone 17",
+      "platform": "ios",
+      "formFactor": "phone",
+      "releasedAt": "2025-09-19",
+      "storeSizeClass": "iphone-6.3",
+      "inheritFrom": "apple.iphone-15-pro",
+      "evidenceUrl": "https://developer.apple.com/help/app-store-connect/reference/app-information/screenshot-specifications/",
+      "evidenceNote": "ASC 6.3-inch lists iPhone 17 with 17 Pro / 16 Pro / 16"
+    },
+    {
+      "id": "apple.iphone-17-pro",
+      "name": "iPhone 17 Pro",
+      "platform": "ios",
+      "formFactor": "phone",
+      "releasedAt": "2025-09-19",
+      "storeSizeClass": "iphone-6.3",
+      "inheritFrom": "apple.iphone-16-pro",
+      "evidenceUrl": "https://developer.apple.com/help/app-store-connect/reference/app-information/screenshot-specifications/",
+      "evidenceNote": "ASC 6.3-inch lists iPhone 17 Pro; chrome inferredFrom 16 Pro (not SKU-measured)"
+    },
+    {
+      "id": "apple.iphone-17-pro-max",
+      "name": "iPhone 17 Pro Max",
+      "platform": "ios",
+      "formFactor": "phone",
+      "releasedAt": "2025-09-19",
+      "storeSizeClass": "iphone-6.9",
+      "inheritFrom": "apple.iphone-16-pro-max",
+      "evidenceUrl": "https://developer.apple.com/help/app-store-connect/reference/app-information/screenshot-specifications/",
+      "evidenceNote": "ASC 6.9-inch lists iPhone 17 Pro Max; chrome inferredFrom 16 Pro Max"
+    },
+    {
+      "id": "google.pixel-10",
+      "name": "Pixel 10",
+      "platform": "android",
+      "formFactor": "phone",
+      "releasedAt": "2025-08-28",
+      "storeSizeClass": "play-phone",
+      "inheritFrom": "google.pixel-9",
+      "evidenceUrl": "https://store.google.com/",
+      "evidenceNote": "Play phone class matching catalog Pixel 9 1080×2424 — not a measured Pixel 10 panel"
+    },
+    {
+      "id": "samsung.galaxy-s25",
+      "name": "Galaxy S25",
+      "platform": "android",
+      "formFactor": "phone",
+      "releasedAt": "2025-01-24",
+      "storeSizeClass": "play-phone-fhd",
+      "inheritFrom": "samsung.galaxy-s24",
+      "evidenceUrl": "https://www.samsung.com/us/smartphones/galaxy-s25/",
+      "evidenceNote": "Play FHD+ class matching catalog S24 1080×2340 — not a measured S25 panel; no invented S24 vs S25 front"
+    }
+  ]
+}

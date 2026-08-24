@@ -1,4 +1,4 @@
-/** OWNER: stages/catalog — Propose → Review → Apply (session). Disk = CLI. */
+/** OWNER: stages/catalog — customer catalog: check → add. Disk publish stays CLI. */
 import { getDevice, listDevices, replaceCatalog, type DeviceProfile } from "@take/device-catalog";
 import {
   classifyChange,
@@ -7,6 +7,7 @@ import {
   hasEvidence,
   materializeDevice,
   parseProposalInput,
+  proposeBundledSnapshots,
   type DeviceProposal,
   type ReviewGate,
 } from "@take/device-sync";
@@ -14,6 +15,14 @@ import { $ } from "../../shared/dom";
 import { escapeHtml } from "../../shared/escape";
 import { downloadText } from "../../shared/download";
 import { toast } from "../../shell/toast";
+import {
+  changeLine,
+  familyLabel,
+  heroCopy,
+  inheritNote,
+  sizeLine,
+  type CatalogHeroState,
+} from "./catalog-copy";
 
 const QUEUE_KEY = "take.catalog.review-queue";
 
@@ -31,41 +40,68 @@ const gate: ReviewGate = createMemoryReviewGate(loadQueue(), (all) => {
 });
 
 let appliedCount = 0;
-let downloaded = false;
+let heroState: CatalogHeroState = "idle";
 
-function setStep(step: "import" | "review" | "apply") {
-  document.querySelectorAll<HTMLElement>("[data-cat-step]").forEach((el) => {
-    el.classList.toggle("is-on", el.dataset.catStep === step);
+function setHero(state: CatalogHeroState, updateCount = 0) {
+  heroState = state;
+  const copy = heroCopy(state, {
+    updateCount,
+    addedCount: appliedCount,
+    deviceCount: listDevices({ includeDeprecated: true }).length,
   });
+  const hero = $("#catalog-hero");
+  if (hero) hero.dataset.state = state;
+  const kicker = $("#catalog-hero-kicker");
+  const title = $("#catalog-hero-title");
+  const body = $("#catalog-hero-body");
+  const btn = $("#btn-catalog-snapshots");
+  if (kicker) kicker.textContent = copy.kicker;
+  if (title) title.textContent = copy.title;
+  if (body) body.textContent = copy.body;
+  if (btn) btn.textContent = copy.action;
 }
 
-function honestyLine(pending: number, approved: number, missingEv: number): string {
-  if (downloaded) {
-    return "Pack downloaded — run npm run catalog:publish -- <file> to write catalogs/devices/. Not live sync.";
-  }
-  if (appliedCount) {
-    return `Applied (session) — ${appliedCount} device(s) in this browser. Download pack for CLI publish. Not written to disk.`;
-  }
-  if (pending || approved) {
-    return `Awaiting review — ${pending} pending, ${approved} approved, ${missingEv} missing evidence. Never auto-published.`;
-  }
-  return "Proposed — paste or open a proposal pack. Apply is session-only. Not live web sync.";
+function renderCatalogNow() {
+  const el = $("#catalog-now");
+  const count = $("#catalog-now-count");
+  const devices = listDevices({ includeDeprecated: true }).slice().sort((a, b) => {
+    const fa = familyLabel(a).localeCompare(familyLabel(b));
+    return fa || a.name.localeCompare(b.name);
+  });
+  if (count) count.textContent = `In your catalog · ${devices.length}`;
+  if (!el) return;
+  el.innerHTML = devices
+    .map((d) => {
+      const inherit = inheritNote(d.source);
+      return `<li class="catalog-device-card">
+        <span class="catalog-device-family mono">${escapeHtml(familyLabel(d))}</span>
+        <strong>${escapeHtml(d.name)}</strong>
+        <span class="catalog-device-size">${escapeHtml(sizeLine(d))}</span>
+        ${inherit ? `<span class="catalog-device-note">${escapeHtml(inherit)}</span>` : ""}
+      </li>`;
+    })
+    .join("");
 }
 
 async function renderList() {
   const all = await gate.listAll();
+  const open = all.filter((p) => p.reviewStatus !== "rejected");
+  const box = $("#catalog-updates");
   const list = $("#catalog-proposal-list");
+  const addAll = $("#btn-catalog-add-all") as HTMLButtonElement | null;
+  if (box) box.hidden = open.length === 0;
+  if (addAll) addAll.hidden = !open.some((p) => p.reviewStatus !== "approved");
   if (!list) return;
-  if (!all.length) {
+  if (!open.length) {
     list.innerHTML = "";
     return;
   }
-  list.innerHTML = all
+  list.innerHTML = open
     .map((p) => {
       const current = getDevice(p.proposed.id);
       const mat = materializeDevice(p.proposed, current);
       const ev = hasEvidence(p);
-      const { summary } = classifyChange(current, {
+      const { kind, summary } = classifyChange(current, {
         id: p.proposed.id,
         exportPx: mat.ok ? mat.device.exportPx : current?.exportPx || { w: 0, h: 0 },
         screenInset: mat.ok
@@ -73,30 +109,24 @@ async function renderList() {
           : current?.screenInset || { x: 0, y: 0, w: 0, h: 0 },
         status: mat.ok ? mat.device.status : current?.status || "current",
       });
-      const errors = [
-        ev ? "" : "evidence URL required",
-        mat.ok ? "" : mat.errors.join("; "),
-      ].filter(Boolean);
       const ok = ev && mat.ok;
-      const badge = ok
-        ? `<span class="truth-badge truth-partial">${escapeHtml(p.reviewStatus.toUpperCase())}</span>`
-        : `<span class="truth-badge truth-fake">INVALID</span>`;
-      const checked = p.reviewStatus === "approved" && ok ? "checked" : "";
-      return `<li data-prop="${escapeHtml(p.id)}">
-        <label>
-          <input type="checkbox" data-approve="${escapeHtml(p.id)}" ${checked} ${ok ? "" : "disabled"} />
-          <strong>${escapeHtml(p.proposed.name)}</strong>
-          <span class="mono">${escapeHtml(p.proposed.id)} · ${escapeHtml(p.confidence)}</span>
-          ${badge}
-        </label>
-        <p class="catalog-diff mono">${escapeHtml(summary)}</p>
-        <p class="catalog-evidence mono">${
-          ev
-            ? escapeHtml(p.evidence.map((e) => e.url).join(" · "))
-            : "No evidence URL — cannot approve"
-        }</p>
-        ${errors.length ? `<p class="hint tight">${escapeHtml(errors.join("; "))}</p>` : ""}
-        <button type="button" class="btn ghost small" data-reject="${escapeHtml(p.id)}">Reject</button>
+      const added = p.reviewStatus === "approved";
+      const inherit = inheritNote(mat.ok ? mat.device.source : p.proposed.source);
+      const size = mat.ok ? sizeLine(mat.device) : "";
+      return `<li data-prop="${escapeHtml(p.id)}" class="catalog-update-card">
+        <span class="catalog-device-family mono">${escapeHtml(changeLine(kind, summary))}</span>
+        <strong>${escapeHtml(p.proposed.name)}</strong>
+        <span class="catalog-device-size">${escapeHtml(size)}</span>
+        ${inherit ? `<span class="catalog-device-note">${escapeHtml(inherit)}</span>` : ""}
+        ${ok ? "" : `<p class="hint tight">This one needs a complete size before it can be added.</p>`}
+        <div class="catalog-card-actions">
+          ${
+            added
+              ? `<span class="catalog-added">Added</span>`
+              : `<button type="button" class="btn small primary" data-add="${escapeHtml(p.id)}" ${ok ? "" : "disabled"}>Add</button>
+                 <button type="button" class="btn small ghost" data-reject="${escapeHtml(p.id)}">Skip</button>`
+          }
+        </div>
       </li>`;
     })
     .join("");
@@ -104,19 +134,38 @@ async function renderList() {
 
 async function updateChrome() {
   const all = await gate.listAll();
-  const pending = all.filter((p) => p.reviewStatus === "pending").length;
-  const approved = all.filter((p) => p.reviewStatus === "approved").length;
-  const missingEv = all.filter((p) => !hasEvidence(p)).length;
-  const approveBtn = $("#btn-catalog-approve-all") as HTMLButtonElement | null;
-  const applyBtn = $("#btn-catalog-apply") as HTMLButtonElement | null;
+  const open = all.filter((p) => p.reviewStatus !== "rejected");
+  const pending = open.filter((p) => p.reviewStatus === "pending").length;
   const exportBtn = $("#btn-catalog-export") as HTMLButtonElement | null;
-  if (approveBtn) approveBtn.disabled = !all.some((p) => hasEvidence(p) && p.reviewStatus !== "approved");
-  if (applyBtn) applyBtn.disabled = approved < 1;
-  if (exportBtn) exportBtn.disabled = approved < 1 && !appliedCount;
-  const status = $("#catalog-status");
-  if (status) status.textContent = honestyLine(pending, approved, missingEv);
-  if (all.length) setStep(appliedCount ? "apply" : "review");
-  else setStep("import");
+  if (exportBtn) exportBtn.disabled = !all.some((p) => p.reviewStatus === "approved") && !appliedCount;
+  if (appliedCount) setHero("added", open.length);
+  else if (pending) setHero("updates", pending);
+  else if (heroState === "current") setHero("current");
+  else setHero(heroState === "idle" ? "idle" : heroState, open.length);
+  await renderList();
+  renderCatalogNow();
+}
+
+function mergeIntoCatalog(devices: DeviceProfile[]) {
+  const byId = new Map(listDevices({ includeDeprecated: true }).map((d) => [d.id, d]));
+  for (const d of devices) byId.set(d.id, d);
+  replaceCatalog([...byId.values()]);
+}
+
+async function addProposal(id: string): Promise<boolean> {
+  const next = await gate.approve(id);
+  if (!next) {
+    toast("This device isn’t ready to add yet.");
+    return false;
+  }
+  const mat = materializeDevice(next.proposed, getDevice(next.proposed.id));
+  if (!mat.ok) {
+    toast(`Can’t add ${next.proposed.name}: missing size details.`);
+    return false;
+  }
+  mergeIntoCatalog([mat.device]);
+  appliedCount += 1;
+  return true;
 }
 
 async function ingestRaw(raw: unknown) {
@@ -125,21 +174,59 @@ async function ingestRaw(raw: unknown) {
   await gate.clear();
   await gate.ingest(parsed.pack.proposals || []);
   appliedCount = 0;
-  downloaded = false;
-  await renderList();
+  heroState = (parsed.pack.proposals || []).length ? "updates" : "idle";
   await updateChrome();
-  toast(`Loaded ${(parsed.pack.proposals || []).length} proposal(s)`);
+  toast(`Loaded ${(parsed.pack.proposals || []).length} device update(s)`);
+}
+
+async function ingestSnapshots() {
+  const current = listDevices({ includeDeprecated: true });
+  const result = proposeBundledSnapshots(current);
+  const proposals = result.pack.proposals || [];
+  if (!proposals.length) {
+    heroState = "current";
+    await gate.clear();
+    appliedCount = 0;
+    await updateChrome();
+    toast("You’re up to date");
+    return;
+  }
+  await gate.clear();
+  await gate.ingest(proposals);
+  appliedCount = 0;
+  heroState = "updates";
+  await updateChrome();
+  toast(
+    proposals.length === 1 ? "1 new device is ready to add" : `${proposals.length} new devices are ready to add`
+  );
 }
 
 export function mountCatalogWizard() {
-  void renderList().then(updateChrome);
+  void updateChrome();
+
+  $("#btn-catalog-snapshots")?.addEventListener("click", () => {
+    void ingestSnapshots();
+  });
+
+  $("#btn-catalog-add-all")?.addEventListener("click", () => {
+    void (async () => {
+      const all = await gate.listAll();
+      let n = 0;
+      for (const p of all) {
+        if (p.reviewStatus !== "pending") continue;
+        if (await addProposal(p.id)) n += 1;
+      }
+      await updateChrome();
+      toast(n ? (n === 1 ? "Device added" : `${n} devices added`) : "Nothing new to add");
+    })();
+  });
 
   $("#btn-catalog-parse")?.addEventListener("click", () => {
     const raw = ($("#catalog-pack-input") as HTMLTextAreaElement | null)?.value || "";
     try {
       void ingestRaw(JSON.parse(raw));
     } catch (err) {
-      toast(err instanceof Error ? err.message : "Invalid JSON");
+      toast(err instanceof Error ? err.message : "That file isn’t valid JSON");
     }
   });
 
@@ -151,81 +238,27 @@ export function mountCatalogWizard() {
       const ta = $("#catalog-pack-input") as HTMLTextAreaElement | null;
       if (ta) ta.value = text;
       await ingestRaw(JSON.parse(text));
-    } catch (err) {
-      toast(err instanceof Error ? err.message : "Invalid JSON file");
+    } catch {
+      toast("That file isn’t valid JSON");
     }
   });
 
-  $("#catalog-proposal-list")?.addEventListener("change", (e) => {
-    const input = (e.target as Element).closest("[data-approve]") as HTMLInputElement | null;
-    if (!input) return;
-    const id = input.dataset.approve || "";
-    void (async () => {
-      if (input.checked) {
-        const next = await gate.approve(id);
-        if (!next) {
-          input.checked = false;
-          toast("Cannot approve — evidence URL required");
-        }
-      } else {
-        await gate.reset(id);
-      }
-      await renderList();
-      await updateChrome();
-    })();
-  });
-
   $("#catalog-proposal-list")?.addEventListener("click", (e) => {
-    const btn = (e.target as Element).closest("[data-reject]") as HTMLButtonElement | null;
-    if (!btn) return;
+    const add = (e.target as Element).closest("[data-add]") as HTMLButtonElement | null;
+    const skip = (e.target as Element).closest("[data-reject]") as HTMLButtonElement | null;
+    if (add) {
+      void (async () => {
+        const ok = await addProposal(add.dataset.add || "");
+        await updateChrome();
+        if (ok) toast("Added — it’s in your device picker");
+      })();
+      return;
+    }
+    if (!skip) return;
     void (async () => {
-      await gate.reject(btn.dataset.reject || "", "rejected in wizard");
-      await renderList();
+      await gate.reject(skip.dataset.reject || "", "skipped in wizard");
       await updateChrome();
-      toast("Rejected");
-    })();
-  });
-
-  $("#btn-catalog-approve-all")?.addEventListener("click", () => {
-    void (async () => {
-      const all = await gate.listAll();
-      let n = 0;
-      for (const p of all) {
-        if (p.reviewStatus === "rejected") continue;
-        const next = await gate.approve(p.id);
-        if (next) n += 1;
-      }
-      await renderList();
-      await updateChrome();
-      toast(n ? `Approved ${n}` : "Nothing approved — evidence URL required");
-    })();
-  });
-
-  $("#btn-catalog-apply")?.addEventListener("click", () => {
-    void (async () => {
-      const all = await gate.listAll();
-      const approved = all.filter((p) => p.reviewStatus === "approved");
-      const devices: DeviceProfile[] = [];
-      for (const p of approved) {
-        const mat = materializeDevice(p.proposed, getDevice(p.proposed.id));
-        if (!mat.ok) {
-          toast(`Cannot apply ${p.proposed.id}: ${mat.errors[0]}`);
-          return;
-        }
-        devices.push(mat.device);
-      }
-      if (!devices.length) {
-        toast("Approve at least one evidenced proposal");
-        return;
-      }
-      const byId = new Map(listDevices({ includeDeprecated: true }).map((d) => [d.id, d]));
-      for (const d of devices) byId.set(d.id, d);
-      replaceCatalog([...byId.values()]);
-      appliedCount = devices.length;
-      downloaded = false;
-      setStep("apply");
-      await updateChrome();
-      toast(`Applied ${devices.length} devices to session (not disk)`);
+      toast("Skipped");
     })();
   });
 
@@ -239,7 +272,7 @@ export function mountCatalogWizard() {
         proposals: all,
       });
       if (!check.ok) {
-        toast(check.message);
+        toast("Add at least one device first, then download.");
         return;
       }
       downloadText(
@@ -255,9 +288,7 @@ export function mountCatalogWizard() {
           2
         )
       );
-      downloaded = true;
-      await updateChrome();
-      toast("Pack downloaded — CLI publish writes disk, not this browser");
+      toast("Pack downloaded");
     })();
   });
 }

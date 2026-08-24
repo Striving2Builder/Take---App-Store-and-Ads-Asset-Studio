@@ -1,0 +1,18 @@
+{
+  "id": "pinterest.standard-2x3",
+  "label": "Pinterest Standard Pin",
+  "family": "pinterest",
+  "kind": "social",
+  "context": "social",
+  "exportPx": { "w": 1080, "h": 1620 },
+  "platform": "Pinterest",
+  "minDurationMs": 4000,
+  "maxDurationMs": 900000,
+  "recommendedDurationMs": { "min": 6000, "max": 15000 },
+  "maxFileSizeBytes": 2000000000,
+  "iabName": "Pinterest Standard Pin — 2:3, 4s–15min (6–15s recommended)",
+  "status": "current",
+  "source": "Pinterest Business — video Pin spec",
+  "updatedAt": "2026-08-24",
+  "version": "1"
+}

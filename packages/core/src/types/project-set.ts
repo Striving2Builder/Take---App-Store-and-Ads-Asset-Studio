@@ -1,6 +1,7 @@
 /** OWNER: packages/core — generated concept set */
 import type { StoryFrame } from "./frame";
 import type { StoreCopy } from "./store-copy";
+import type { AdCopy } from "./ad-copy";
 
 export type ProjectSet = {
   id: string;
@@ -19,4 +20,6 @@ export type ProjectSet = {
     composition: "isolated" | "strip";
     recipe: unknown;
   };
+  /** Ads mode: one message across N ad units (see StoryFrame.adUnitId) — not App Store/Play metadata */
+  adCopy?: AdCopy;
 };

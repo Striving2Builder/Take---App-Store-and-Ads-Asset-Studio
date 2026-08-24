@@ -1,0 +1,14 @@
+{
+  "id": "iab.square-250x250",
+  "label": "Square",
+  "family": "interstitial",
+  "kind": "display",
+  "context": "mobile-app",
+  "exportPx": { "w": 250, "h": 250 },
+  "platform": "Generic / IAB",
+  "iabName": "Square",
+  "status": "current",
+  "source": "IAB Display Advertising Portfolio — Square",
+  "updatedAt": "2026-08-24",
+  "version": "1"
+}

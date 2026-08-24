@@ -1,0 +1,14 @@
+{
+  "id": "iab.mpu-336x280",
+  "label": "Large Rectangle",
+  "family": "mpu",
+  "kind": "display",
+  "context": "desktop-web",
+  "exportPx": { "w": 336, "h": 280 },
+  "platform": "Generic / IAB",
+  "iabName": "Large Rectangle",
+  "status": "current",
+  "source": "IAB Display Advertising Portfolio — Large Rectangle",
+  "updatedAt": "2026-08-24",
+  "version": "1"
+}

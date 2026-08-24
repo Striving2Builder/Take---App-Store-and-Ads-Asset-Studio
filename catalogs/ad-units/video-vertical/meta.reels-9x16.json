@@ -1,0 +1,17 @@
+{
+  "id": "meta.reels-9x16",
+  "label": "Instagram/Facebook Reels",
+  "family": "video-vertical",
+  "kind": "video",
+  "context": "video",
+  "exportPx": { "w": 1080, "h": 1920 },
+  "platform": "Instagram/Facebook",
+  "minDurationMs": 1000,
+  "maxDurationMs": 90000,
+  "maxFileSizeBytes": 4000000000,
+  "iabName": "Meta Reels ads — 1–90s",
+  "status": "current",
+  "source": "Meta Ads Manager — Reels video spec (unified safe zone with Stories)",
+  "updatedAt": "2026-08-24",
+  "version": "1"
+}

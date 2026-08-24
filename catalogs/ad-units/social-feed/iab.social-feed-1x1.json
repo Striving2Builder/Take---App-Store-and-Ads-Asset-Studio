@@ -1,0 +1,14 @@
+{
+  "id": "iab.social-feed-1x1",
+  "label": "Social Feed · 1:1",
+  "family": "social-feed",
+  "kind": "social",
+  "context": "social",
+  "exportPx": { "w": 1080, "h": 1080 },
+  "platform": "Instagram/Facebook",
+  "iabName": "Feed image/video — 1:1 square",
+  "status": "current",
+  "source": "Meta Ads Manager — feed placement guidance, 1:1",
+  "updatedAt": "2026-08-24",
+  "version": "1"
+}

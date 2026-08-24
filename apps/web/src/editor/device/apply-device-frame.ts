@@ -17,7 +17,7 @@ function platformMismatchHint(devicePlatform: string): string | null {
 
 /**
  * Drive editor chrome from catalog: aspect, inset %, front/back shell asset.
- * Store PNG does not bake this bezel — preview only.
+ * Layout / ZIP also bake geometric chrome from DeviceProfile.hardware (island / punch).
  */
 export function applyDeviceFrame() {
   const phone = $("#phone-mock") as HTMLElement | null;

@@ -4,21 +4,20 @@ import type { Grammar, TokenRange } from "../grammar/tokens";
 import { lerp } from "../rng/seed";
 import type { DeviceMetrics } from "./types";
 
-export function jitterInstance(
+export function jitterFromRange(
   rng: () => number,
-  grammar: Grammar,
-  placement: DevicePlacement,
+  token: TokenRange,
   opts: {
     id: string;
     sliceIndex: number;
     shotIndex: number;
     z: number;
     metrics: DeviceMetrics;
-    /** World x = sliceIndex + token.x  (bleed-next token.x ≈ 1) */
     xBase?: number;
+    placement: DevicePlacement;
+    authored?: boolean;
   }
 ): DeviceInstance {
-  const token: TokenRange = grammar.tokens.placements[placement];
   const xBase = opts.xBase ?? opts.sliceIndex;
   const w = lerp(rng, token.w[0], token.w[1]);
   return {
@@ -30,6 +29,26 @@ export function jitterInstance(
     rotationDeg: lerp(rng, token.rot[0], token.rot[1]),
     z: opts.z,
     shotIndex: opts.shotIndex,
-    placement,
+    placement: opts.placement,
+    authored: opts.authored,
   };
+}
+
+export function jitterInstance(
+  rng: () => number,
+  grammar: Grammar,
+  placement: DevicePlacement,
+  opts: {
+    id: string;
+    sliceIndex: number;
+    shotIndex: number;
+    z: number;
+    metrics: DeviceMetrics;
+    xBase?: number;
+  }
+): DeviceInstance {
+  return jitterFromRange(rng, grammar.tokens.placements[placement], {
+    ...opts,
+    placement,
+  });
 }

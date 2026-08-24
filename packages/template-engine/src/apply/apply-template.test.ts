@@ -49,9 +49,17 @@ const isolated = recipeFromSaved({
   defaultOrientation: "portrait",
   tags: ["ios"],
 });
-assert(isolated.composition === "isolated", "non-seed is isolated");
+assert(isolated.composition === "isolated", "unknown id is isolated");
 assert(isolated.frameCount === 8, "isolated count from library");
-assert(isolated.devices.length === 0, "no fake devices on identity cards");
+assert(isolated.devices.length === 0, "no fake devices on unknown cards");
+
+const sample = recipeFromSaved({
+  id: "sys-ios-isolated-5",
+  name: "x",
+  frames: 99,
+});
+assert(sample.devices.length === 5, "system sample hydrates devices");
+assert(sample.frameCount === 5, "sample owns count");
 
 const applied = applyTemplate({ recipe: strip, brief, shotCount: 3 });
 assert(applied.frames.length === 5, "recipe frame count");

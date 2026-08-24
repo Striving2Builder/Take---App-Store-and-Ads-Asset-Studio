@@ -1,0 +1,125 @@
+{
+  "tags": [
+    "mobile",
+    "layout",
+    "screenshots"
+  ],
+  "version": 1,
+  "deviceId": "apple.iphone-16-pro-max",
+  "defaultOrientation": "portrait",
+  "typeScale": "m",
+  "lockBrand": false,
+  "provenance": {
+    "source": "seed",
+    "grammarVersion": "2026.08"
+  },
+  "id": "layout-photo-span-5",
+  "name": "Layout · photo span",
+  "composition": "strip",
+  "frameCount": 5,
+  "typeFamily": "top",
+  "style": "premium",
+  "background": {
+    "kind": "gradient",
+    "colorA": "#1e2129",
+    "colorB": "#111318"
+  },
+  "palette": [
+    "#f3f1ec",
+    "#1e2129",
+    "#ff4d1a",
+    "#888888",
+    "#ffffff"
+  ],
+  "devices": [
+    {
+      "id": "ps0",
+      "x": 0.5,
+      "y": 0.62,
+      "w": 0.5,
+      "h": 1.082051282051282,
+      "rotationDeg": 0,
+      "z": 1,
+      "shotIndex": 0,
+      "placement": "center",
+      "authored": true
+    },
+    {
+      "id": "ps1",
+      "x": 1.5,
+      "y": 0.62,
+      "w": 0.5,
+      "h": 1.082051282051282,
+      "rotationDeg": 0,
+      "z": 1,
+      "shotIndex": 1,
+      "placement": "center",
+      "authored": true
+    },
+    {
+      "id": "ps2",
+      "x": 2.5,
+      "y": 0.58,
+      "w": 0.56,
+      "h": 1.211897435897436,
+      "rotationDeg": 0,
+      "z": 1,
+      "shotIndex": 2,
+      "placement": "center",
+      "authored": true
+    },
+    {
+      "id": "ps3",
+      "x": 3.5,
+      "y": 0.58,
+      "w": 0.56,
+      "h": 1.211897435897436,
+      "rotationDeg": 0,
+      "z": 1,
+      "shotIndex": 3,
+      "placement": "center",
+      "authored": true
+    },
+    {
+      "id": "ps4",
+      "x": 4.5,
+      "y": 0.58,
+      "w": 0.56,
+      "h": 1.211897435897436,
+      "rotationDeg": 0,
+      "z": 1,
+      "shotIndex": 4,
+      "placement": "center",
+      "authored": true
+    }
+  ],
+  "extras": [
+    {
+      "id": "photo-cut",
+      "kind": "visual",
+      "sliceIndex": 0,
+      "x": 1,
+      "y": 0.22,
+      "w": 0.86,
+      "h": 0.28,
+      "rotationDeg": 0,
+      "z": 12,
+      "fill": "rgba(243,241,236,0.22)",
+      "authored": true
+    },
+    {
+      "id": "photo-hint",
+      "kind": "copy",
+      "sliceIndex": 0,
+      "x": 0.5,
+      "y": 0.88,
+      "w": 0.84,
+      "h": 0.12,
+      "rotationDeg": 0,
+      "z": 22,
+      "fill": "#f3f1ec",
+      "text": "Your photo ++spans++ this cut",
+      "authored": true
+    }
+  ]
+}

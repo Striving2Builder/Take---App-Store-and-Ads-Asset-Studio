@@ -5,6 +5,7 @@ const ALLOWED_HOSTS = new Set([
   "www.apple.com",
   "developer.android.com",
   "store.google.com",
+  "query.wikidata.org",
 ]);
 
 const BLOCKED_HOSTS = new Set(["localhost", "metadata.google.internal", "metadata"]);

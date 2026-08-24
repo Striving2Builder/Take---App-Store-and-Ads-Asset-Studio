@@ -1,0 +1,8 @@
+/* OWNER: styles/fonts.css — bundled ExtraSlot script face (not store headline) */
+@font-face {
+  font-family: "Take Script";
+  src: url("/fonts/take-script.woff2") format("woff2");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}

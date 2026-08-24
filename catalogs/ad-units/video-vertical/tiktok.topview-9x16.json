@@ -1,0 +1,17 @@
+{
+  "id": "tiktok.topview-9x16",
+  "label": "TikTok TopView",
+  "family": "video-vertical",
+  "kind": "video",
+  "context": "video",
+  "exportPx": { "w": 1080, "h": 1920 },
+  "platform": "TikTok",
+  "minDurationMs": 5000,
+  "maxDurationMs": 60000,
+  "maxFileSizeBytes": 500000000,
+  "iabName": "TikTok TopView — 5–60s",
+  "status": "current",
+  "source": "TikTok Ads Manager — TopView video spec",
+  "updatedAt": "2026-08-24",
+  "version": "1"
+}

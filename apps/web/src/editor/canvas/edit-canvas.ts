@@ -1,7 +1,7 @@
 /** OWNER: editor/canvas — contenteditable sync + frame render + scan assets */
 import { FRAME_ROLES } from "@take/core";
 import { currentFrame, currentSet, state } from "../../app/app-state";
-import { $ } from "../../shared/dom";
+import { $, $$ } from "../../shared/dom";
 import { escapeHtml } from "../../shared/escape";
 import { renderMetaFields } from "../inspectors/copy-inspector";
 import {
@@ -16,8 +16,15 @@ import { cssObjectFitForMode } from "../device/shell-composite";
 import { scanIconUrl, shotUrlAt } from "../../stages/export/selected-shots";
 import { paintStripSlice, stripRecipeOfSet } from "../../stages/export/paint-strip-slice";
 import { refreshStripPreview } from "../strip/strip-preview";
+import { refreshSetView } from "../strip/set-view";
 import { syncLayoutDrag } from "../layout/layout-drag";
+import { ensureSetRecipe } from "../layout/attach-recipe";
+import { renderPanoramaPicker, renderTypeBandRow } from "../inspectors/layers-inspector";
+import { renderCopyMarksRow } from "../inspectors/copy-marks";
+import { renderWidgetFields } from "../inspectors/widget-fields";
+import { renderTiltSliders } from "../inspectors/tilt-sliders";
 import { resolveExportSize } from "@take/device-catalog";
+import { renderAdsThumbGrid } from "../../modes/ads/ads.plugin";
 
 export function syncFrameFromDom() {
   const frame = currentFrame();
@@ -100,7 +107,14 @@ export function renderEditor() {
   const frame = currentFrame();
   if (!frame) return;
   const label = $("#canvas-label");
-  if (label) label.textContent = `FRAME ${String(frame.index + 1).padStart(2, "0")} · ${frame.role}`;
+  if (label) {
+    label.textContent =
+      state.mode === "ads"
+        ? `AD SET · ${set.frames.filter((f) => f.adUnitId).length} unit${set.frames.length === 1 ? "" : "s"}`
+        : state.editView === "set"
+          ? `SET · ${set.frames.length} frames · store carousel`
+          : `FRAME ${String(frame.index + 1).padStart(2, "0")} · ${frame.role}`;
+  }
   const k = $("#shot-kicker");
   const h = $("#shot-headline");
   const c = $("#shot-caption");
@@ -119,16 +133,52 @@ export function renderEditor() {
   if (locale) locale.textContent = state.inference?.locale || "en-US";
   void syncLayoutStage();
   void refreshStripPreview();
+  void refreshSetView();
+  renderPanoramaPicker();
+  renderTypeBandRow();
+  renderCopyMarksRow();
+  renderWidgetFields();
+  renderTiltSliders();
 }
 
 async function syncLayoutStage() {
   const phone = $("#phone-mock") as HTMLElement | null;
   const stage = $("#layout-stage") as HTMLElement | null;
+  const adsStage = $("#ads-edit-stage") as HTMLElement | null;
   const canvas = $("#layout-slice-canvas") as HTMLCanvasElement | null;
   const screen = $("#phone-screen") as HTMLElement | null;
   const content = $("#shot-content") as HTMLElement | null;
   const recipe = stripRecipeOfSet();
   if (!phone || !stage || !canvas || !screen || !content) return;
+
+  document.body.classList.toggle("is-ads-edit", state.mode === "ads");
+
+  if (state.mode === "ads") {
+    phone.hidden = true;
+    stage.hidden = true;
+    if (adsStage) {
+      adsStage.hidden = false;
+      renderAdsThumbGrid(adsStage);
+    }
+    const activePanel = document.querySelector(".meta-link.is-active") as HTMLElement | null;
+    if (activePanel?.dataset.panel === "copy" || activePanel?.dataset.panel === "layers") {
+      $$(".meta-link").forEach((el) => el.classList.toggle("is-active", el.getAttribute("data-panel") === "mode"));
+      $$<HTMLElement>("[data-panel-view]").forEach((panel) => {
+        const on = panel.dataset.panelView === "mode";
+        panel.hidden = !on;
+        panel.classList.toggle("is-active", on);
+      });
+    }
+    return;
+  }
+  if (adsStage) adsStage.hidden = true;
+
+  if (state.editView === "set") {
+    phone.hidden = true;
+    stage.hidden = true;
+    syncLayoutDrag();
+    return;
+  }
 
   if (recipe) {
     phone.hidden = true;
@@ -173,6 +223,7 @@ export function addFrame() {
     dwellMs: state.mode === "slideshow" ? 2000 : undefined,
   });
   state.activeFrame = i;
+  if (stripRecipeOfSet()) ensureSetRecipe();
   renderEditor();
   toast("Frame added");
 }
@@ -189,6 +240,7 @@ export function removeFrame() {
     f.kicker = `${String(i + 1).padStart(2, "0")} · ${f.role}`;
   });
   state.activeFrame = Math.min(state.activeFrame, set.frames.length - 1);
+  if (stripRecipeOfSet()) ensureSetRecipe();
   renderEditor();
   toast("Frame removed");
 }

@@ -1,10 +1,12 @@
 /** OWNER: packages/template-engine — AND of layout legality rules */
-import type { TemplateRecord } from "../template.types";
+import type { DeviceInstance, TemplateRecord } from "../template.types";
 import type { DeviceMetrics } from "../generate/types";
-import { deviceAabb, intersectArea, screenAabb } from "./aabb";
+import { resolveMetrics } from "../generate/metrics";
+import { intersectArea } from "./aabb";
 import { bleedLegal, slicesTouched } from "./bleed";
-import { typeBandRect } from "./type-band";
-import { toWorldInstance } from "./world";
+import { MAX_DEVICES_PER_SLICE } from "./limits";
+import { hasPerspective, instanceAabb, instanceScreenAabb } from "../project/perspective";
+import { typeBandForSlice, typeBandRect } from "./type-band";
 
 export type ValidateLayoutResult = { ok: boolean; errors: string[] };
 
@@ -21,6 +23,23 @@ function insetOk(inset: { x: number; y: number; w: number; h: number }): boolean
     inset.x + inset.w <= 1.02 &&
     inset.y + inset.h <= 1.02
   );
+}
+
+function extrasOnSlice(recipe: TemplateRecord, sliceIndex: number) {
+  return (recipe.extras || []).filter(
+    (e) => e.sliceIndex === sliceIndex || Math.floor(e.x) === sliceIndex
+  );
+}
+
+function insetFor(
+  recipe: TemplateRecord,
+  inst: DeviceInstance,
+  fallback: { x: number; y: number; w: number; h: number }
+) {
+  const setOrient = recipe.defaultOrientation === "landscape" ? "landscape" : "portrait";
+  const orient = inst.orientation || setOrient;
+  if (orient === setOrient) return fallback;
+  return resolveMetrics(recipe.deviceId || "apple.iphone-16-pro-max", "ios", orient).inset;
 }
 
 export function validateLayout(
@@ -55,11 +74,11 @@ export function validateLayout(
     }
     for (const i of touched) perSlice[i] += 1;
 
-    const world = toWorldInstance(inst, sliceW, sliceH);
-    const shell = deviceAabb(world.x, world.y, world.w, world.h, world.rotationDeg);
-    const screen = screenAabb(world.x, world.y, world.w, world.h, world.rotationDeg, inset);
+    const usedInset = insetFor(recipe, inst, inset);
+    const shell = instanceAabb(inst, sliceW, sliceH);
+    const screen = instanceScreenAabb(inst, sliceW, sliceH, usedInset);
     const screenArea = Math.max(1, screen.w * screen.h);
-    if (intersectArea(screen, shell) / screenArea < 0.97) {
+    if (!hasPerspective(inst) && intersectArea(screen, shell) / screenArea < 0.97) {
       errors.push(`screenInset outside shell ${inst.id}`);
     }
     if (!inst.authored) {
@@ -73,19 +92,20 @@ export function validateLayout(
   }
 
   perSlice.forEach((c, i) => {
-    if (c > 2) errors.push(`slice ${i} has ${c} devices`);
-    if (c < 1) errors.push(`slice ${i} empty`);
+    if (c > MAX_DEVICES_PER_SLICE) errors.push(`slice ${i} has ${c} devices`);
+    if (c < 1 && extrasOnSlice(recipe, i).length < 1) errors.push(`slice ${i} empty`);
   });
 
-  const band = typeBandRect(recipe.typeFamily, sliceW, sliceH, recipe.typeScale);
   for (const inst of recipe.devices) {
-    const world = toWorldInstance(inst, sliceW, sliceH);
-    const box = deviceAabb(world.x, world.y, world.w, world.h, world.rotationDeg);
+    const box = instanceAabb(inst, sliceW, sliceH);
     const touched = slicesTouched(inst, n, sliceW, sliceH);
     for (const i of touched) {
+      const family = typeBandForSlice(recipe, i);
+      if (family === "none") continue;
+      const band = typeBandRect(family, sliceW, sliceH, recipe.typeScale);
       const bandWorld = { x: i * sliceW + band.x, y: band.y, w: band.w, h: band.h };
       const overlap = intersectArea(box, bandWorld);
-      if (!inst.authored && overlap / Math.max(1, world.w * world.h) > TYPE_OVERLAP_MAX) {
+      if (!inst.authored && overlap / Math.max(1, box.w * box.h) > TYPE_OVERLAP_MAX) {
         errors.push(`type-band overlap ${inst.id} slice ${i}`);
       }
     }

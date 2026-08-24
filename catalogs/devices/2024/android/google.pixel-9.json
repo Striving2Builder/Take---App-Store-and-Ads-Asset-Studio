@@ -34,28 +34,30 @@
   "hardware": {
     "frontCamera": {
       "x": 182,
-      "y": 32,
-      "w": 20,
-      "h": 20
+      "y": 28,
+      "w": 18,
+      "h": 18
     },
     "buttons": [
       {
         "side": "right",
         "y": 180,
-        "h": 48
+        "h": 48,
+        "kind": "power"
       },
       {
         "side": "right",
         "y": 248,
-        "h": 72
+        "h": 72,
+        "kind": "volume"
       }
     ],
     "rearCameras": [
       {
-        "x": 36,
-        "y": 32,
-        "w": 312,
-        "h": 56
+        "x": 118,
+        "y": 36,
+        "w": 148,
+        "h": 108
       }
     ]
   },

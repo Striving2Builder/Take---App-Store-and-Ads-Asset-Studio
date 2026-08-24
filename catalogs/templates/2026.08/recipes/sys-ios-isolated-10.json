@@ -1,0 +1,147 @@
+{
+  "id": "sys-ios-isolated-10",
+  "name": "iOS · isolated 10",
+  "tags": [
+    "ios",
+    "isolated",
+    "screenshots",
+    "needs-polish"
+  ],
+  "version": 1,
+  "composition": "isolated",
+  "deviceId": "apple.iphone-16-pro-max",
+  "defaultOrientation": "portrait",
+  "frameCount": 10,
+  "typeFamily": "top",
+  "typeScale": "m",
+  "background": {
+    "kind": "solid",
+    "colorA": "#111111"
+  },
+  "devices": [
+    {
+      "id": "iso-0",
+      "x": 0.5,
+      "y": 0.52,
+      "w": 0.58,
+      "h": 1.255179487179487,
+      "rotationDeg": 0,
+      "z": 1,
+      "shotIndex": 0,
+      "placement": "center"
+    },
+    {
+      "id": "iso-1",
+      "x": 1.5,
+      "y": 0.52,
+      "w": 0.58,
+      "h": 1.255179487179487,
+      "rotationDeg": 0,
+      "z": 1,
+      "shotIndex": 1,
+      "placement": "center"
+    },
+    {
+      "id": "iso-2",
+      "x": 2.5,
+      "y": 0.52,
+      "w": 0.58,
+      "h": 1.255179487179487,
+      "rotationDeg": 0,
+      "z": 1,
+      "shotIndex": 2,
+      "placement": "center"
+    },
+    {
+      "id": "iso-3",
+      "x": 3.5,
+      "y": 0.52,
+      "w": 0.58,
+      "h": 1.255179487179487,
+      "rotationDeg": 0,
+      "z": 1,
+      "shotIndex": 3,
+      "placement": "center"
+    },
+    {
+      "id": "iso-4",
+      "x": 4.5,
+      "y": 0.52,
+      "w": 0.58,
+      "h": 1.255179487179487,
+      "rotationDeg": 0,
+      "z": 1,
+      "shotIndex": 4,
+      "placement": "center"
+    },
+    {
+      "id": "iso-5",
+      "x": 5.5,
+      "y": 0.52,
+      "w": 0.58,
+      "h": 1.255179487179487,
+      "rotationDeg": 0,
+      "z": 1,
+      "shotIndex": 5,
+      "placement": "center"
+    },
+    {
+      "id": "iso-6",
+      "x": 6.5,
+      "y": 0.52,
+      "w": 0.58,
+      "h": 1.255179487179487,
+      "rotationDeg": 0,
+      "z": 1,
+      "shotIndex": 6,
+      "placement": "center"
+    },
+    {
+      "id": "iso-7",
+      "x": 7.5,
+      "y": 0.52,
+      "w": 0.58,
+      "h": 1.255179487179487,
+      "rotationDeg": 0,
+      "z": 1,
+      "shotIndex": 7,
+      "placement": "center"
+    },
+    {
+      "id": "iso-8",
+      "x": 8.5,
+      "y": 0.52,
+      "w": 0.58,
+      "h": 1.255179487179487,
+      "rotationDeg": 0,
+      "z": 1,
+      "shotIndex": 8,
+      "placement": "center"
+    },
+    {
+      "id": "iso-9",
+      "x": 9.5,
+      "y": 0.52,
+      "w": 0.58,
+      "h": 1.255179487179487,
+      "rotationDeg": 0,
+      "z": 1,
+      "shotIndex": 9,
+      "placement": "center"
+    }
+  ],
+  "extras": [],
+  "lockBrand": false,
+  "style": "minimal",
+  "palette": [
+    "#f3f1ec",
+    "#111111",
+    "#ff4d1a",
+    "#888888",
+    "#222222"
+  ],
+  "provenance": {
+    "source": "seed",
+    "grammarVersion": "2026.08"
+  }
+}

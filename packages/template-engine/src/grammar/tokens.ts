@@ -11,6 +11,12 @@ export type TokenRange = {
 export type GrammarTokens = {
   grammarVersion: string;
   placements: Record<DevicePlacement, TokenRange>;
+  /** Optional 3-phone fan (isolated). Missing = generator never fans. */
+  fan3?: {
+    backLeft: TokenRange;
+    front: TokenRange;
+    backRight: TokenRange;
+  };
 };
 
 export type GrammarProductions = {
@@ -21,6 +27,8 @@ export type GrammarProductions = {
   bleedBudget: Record<"0" | "1" | "2", number>;
   isolatedPlacement: Record<"center" | "left" | "right", number>;
   stripLocalPlacement: Record<"center" | "left" | "right", number>;
+  /** "1" = one isolated slice gets three phones. */
+  fan3?: Record<"0" | "1", number>;
 };
 
 export type Grammar = {

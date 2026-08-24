@@ -1,0 +1,151 @@
+{
+  "tags": [
+    "mobile",
+    "layout",
+    "screenshots"
+  ],
+  "version": 1,
+  "deviceId": "apple.iphone-16-pro-max",
+  "defaultOrientation": "portrait",
+  "typeScale": "m",
+  "lockBrand": false,
+  "provenance": {
+    "source": "seed",
+    "grammarVersion": "2026.08"
+  },
+  "id": "layout-fan-3-5",
+  "name": "Layout · fan 3",
+  "composition": "isolated",
+  "frameCount": 5,
+  "typeFamily": "top",
+  "style": "bold",
+  "background": {
+    "kind": "gradient",
+    "colorA": "#102018",
+    "colorB": "#1a3d32"
+  },
+  "palette": [
+    "#f3f1ec",
+    "#102018",
+    "#6dffb0",
+    "#111111",
+    "#ffffff"
+  ],
+  "devices": [
+    {
+      "id": "f0",
+      "x": 0.5,
+      "y": 0.54,
+      "w": 0.56,
+      "h": 1.211897435897436,
+      "rotationDeg": 0,
+      "z": 1,
+      "shotIndex": 0,
+      "placement": "center",
+      "authored": true
+    },
+    {
+      "id": "f1",
+      "x": 1.5,
+      "y": 0.54,
+      "w": 0.56,
+      "h": 1.211897435897436,
+      "rotationDeg": 0,
+      "z": 1,
+      "shotIndex": 1,
+      "placement": "center",
+      "authored": true
+    },
+    {
+      "id": "f2-l",
+      "x": 2.32,
+      "y": 0.58,
+      "w": 0.4,
+      "h": 0.8656410256410256,
+      "rotationDeg": -12,
+      "z": 1,
+      "shotIndex": 2,
+      "placement": "center",
+      "authored": true
+    },
+    {
+      "id": "f2-c",
+      "x": 2.5,
+      "y": 0.6,
+      "w": 0.46,
+      "h": 0.9954871794871795,
+      "rotationDeg": 4,
+      "z": 3,
+      "shotIndex": 2,
+      "placement": "center",
+      "authored": true
+    },
+    {
+      "id": "f2-r",
+      "x": 2.68,
+      "y": 0.58,
+      "w": 0.4,
+      "h": 0.8656410256410256,
+      "rotationDeg": 12,
+      "z": 2,
+      "shotIndex": 2,
+      "placement": "center",
+      "authored": true
+    },
+    {
+      "id": "f3",
+      "x": 3.5,
+      "y": 0.54,
+      "w": 0.56,
+      "h": 1.211897435897436,
+      "rotationDeg": 0,
+      "z": 1,
+      "shotIndex": 3,
+      "placement": "center",
+      "authored": true
+    },
+    {
+      "id": "f4",
+      "x": 4.5,
+      "y": 0.55,
+      "w": 0.72,
+      "h": 0.33270142180094786,
+      "rotationDeg": -6,
+      "z": 1,
+      "shotIndex": 4,
+      "placement": "center",
+      "authored": true,
+      "orientation": "landscape"
+    }
+  ],
+  "extras": [
+    {
+      "id": "dot-line",
+      "kind": "visual",
+      "sliceIndex": 2,
+      "x": 2.5,
+      "y": 0.88,
+      "w": 0.72,
+      "h": 0.08,
+      "rotationDeg": 0,
+      "z": 0,
+      "fill": "rgba(243,241,236,0.4)",
+      "shape": "scribble",
+      "authored": true
+    },
+    {
+      "id": "fan-copy",
+      "kind": "copy",
+      "sliceIndex": 0,
+      "x": 0.5,
+      "y": 0.16,
+      "w": 0.84,
+      "h": 0.12,
+      "rotationDeg": 0,
+      "z": 22,
+      "fill": "#f3f1ec",
+      "text": "Three **angles**",
+      "authored": true
+    }
+  ]
+}

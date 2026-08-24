@@ -26,4 +26,6 @@ export type ModeContext = {
   orientation?: "portrait" | "landscape";
   /** Selected screenshot count for ordered shot map / frame clamp */
   shotCount?: number;
+  /** Ads mode: selected ad-unit-catalog ids — one frame per id */
+  adUnitIds?: string[];
 };

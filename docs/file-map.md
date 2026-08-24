@@ -29,6 +29,7 @@ apps/web/
     ├── styles/
     │   ├── main.css                    # @imports only — no rules
     │   ├── tokens.css                  # CSS variables
+    │   ├── fonts.css                   # bundled Take Script (Caveat) for ExtraSlot.face
     │   ├── base.css                    # reset, typography defaults
     │   ├── atmosphere.css              # noise / scanline overlays
     │   ├── buttons.css
@@ -95,6 +96,15 @@ apps/web/
     │   │   ├── fit-canvas.ts            # cover / contain draw
     │   │   ├── frame-render.ts
     │   │   ├── paint-strip-slice.ts     # world clip → PNG (shared with preview)
+    │   │   ├── paint-devices.ts         # 2D shells + C1 projected yaw/pitch
+    │   │   ├── paint-shell-chrome.ts    # island / punch / buttons from catalog hardware
+    │   │   ├── shell-chrome-map.ts      # shellPx → local map
+    │   │   ├── paint-background.ts      # solid / gradient / image
+    │   │   ├── paint-extras.ts          # ExtraSlot after devices
+    │   │   ├── canvas-round-rect.ts     # shared rounded-rect path
+    │   │   ├── paint-copy-marks.ts      # **pill** / ++underline++ + script face
+    │   │   ├── paint-widgets.ts         # rating / review / pills
+    │   │   ├── paint-shapes.ts          # blob/wave/star/dots/scribble
     │   │   ├── selected-shots.ts        # ordered 1:1, no modulo
     │   │   ├── canvas-text.ts
     │   │   ├── slideshow-video.ts
@@ -103,9 +113,14 @@ apps/web/
     │   │   ├── library.html.ts
     │   │   ├── library.controller.ts
     │   │   ├── library.render.ts
+    │   │   ├── library-filter.ts        # Mobile pack under iOS + Android filters
+    │   │   ├── library-thumb.ts         # paintStripSlice(0) card preview
+    │   │   ├── library-preview.ts       # click thumb → all slices
+    │   │   ├── library-use.ts           # Use apply / Wizard-arm; New layout
     │   │   └── library.css
     │   └── catalog/
-    │       └── catalog-wizard.ts       # ReviewGate + session apply; disk is CLI
+    │       ├── catalog-wizard.ts       # Check / Add; disk publish is Advanced
+    │       └── catalog-copy.ts         # customer-facing catalog strings
     │
     ├── modes/                          # MODE plugins (UI adapters)
     │   ├── register-modes.ts
@@ -139,11 +154,15 @@ apps/web/
     │   │   ├── edit-canvas.ts          # #layout-stage = export slice when recipe has devices
     │   │   └── shot-content.ts         # contenteditable sync
     │   ├── layout/
-    │   │   └── layout-drag.ts          # device move / resize / rotate on export slice
+    │   │   ├── attach-recipe.ts        # ensureIsolatedRecipe onto ProjectSet
+    │   │   ├── layout-drag.ts          # device + extra move / resize / rotate
+    │   │   └── layout-live-paint.ts    # debounce slice + strip preview
     │   ├── strip/
-    │   │   └── strip-preview.ts        # joined rail; shares paintStripSlice
+    │   │   ├── strip-preview.ts        # 72px minimap; shares paintStripSlice
+    │   │   └── set-view.ts             # readable Set carousel
     │   ├── device/
     │   │   ├── device-picker.ts        # phone/tablet selector (optgroups)
+    │   │   ├── store-target-control.ts # Edit iOS|Android shell bind
     │   │   ├── fit-control.ts          # cover / contain / safe-area
     │   │   ├── apply-device-frame.ts   # aspect + inset CSS vars
     │   │   └── shell-composite.ts      # shared fit plan for export
@@ -151,7 +170,12 @@ apps/web/
     │   │   └── layer-toggles.ts
     │   └── inspectors/
     │       ├── copy-inspector.ts       # store metadata fields
+    │       ├── copy-marks.ts           # ExtraSlot **pill** / ++underline++ / face
+    │       ├── widget-fields.ts        # selected proof widget score/quote/pills
+    │       ├── tilt-sliders.ts         # C1 yaw/pitch on selected device
     │       ├── layers-inspector.ts
+    │       ├── slice-rules.ts          # add/remove/fan/orient/mini on this PNG
+    │       ├── position-presets.ts     # Center / tilt / bleed-next stamps
     │       └── style-inspector.ts      # palette + style family ONLY
     │
     ├── library-ui/                     # personal library actions beyond stage
@@ -160,7 +184,8 @@ apps/web/
     └── shared/
         ├── dom.ts                      # $, $$
         ├── escape.ts
-        └── download.ts
+        ├── download.ts
+        └── typing-target.ts            # skip layout nudges in INPUT/TEXTAREA/SELECT
 ```
 
 ---
@@ -199,9 +224,21 @@ packages/
 │   ├── src/
 │   │   ├── index.ts
 │   │   ├── template.types.ts
+│   │   ├── ensure-isolated.ts        # Wizard → recipe; panorama helper
+│   │   ├── extras/                   # ExtraSlot add / hit / transform / shapes / widget defaults / copy marks / widget-copy
 │   │   ├── apply/                    # applyTemplate, map-shots, from-saved
 │   │   ├── constraints/              # aabb, world, bleed, type-band, validate, hit-device, transform-device
-│   │   ├── seeds/strip-bleed-hook.ts
+│   │   ├── project/perspective.ts    # 2.5D box project + screen-warp strips
+│   │   ├── seeds/load-recipes.ts     # explicit JSON imports (store + mobile pack)
+│   │   ├── seeds/layout-android-port.ts # bindRecipeShell ios↔android (no twin cards)
+│   │   ├── seeds/sample-five.ts      # authoring helpers → catalogs JSON
+│   │   ├── seeds/layout-ref-helpers.ts
+│   │   ├── seeds/layout-refs.ts      # core geometry cards (tag: mobile)
+│   │   ├── seeds/layout-refs-pack.ts # Epic E pack (tilt, proof, yaw-stack, …)
+│   │   ├── seeds/emit-layout-refs.ts # writes mobile layout JSON to catalogs
+│   │   ├── seeds/strip-bleed-hook.ts # re-export from load-recipes
+│   │   ├── presets/apply-placement.ts # Center / crop / yaw / pitch / bleed-next stamps
+│   │   ├── presets/slice-devices.ts  # add/remove/fan-3/orientation
 │   │   ├── grammar/                  # load 2026.08 JSON
 │   │   ├── rng/seed.ts
 │   │   ├── score/score-layout.ts
@@ -259,7 +296,7 @@ packages/
     │   ├── index.ts
     │   ├── keys.ts
     │   ├── local-json.ts             # get/set JSON helper
-    │   ├── templates.repo.ts
+    │   ├── templates.repo.ts             # system cards from listSystemRecipes + user saves
     │   ├── history.repo.ts
     │   └── projects.repo.ts          # stub until project resume exists
     └── package.json
@@ -277,11 +314,12 @@ catalogs/
 │   ├── 2023/ios/
 │   └── 2022/ios/ · 2022/android/     # curated size-class JSON
 ├── templates/
-│   ├── manifest.json                 # grammarVersion + seed ids
-│   └── 2026.08/grammar/
-│       ├── tokens.json               # AABB + rotation ranges
-│       └── productions.json          # set-plan weights
-│   └── seeds stay in template-engine TS + storage SEED
+│   ├── manifest.json                 # grammarVersion + recipe ids
+│   └── 2026.08/
+│       ├── grammar/
+│       │   ├── tokens.json
+│       │   └── productions.json
+│       └── recipes/                  # sample-five store canvases (JSON SSOT)
 └── export-specs/
     └── store-rules.json              # optional / future
 ```
@@ -319,27 +357,38 @@ services/
 │   └── README.md
 ├── device-sync/
 │   ├── package.json
-│   ├── src/
-│   │   ├── index.ts                  # browser-safe API
-│   │   ├── types.ts                  # DeviceProposal / CatalogPack
-│   │   ├── evidence.ts               # https evidence required
-│   │   ├── parse-pack.ts
-│   │   ├── review-gate.ts            # memory gate; approve needs evidence
-│   │   ├── materialize.ts
-│   │   ├── diff-catalog.ts
-│   │   ├── allowlist.ts              # Device Sync hosts (not App Scan)
-│   │   ├── job.ts                    # runDeviceSync — no fetch
-│   │   ├── publish-check.ts          # refuse unapproved packs
-│   │   ├── write-barrel.ts           # generate load-catalog.ts source
-│   │   ├── publishers/catalog-publisher.ts  # browser noop
-│   │   └── node/                     # CLI only (fs)
-│   │       ├── cli-sync.ts
-│   │       ├── cli-publish.ts
-│   │       ├── disk-write.ts
-│   │       ├── fetch-json.ts         # DEVICE_SYNC_FETCH=1 JSON only
-│   │       ├── file-gate.ts          # .take-sync/queue.json persist
-│   │       └── resolve-host.ts       # DNS private-IP block
-│   └── README.md
+    │   ├── src/
+    │   │   ├── index.ts                  # browser-safe API
+    │   │   ├── types.ts                  # DeviceProposal / CatalogPack
+    │   │   ├── discover.types.ts         # RawDiscovery / NormalizedCandidate
+    │   │   ├── store-size-classes.ts     # cited ASC / Play exportPx table
+    │   │   ├── normalize-discovery.ts    # inherit + size class; no invented chrome
+    │   │   ├── run-discover.ts           # batch normalize
+    │   │   ├── bundled-snapshots.ts      # browser-safe fixture propose
+    │   │   ├── adapters/snapshots.ts     # parse cited snapshot JSON
+    │   │   ├── adapters/wikidata-parse.ts
+    │   │   ├── sources/snapshots/2025-flagships.json
+    │   │   ├── evidence.ts               # https evidence required
+    │   │   ├── parse-pack.ts
+    │   │   ├── review-gate.ts            # memory gate; approve needs evidence
+    │   │   ├── materialize.ts
+    │   │   ├── approve-pack.ts           # evidenced + valid → approved
+    │   │   ├── diff-catalog.ts           # + proposalsFromNormalized
+    │   │   ├── allowlist.ts              # Device Sync hosts (not App Scan)
+    │   │   ├── job.ts                    # runDeviceSync — no fetch
+    │   │   ├── publish-check.ts          # refuse unapproved packs
+    │   │   ├── write-barrel.ts           # generate load-catalog.ts source
+    │   │   ├── publishers/catalog-publisher.ts  # browser noop
+    │   │   └── node/                     # CLI only (fs)
+    │   │       ├── cli-sync.ts           # --discover snapshots (default)
+    │   │       ├── cli-approve.ts        # evidence + materialize only
+    │   │       ├── cli-publish.ts
+    │   │       ├── disk-write.ts
+    │   │       ├── load-snapshots.ts
+    │   │       ├── fetch-json.ts         # DEVICE_SYNC_FETCH=1 JSON only
+    │   │       ├── file-gate.ts          # .take-sync/queue.json persist
+    │   │       └── resolve-host.ts       # DNS private-IP block
+    │   └── README.md
 └── render-worker/
     ├── package.json
     ├── src/

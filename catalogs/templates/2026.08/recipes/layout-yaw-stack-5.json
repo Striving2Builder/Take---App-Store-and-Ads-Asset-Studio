@@ -1,0 +1,116 @@
+{
+  "tags": [
+    "mobile",
+    "layout",
+    "screenshots",
+    "needs-polish"
+  ],
+  "version": 1,
+  "deviceId": "apple.iphone-16-pro-max",
+  "defaultOrientation": "portrait",
+  "typeScale": "m",
+  "lockBrand": false,
+  "provenance": {
+    "source": "seed",
+    "grammarVersion": "2026.08"
+  },
+  "id": "layout-yaw-stack-5",
+  "name": "Layout · yaw stack",
+  "composition": "strip",
+  "frameCount": 5,
+  "typeFamily": "top",
+  "style": "bold",
+  "background": {
+    "kind": "gradient",
+    "colorA": "#0c1220",
+    "colorB": "#1a2840"
+  },
+  "palette": [
+    "#f3f1ec",
+    "#0c1220",
+    "#4d7cff",
+    "#888888",
+    "#ffffff"
+  ],
+  "devices": [
+    {
+      "id": "ys0",
+      "x": 0.5,
+      "y": 0.56,
+      "w": 0.56,
+      "h": 1.211897435897436,
+      "rotationDeg": 0,
+      "z": 1,
+      "shotIndex": 0,
+      "placement": "center",
+      "authored": true
+    },
+    {
+      "id": "ys-back",
+      "x": 1.92,
+      "y": 0.52,
+      "w": 0.4,
+      "h": 0.8656410256410256,
+      "rotationDeg": 0,
+      "rotateYDeg": -20,
+      "depth": 0.05,
+      "z": 1,
+      "shotIndex": 1,
+      "placement": "bleed-next",
+      "authored": true
+    },
+    {
+      "id": "ys-mid",
+      "x": 2,
+      "y": 0.58,
+      "w": 0.44,
+      "h": 0.9522051282051281,
+      "rotationDeg": 0,
+      "rotateYDeg": 8,
+      "depth": 0.05,
+      "z": 2,
+      "shotIndex": 1,
+      "placement": "bleed-next",
+      "authored": true
+    },
+    {
+      "id": "ys-front",
+      "x": 2.08,
+      "y": 0.64,
+      "w": 0.4,
+      "h": 0.8656410256410256,
+      "rotationDeg": 0,
+      "rotateYDeg": 24,
+      "depth": 0.05,
+      "z": 3,
+      "shotIndex": 1,
+      "placement": "bleed-next",
+      "authored": true
+    },
+    {
+      "id": "ys3",
+      "x": 3.5,
+      "y": 0.56,
+      "w": 0.56,
+      "h": 1.211897435897436,
+      "rotationDeg": 0,
+      "z": 1,
+      "shotIndex": 3,
+      "placement": "center",
+      "authored": true
+    },
+    {
+      "id": "ys4",
+      "x": 4.5,
+      "y": 0.56,
+      "w": 0.56,
+      "h": 1.211897435897436,
+      "rotationDeg": 0,
+      "z": 1,
+      "shotIndex": 4,
+      "placement": "center",
+      "authored": true
+    }
+  ],
+  "extras": []
+}

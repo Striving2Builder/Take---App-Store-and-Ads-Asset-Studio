@@ -1,0 +1,126 @@
+{
+  "id": "sys-ios-strip-8",
+  "name": "Strip · eight-up",
+  "tags": [
+    "strip",
+    "ios",
+    "screenshots",
+    "needs-polish"
+  ],
+  "version": 1,
+  "composition": "strip",
+  "deviceId": "apple.iphone-16-pro-max",
+  "defaultOrientation": "portrait",
+  "frameCount": 8,
+  "typeFamily": "top",
+  "typeScale": "m",
+  "background": {
+    "kind": "gradient",
+    "colorA": "#0b1020",
+    "colorB": "#e07a3a"
+  },
+  "devices": [
+    {
+      "id": "bleed-0",
+      "x": 1,
+      "y": 0.62,
+      "w": 0.76,
+      "h": 1.6447179487179486,
+      "rotationDeg": -10,
+      "z": 1,
+      "shotIndex": 0,
+      "placement": "bleed-next"
+    },
+    {
+      "id": "local-1",
+      "x": 1.5,
+      "y": 0.56,
+      "w": 0.58,
+      "h": 1.255179487179487,
+      "rotationDeg": 3,
+      "z": 1,
+      "shotIndex": 1,
+      "placement": "center"
+    },
+    {
+      "id": "local-2",
+      "x": 2.5,
+      "y": 0.56,
+      "w": 0.58,
+      "h": 1.255179487179487,
+      "rotationDeg": -3,
+      "z": 1,
+      "shotIndex": 2,
+      "placement": "center"
+    },
+    {
+      "id": "local-3",
+      "x": 3.5,
+      "y": 0.56,
+      "w": 0.58,
+      "h": 1.255179487179487,
+      "rotationDeg": 3,
+      "z": 1,
+      "shotIndex": 3,
+      "placement": "center"
+    },
+    {
+      "id": "local-4",
+      "x": 4.5,
+      "y": 0.56,
+      "w": 0.58,
+      "h": 1.255179487179487,
+      "rotationDeg": -3,
+      "z": 1,
+      "shotIndex": 4,
+      "placement": "center"
+    },
+    {
+      "id": "local-5",
+      "x": 5.5,
+      "y": 0.56,
+      "w": 0.58,
+      "h": 1.255179487179487,
+      "rotationDeg": 3,
+      "z": 1,
+      "shotIndex": 5,
+      "placement": "center"
+    },
+    {
+      "id": "local-6",
+      "x": 6.5,
+      "y": 0.56,
+      "w": 0.58,
+      "h": 1.255179487179487,
+      "rotationDeg": -3,
+      "z": 1,
+      "shotIndex": 6,
+      "placement": "center"
+    },
+    {
+      "id": "local-7",
+      "x": 7.5,
+      "y": 0.56,
+      "w": 0.58,
+      "h": 1.255179487179487,
+      "rotationDeg": 3,
+      "z": 1,
+      "shotIndex": 7,
+      "placement": "center"
+    }
+  ],
+  "extras": [],
+  "lockBrand": false,
+  "style": "premium",
+  "palette": [
+    "#e07a3a",
+    "#0b1020",
+    "#f3f1ec",
+    "#3de0ff",
+    "#1e2129"
+  ],
+  "provenance": {
+    "source": "seed",
+    "grammarVersion": "2026.08"
+  }
+}

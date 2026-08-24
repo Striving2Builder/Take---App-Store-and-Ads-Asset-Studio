@@ -42,12 +42,14 @@
       {
         "side": "left",
         "y": 200,
-        "h": 40
+        "h": 40,
+        "kind": "volume"
       },
       {
         "side": "right",
         "y": 220,
-        "h": 64
+        "h": 64,
+        "kind": "power"
       }
     ],
     "rearCameras": [

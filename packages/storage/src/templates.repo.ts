@@ -1,4 +1,6 @@
 /** OWNER: packages/storage — templates repository */
+import { listSystemRecipes } from "@take/template-engine";
+import type { TemplateRecord } from "@take/template-engine";
 import { STORAGE_KEYS } from "./keys";
 import { loadJSON, saveJSON } from "./local-json";
 
@@ -17,7 +19,7 @@ export type SavedTemplate = {
   prompt?: unknown;
   updated: string;
   version?: number;
-  /** Catalog bind — consume in Template mode, not a device shell */
+  /** Catalog bind — consume in Library apply, not a device shell */
   deviceId?: string;
   defaultOrientation?: "portrait" | "landscape";
   /** Strip / generated recipes hydrate a typed TemplateRecord */
@@ -25,93 +27,39 @@ export type SavedTemplate = {
   layout?: unknown;
 };
 
-const SEED: SavedTemplate[] = [
-  {
-    id: "sys-ios-story",
-    name: "iOS Story Spine",
-    tags: ["ios", "screenshots", "sequence"],
-    platform: "ios",
+function platformOf(recipe: TemplateRecord): string {
+  if (recipe.tags.includes("mobile")) return "mobile";
+  if (recipe.tags.includes("android") || recipe.deviceId?.startsWith("google.")) return "android";
+  if (recipe.tags.includes("ios")) return "ios";
+  return "ios";
+}
+
+function recipeToCard(recipe: TemplateRecord): SavedTemplate {
+  return {
+    id: recipe.id,
+    name: recipe.name,
+    tags: recipe.tags,
+    platform: platformOf(recipe),
     kind: "system",
-    style: "premium",
-    frames: 8,
-    deviceId: "apple.iphone-16-pro-max",
-    defaultOrientation: "portrait",
-    updated: "2026-08-01",
-  },
-  {
-    id: "sys-play-bold",
-    name: "Play Bold Stack",
-    tags: ["android", "screenshots", "bold"],
-    platform: "android",
-    kind: "system",
-    style: "bold",
-    frames: 7,
-    deviceId: "google.pixel-9",
-    defaultOrientation: "portrait",
-    updated: "2026-08-01",
-  },
-  {
-    id: "sys-ig-organic",
-    name: "IG Organic Vertical",
-    tags: ["social", "instagram", "organic"],
-    platform: "social",
-    kind: "system",
-    style: "minimal",
-    frames: 4,
-    updated: "2026-07-20",
-  },
-  {
-    id: "sys-tiktok-cut",
-    name: "TikTok Cut Reel",
-    tags: ["social", "tiktok", "video"],
-    platform: "social",
-    kind: "system",
-    style: "playful",
-    frames: 6,
-    updated: "2026-07-20",
-  },
-  {
-    id: "sys-iab-mpu",
-    name: "IAB MPU 300×250",
-    tags: ["ads", "iab", "display"],
-    platform: "ads",
-    kind: "system",
-    style: "realistic",
-    frames: 1,
-    updated: "2026-06-12",
-  },
-  {
-    id: "sys-feature-ios",
-    name: "iOS Feature Plate",
-    tags: ["ios", "feature"],
-    platform: "ios",
-    kind: "system",
-    style: "premium",
-    frames: 1,
-    deviceId: "apple.iphone-16-pro-max",
-    defaultOrientation: "portrait",
-    updated: "2026-08-01",
-  },
-  {
-    id: "seed-strip-bleed-hook",
-    name: "Strip · bleed hook",
-    tags: ["strip", "bleed", "ios"],
-    platform: "ios",
-    kind: "system",
-    style: "premium",
-    frames: 5,
-    composition: "strip",
-    deviceId: "apple.iphone-16-pro-max",
-    defaultOrientation: "portrait",
-    updated: "2026-08-14",
-  },
-];
+    style: recipe.style || "premium",
+    frames: recipe.frameCount,
+    lockBrand: recipe.lockBrand,
+    palette: recipe.palette,
+    updated: "2026-08-15",
+    version: recipe.version,
+    deviceId: recipe.deviceId,
+    defaultOrientation: recipe.defaultOrientation,
+    composition: recipe.composition,
+    layout: recipe,
+  };
+}
 
 /** Device-shell seeds are catalog domain — never treat as layout recipes. */
 export function isLayoutRecipe(t: SavedTemplate): boolean {
   const tags = (t.tags || []).map((x) => x.toLowerCase());
   if (tags.includes("device") && tags.includes("shell")) return false;
-  return true;
+  const rec = t.layout as { devices?: unknown[]; frameCount?: number } | undefined;
+  return !!(rec && Array.isArray(rec.devices) && rec.devices.length && rec.frameCount);
 }
 
 export function listLayoutTemplates(): SavedTemplate[] {
@@ -119,8 +67,9 @@ export function listLayoutTemplates(): SavedTemplate[] {
 }
 
 export function getTemplates(): SavedTemplate[] {
+  const system = listSystemRecipes().map(recipeToCard);
   const user = loadJSON<SavedTemplate[]>(STORAGE_KEYS.templates, []);
-  return [...SEED, ...user];
+  return [...system, ...user];
 }
 
 export function saveUserTemplate(tpl: SavedTemplate): void {

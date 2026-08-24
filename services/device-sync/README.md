@@ -12,9 +12,9 @@ On-demand job that **proposes** device profile updates for `catalogs/devices/`. 
 
 ## Paths
 
-1. **Job** — `npm run sync:devices -- --input candidates.json --evidence https://…`  
-   Writes `.take-sync/proposals.json` (wizard pack) and ingests `.take-sync/queue.json` (file ReviewGate). Both gitignored. Optional `--deprecate-missing` (same-prefix catalog ids not in the pack). Optional `DEVICE_SYNC_FETCH=1` + `DEVICE_SYNC_SOURCES` (https JSON on the allowlist; DNS private-IP blocked — no HTML scrape).
-2. **Wizard** — Catalog sync stage: import pack → ReviewGate (evidence required) → **Apply session** (`replaceCatalog`) → download approved pack.
+1. **Job** — `npm run sync:devices` (default `--discover snapshots`)  
+   Cited snapshot JSON → normalize (store-size-class + family inherit) → `.take-sync/proposals.json` + `.take-sync/queue.json` (gitignored). Optional `--input pack.json --evidence https://…`. Optional `--discover wikidata` with `DEVICE_SYNC_FETCH=1` (SPARQL JSON; identity only). Optional `--deprecate-missing`. Optional `DEVICE_SYNC_SOURCES` allowlisted https JSON. DNS private-IP blocked. No HTML scrape.
+2. **Review** — Catalog UI **Check for new devices** / Add, or `npm run catalog:approve -- pack.json --out approved.json`. Evidence + materialize required. Not auto-publish. Pack import is Advanced.
 3. **CLI publish** — `npm run catalog:publish -- approved-pack.json`  
    Writes `catalogs/devices/{year}/{platform}/{id}.json` and regenerates `load-catalog.ts`. Refuses unapproved or unevidenced packs.
 
@@ -22,5 +22,6 @@ Plan: [docs/device-sync-mvp-sprint.md](../../docs/device-sync-mvp-sprint.md)
 
 ## Files
 
-- Browser-safe: `src/*.ts` (no `fs`)
-- Node CLI: `src/node/*`
+- Browser-safe: `src/*.ts` + `src/adapters/*` (no `fs`)
+- Snapshots: `src/sources/snapshots/2025-flagships.json`
+- Node CLI: `src/node/*` (`--discover snapshots` default)

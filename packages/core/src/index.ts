@@ -4,6 +4,7 @@ export * from "./types/intake";
 export * from "./types/inference";
 export * from "./types/frame";
 export * from "./types/store-copy";
+export * from "./types/ad-copy";
 export * from "./types/project-set";
 export * from "./constants/meta-limits";
 export * from "./constants/frame-roles";

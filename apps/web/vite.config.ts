@@ -18,6 +18,8 @@ export default defineConfig({
       "@take/storage": pkg("storage"),
       "@take/template-engine": pkg("template-engine"),
       "@take/export-presets": pkg("export-presets"),
+      "@take/ad-unit-catalog": pkg("ad-unit-catalog"),
+      "@take/ad-compliance": pkg("ad-compliance"),
       "@take/device-sync": svc("device-sync"),
     },
   },

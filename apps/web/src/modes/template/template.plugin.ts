@@ -2,15 +2,22 @@
 import type { ModeEditorPlugin } from "@take/modes-sdk";
 import { listLayoutTemplates } from "@take/storage";
 import { getDevice } from "@take/device-catalog";
-import { recipeFromSaved, refreshCopy, type TemplateRecord } from "@take/template-engine";
+import { recipeFromSaved, refreshCopy, bindRecipeShell, type TemplateRecord } from "@take/template-engine";
 import { currentSet, state } from "../../app/app-state";
 import { escapeHtml } from "../../shared/escape";
 import { toast } from "../../shell/toast";
 import { renderReview } from "../../stages/review/review.render";
 import { renderEditor } from "../../editor/canvas/edit-canvas";
 import { mountModePlugins } from "../mode-plugins";
-import { syncDevicePickerValue } from "../../editor/device/device-picker";
+import {
+  refreshDevicePickerForPlatform,
+  syncDevicePickerValue,
+} from "../../editor/device/device-picker";
 import { syncOrientationUi } from "../../editor/device/orientation-control";
+import {
+  resolveApplyStoreShell,
+  syncStoreTargetUi,
+} from "../../editor/device/store-target-control";
 import { pickTemplate } from "./template-pick";
 import { projectSetFromRecipe } from "./template-set";
 
@@ -86,7 +93,15 @@ export const templateInspectorPlugin: ModeEditorPlugin = {
         return;
       }
       const tpl = pickTemplate(state.templateId);
-      const recipe = recipeFromSaved({ ...tpl, layout: tpl?.layout });
+      let recipe = recipeFromSaved({ ...tpl, layout: tpl?.layout });
+      const mobile = (recipe.tags || []).includes("mobile") || tpl?.platform === "mobile";
+      if (mobile) {
+        const shell = resolveApplyStoreShell(brief.platform);
+        recipe = bindRecipeShell(recipe, shell);
+        state.platform = shell;
+        state.deviceId = recipe.deviceId || state.deviceId;
+        refreshDevicePickerForPlatform(shell);
+      }
       const set = projectSetFromRecipe(recipe, brief, {
         deviceId: recipe.deviceId || state.deviceId,
         seedPalette: state.scanPalette?.swatches.map((s) => s.hex),
@@ -97,6 +112,8 @@ export const templateInspectorPlugin: ModeEditorPlugin = {
       state.activeFrame = 0;
       if (recipe.deviceId) state.deviceId = recipe.deviceId;
       if (recipe.defaultOrientation) state.orientation = recipe.defaultOrientation;
+      syncDevicePickerValue();
+      syncStoreTargetUi();
       afterApply();
       toast("Library recipe applied");
     });

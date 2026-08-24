@@ -12,7 +12,7 @@ function assert(cond: boolean, msg: string) {
 
 resetCatalogFromDisk();
 const all = loadCatalogDevices();
-assert(all.length >= 10, `expected >=10 devices, got ${all.length}`);
+assert(all.length >= 19, `expected >=19 devices, got ${all.length}`);
 
 for (const d of all) {
   const r = validateDevice(d);
@@ -31,6 +31,13 @@ assert(iosDef?.id === "apple.iphone-16-pro-max", `ios default is Pro Max, got ${
 
 const andDef = resolveDefaultDevice("android");
 assert(andDef?.id === "google.pixel-9", `android default Pixel 9, got ${andDef?.id}`);
+
+const i17 = getDevice("apple.iphone-17-pro");
+assert(!!i17, "iphone-17-pro published");
+assert((i17!.source || "").includes("inferredFrom"), "17 Pro chrome labeled inherited");
+assert(!!getDevice("apple.iphone-16"), "iphone-16 published");
+assert(!!getDevice("google.pixel-10"), "pixel-10 published");
+assert(!!getDevice("samsung.galaxy-s25"), "galaxy-s25 published");
 
 const size = resolveExportSize("google.pixel-9");
 assert(size.size.w === 1080 && size.size.h === 2424 && !size.fellBack, "pixel export size");

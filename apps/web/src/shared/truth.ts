@@ -33,8 +33,8 @@ export const TRUTH_MARKS: TruthMark[] = [
   },
   {
     sel: '[data-mode-pick="template"]',
-    status: "partial",
-    why: "Applies generated grammar layouts or a library recipe; drag devices on the export slice — not extra layers; not LLM",
+    status: "real",
+    why: "Opens Library. Use applies a store canvas (devices pre-placed). Scan stays on Wizard.",
     place: "corner",
   },
   {
@@ -46,7 +46,13 @@ export const TRUTH_MARKS: TruthMark[] = [
   {
     sel: '[data-mode-pick="slideshow"]',
     status: "partial",
-    why: "Storyboard + editable dwells; MediaRecorder motion when supported",
+    why: "Same stages as Wizard. Distinct only: 6 beats, dwellMs inspector, MediaRecorder when supported — not a separate destination",
+    place: "corner",
+  },
+  {
+    sel: '[data-mode-pick="ads"]',
+    status: "partial",
+    why: "Display/social/video units compose natively — video records the uploaded clip itself (MediaRecorder), not a re-recorded slideshow. Audio passthrough depends on browser captureStream support. Falls back to a labeled static frame only when no video is uploaded.",
     place: "corner",
   },
 
@@ -113,20 +119,20 @@ export const TRUTH_MARKS: TruthMark[] = [
   },
   {
     sel: "#template-arm",
-    status: "partial",
-    why: "Arms a library recipe + catalog device. Generate still builds a new layout; Apply library keeps the card.",
+    status: "real",
+    why: "Shows when a Library look is armed. Wizard Generate applies that recipe (applyTemplate), not generateSets / generateLayout.",
     place: "corner",
   },
   {
     sel: "#qty-control",
     status: "real",
-    why: "Controls Wizard concept-set count or Template generated-layout count",
+    why: "Controls Wizard concept-set count. Armed Library look uses the recipe’s frame count (one set).",
     place: "after",
   },
   {
     sel: "#btn-generate",
     status: "partial",
-    why: "Scan brief + mode.run; Template Generate = grammar layouts (not LLM); copy still rule-based",
+    why: "Scan brief + mode.run; Wizard with an armed Library look applies that recipe",
     place: "after",
   },
 
@@ -146,7 +152,7 @@ export const TRUTH_MARKS: TruthMark[] = [
   {
     sel: "#btn-regen-all",
     status: "partial",
-    why: "Re-runs the armed mode. Template: new generateLayout seed. Refresh copy is a separate inspector action.",
+    why: "Re-runs the armed mode. Wizard + armed look re-applies the recipe. New layout is a Library action (grammar).",
     place: "after",
   },
 
@@ -158,6 +164,12 @@ export const TRUTH_MARKS: TruthMark[] = [
     place: "after",
   },
   {
+    sel: "#store-target-control",
+    status: "real",
+    why: "iOS | Android swaps shell + device aspect on the same layout recipe, then re-export. Play sets over 8 frames warn — no silent trim. Armed Wizard Generate binds the shell from intake/brief.",
+    place: "after",
+  },
+  {
     sel: "#phone-mock",
     status: "partial",
     why: "Wizard / no-recipe copy edit. Layout recipes use #layout-stage (the export slice) instead",
@@ -166,13 +178,19 @@ export const TRUTH_MARKS: TruthMark[] = [
   {
     sel: "#layout-stage",
     status: "real",
-    why: "Export slice canvas + overlay copy; drag/resize/rotate device slots; type is not double-painted",
+    why: "Export slice canvas. Geometric shells bake island / punch / side buttons from catalog hardware — not photoreal OEM photos.",
     place: "after",
   },
   {
     sel: "#strip-preview",
     status: "real",
     why: "Joined strip rail shares paintStripSlice with export — bleed is a real world clip",
+    place: "after",
+  },
+  {
+    sel: "#set-stage",
+    status: "real",
+    why: "Set view paints the store carousel via paintStripSlice (same as export); click a frame for Slice",
     place: "after",
   },
   {
@@ -189,14 +207,68 @@ export const TRUTH_MARKS: TruthMark[] = [
   },
   {
     sel: "#btn-add-copy",
-    status: "fake",
-    why: "Toast only — extra copy blocks are not a slot (device drag is real on #layout-stage)",
+    status: "real",
+    why: "Creates an ExtraSlot copy on the recipe; drag on #layout-stage; cap 6 per slice",
+    place: "after",
+  },
+  {
+    sel: "#copy-marks-row",
+    status: "real",
+    why: "**word** paints a pill, ++word++ an underline. Script face is this extra only — store headline stays system-ui.",
     place: "after",
   },
   {
     sel: "#btn-add-visual",
-    status: "fake",
-    why: "Toast only — extra visuals are not a slot (device drag is real on #layout-stage)",
+    status: "real",
+    why: "Creates an ExtraSlot visual (image or fill) on the recipe; not the world background",
+    place: "after",
+  },
+  {
+    sel: "#shape-row",
+    status: "real",
+    why: "Procedural blob/wave/star/dots/scribble extras — not competitor art",
+    place: "after",
+  },
+  {
+    sel: "#widget-row",
+    status: "real",
+    why: "Rating / review / pills geometry. Numbers and names are sample until you type them — ZIP does not invent App Store ratings.",
+    place: "after",
+  },
+  {
+    sel: "#widget-fields-row",
+    status: "real",
+    why: "Edit selected widget score, label, quote, name, pills. Empty score paints an em dash.",
+    place: "after",
+  },
+  {
+    sel: "#type-band-row",
+    status: "real",
+    why: "Per-PNG type band (top/bottom/split/none). Recipe typeFamily is the default.",
+    place: "after",
+  },
+  {
+    sel: "#slice-rule-row",
+    status: "real",
+    why: "Add/remove/fan-3 phones on this PNG; landscape is this device in a portrait store file; mini screen is an extra, not a DeviceInstance.",
+    place: "after",
+  },
+  {
+    sel: "#btn-strip-panorama",
+    status: "real",
+    why: "Sets BackgroundLayer image across n·W; isolated still paints per PNG (no fake join)",
+    place: "after",
+  },
+  {
+    sel: "#pos-preset-grid",
+    status: "real",
+    why: "Stamps selected device from PLACEMENT_PRESETS. Yaw/Pitch project a 2.5D shell (not OEM photos). Bleed next/prev is one phone clipped across two store PNGs.",
+    place: "after",
+  },
+  {
+    sel: "#tilt-sliders-row",
+    status: "real",
+    why: "Yaw −35…35 and pitch −20…20 on the selected phone. Same rotateXDeg/rotateYDeg as presets. Cheap warp, not WebGL.",
     place: "after",
   },
   {
@@ -228,7 +300,7 @@ export const TRUTH_MARKS: TruthMark[] = [
   {
     sel: "#catalog-wizard",
     status: "partial",
-    why: "Propose→Review→Apply session catalog; evidence required; download pack for CLI publish — not live sync",
+    why: "Check for new devices uses a bundled research list (not a live scrape). Add updates this browser’s catalog. Disk publish is Advanced / CLI.",
     place: "corner",
   },
   {
@@ -244,11 +316,31 @@ export const TRUTH_MARKS: TruthMark[] = [
     place: "corner",
   },
 
+  // Ads mode
+  {
+    sel: ".ads-thumb-grid",
+    status: "real",
+    why: "Each thumbnail is paintAdFrame — a real composition at that unit's native WxH from the chosen wireframe, headline/CTA/logo positioned for that shape. ZIP export uses the same painter.",
+    place: "corner",
+  },
+  {
+    sel: ".ads-compliance-checklist",
+    status: "partial",
+    why: "Real keyword checks against cited platform/regulator disclosure norms — 4 categories × 4 jurisdictions (US/EU/UK/Canada, the only ones the picker offers). Not legal advice, not NLP. EU/UK pharma and EU/CA alcohol/gambling correctly show as legality prohibition-notices (banned, or too fragmented per-country for one rule) rather than a fake pass/fail checklist. No other country is selectable yet — deliberately, rather than fabricating continent-wide rules. Never blocks export.",
+    place: "corner",
+  },
+  {
+    sel: ".ads-unit-grid",
+    status: "real",
+    why: "24 units (incl. named TikTok/Instagram/YouTube/Pinterest destinations, real duration + file-size limits per platform) across 10 shape families from @take/ad-unit-catalog. Toggle, then Regenerate to rebuild the set — matches every other mode's regen path.",
+    place: "after",
+  },
+
   // Library
   {
     sel: ".library-layout .stage-label, #stage-library .stage-label",
-    status: "partial",
-    why: "Use arms Template mode; Refresh copy rewrites user cards (system cards: duplicate first)",
+    status: "real",
+    why: "Click the thumb to browse every slice. System cards are store-count canvases plus dual-store mobile geometry for the 20 refs (one card each; visible under Mobile / iOS / Android filters; Edit iOS|Android swaps the shell; photo plates empty until you drop an image). Use applies the look (or arms Wizard if you have not scanned).",
     place: "after",
   },
 ];

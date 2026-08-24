@@ -1,0 +1,14 @@
+{
+  "id": "iab.billboard-970x250",
+  "label": "Billboard",
+  "family": "billboard",
+  "kind": "display",
+  "context": "desktop-web",
+  "exportPx": { "w": 970, "h": 250 },
+  "platform": "Generic / IAB",
+  "iabName": "Billboard",
+  "status": "current",
+  "source": "IAB Display Advertising Portfolio — Billboard",
+  "updatedAt": "2026-08-24",
+  "version": "1"
+}

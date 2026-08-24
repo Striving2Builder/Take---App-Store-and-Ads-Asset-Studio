@@ -22,10 +22,8 @@
   <rect x="132" y="32" width="126" height="34" rx="17" fill="#000"/>
   <circle cx="230" cy="49" r="5" fill="#1a2030"/>
   <circle cx="242" cy="49" r="3.5" fill="#0e1218"/>
-  <!-- Side buttons -->
-  <rect x="2" y="168" width="7" height="32" rx="2" fill="url(#side)"/>
+  <!-- Side buttons (Action + volume left; power right) — 15/16 family default -->
+  <rect x="2" y="148" width="7" height="18" rx="2" fill="#4a4e58"/>
   <rect x="2" y="220" width="7" height="62" rx="2" fill="url(#side)"/>
   <rect x="381" y="210" width="7" height="78" rx="2" fill="url(#side)"/>
-  <!-- Action button cue -->
-  <rect x="2" y="148" width="7" height="14" rx="2" fill="#4a4e58"/>
 </svg>

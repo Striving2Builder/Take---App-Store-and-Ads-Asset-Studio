@@ -1,0 +1,15 @@
+{
+  "id": "youtube.instream-16x9",
+  "label": "YouTube Skippable In-Stream",
+  "family": "video-landscape",
+  "kind": "video",
+  "context": "video",
+  "exportPx": { "w": 1920, "h": 1080 },
+  "platform": "YouTube",
+  "recommendedDurationMs": { "min": 30000, "max": 90000 },
+  "iabName": "YouTube skippable in-stream — skip after 5s, no hard length cap, 3min soft ceiling",
+  "status": "current",
+  "source": "Google Ads Help — Skippable in-stream ads (no hard max; ~3min recommended ceiling)",
+  "updatedAt": "2026-08-24",
+  "version": "1"
+}

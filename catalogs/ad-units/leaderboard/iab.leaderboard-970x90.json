@@ -1,0 +1,14 @@
+{
+  "id": "iab.leaderboard-970x90",
+  "label": "Large Leaderboard",
+  "family": "leaderboard",
+  "kind": "display",
+  "context": "desktop-web",
+  "exportPx": { "w": 970, "h": 90 },
+  "platform": "Generic / IAB",
+  "iabName": "Large Leaderboard",
+  "status": "current",
+  "source": "IAB Display Advertising Portfolio — Large Leaderboard",
+  "updatedAt": "2026-08-24",
+  "version": "1"
+}

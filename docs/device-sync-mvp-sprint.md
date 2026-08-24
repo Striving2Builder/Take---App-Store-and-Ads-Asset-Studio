@@ -170,3 +170,19 @@ Do not start fetch (B2) before the gate + CLI refuse-path is tested. A scraper w
 - [x] F62–F65 progress recorded; F66 stays DEFERRED
 - [x] `truth.ts` catalog wizard matches
 - [x] `npm run test:sync` + `test:devices` + web build green
+
+---
+
+## F80 addendum (2026-08-15)
+
+**Closed as:** Node discovery → normalize → existing ReviewGate. Not an in-app crawl. Not HTML.
+
+| Adapter | Default | Output |
+|---------|---------|--------|
+| `snapshots` | `npm run sync:devices` | Cited flagship JSON + ASC/Play size class + family inherit (`inferredFrom`) |
+| `wikidata` | `DEVICE_SYNC_FETCH=1 --discover wikidata` | SPARQL JSON identity only |
+| HTML vendor pages | F100 DEFERRED | — |
+
+Wizard remains pack import (F101 WATCH). Cron F66 and photoreal F25 unchanged. Do not invent SKU chrome; inherited hardware is labeled.
+
+**Published (2026-08-15):** `catalog:approve` + `catalog:publish` wrote iPhone 16 / 16 Plus / 17 / 17 Pro / 17 Pro Max, Pixel 10, Galaxy S25. F32 → 19 devices. F102 WATCH (inherited chrome).

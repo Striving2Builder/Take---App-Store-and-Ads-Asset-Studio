@@ -19,18 +19,17 @@ import { escapeHtml } from "../../shared/escape";
 import { toast } from "../../shell/toast";
 import { renderReview } from "../review/review.render";
 import { renderEditor } from "../../editor/canvas/edit-canvas";
-import { syncTemplateArm } from "../../modes/template/template-arm";
 import { mountModePlugins } from "../../modes/mode-plugins";
 import { persistExportPresetIds } from "../export/persist-presets";
 import { syncExportPresetChecks } from "../export/mount-presets";
+import { paintLibraryThumbs } from "./library-thumb";
+import { libraryFilterMatch } from "./library-filter";
+import { newLayoutFromLibrary, useLibraryRecipe } from "./library-use";
+import { openLibraryPreview } from "./library-preview";
 
 export async function renderLibrary() {
   const all = listLayoutTemplates();
-  const filtered = all.filter((t) => {
-    if (state.filter === "all") return true;
-    if (state.filter === "mine") return t.kind === "user";
-    return t.platform === state.filter || (t.tags || []).includes(state.filter);
-  });
+  const filtered = all.filter((t) => libraryFilterMatch(t, state.filter));
 
   const projects = await listProjects();
   const grid = $("#library-grid");
@@ -42,7 +41,7 @@ export async function renderLibrary() {
         .map(
           (p) => `
       <article class="tpl-card" data-project="${escapeHtml(p.id)}">
-        <div class="tpl-preview" style="background:linear-gradient(145deg, rgba(109,255,176,0.25), transparent 55%), #0c0d10">
+        <div class="tpl-preview tpl-preview-project">
           <span class="tpl-mark">PROJECT</span>
         </div>
         <div class="tpl-body">
@@ -67,16 +66,33 @@ export async function renderLibrary() {
       .map(
         (t) => `
       <article class="tpl-card" data-tpl="${escapeHtml(t.id)}">
-        <div class="tpl-preview" style="background:linear-gradient(145deg, ${
-          t.kind === "user" ? "rgba(255,77,26,0.35)" : "rgba(61,224,255,0.15)"
-        }, transparent 55%), #0c0d10">
+        <div class="tpl-preview">
+          <button type="button" class="tpl-preview-hit" data-action="preview" aria-label="Preview ${escapeHtml(t.name)}">
+            <div class="tpl-shot-grid">
+              ${[0, 1, 2]
+                .map(
+                  (i) => `<canvas class="tpl-shot tpl-thumb" data-thumb="${escapeHtml(t.id)}" data-thumb-slice="${i}" width="180" height="390"></canvas>`
+                )
+                .join("")}
+            </div>
+          </button>
+          <div class="tpl-extra-row">
+            ${state.uploads
+              .filter((u) => u.kind !== "video")
+              .slice(3)
+              .map((u) => `<img class="tpl-extra-shot" src="${u.url}" alt="${escapeHtml(u.name)}" />`)
+              .join("")}
+            <button type="button" class="tpl-add-shot" data-action="upload-more">+ Add more</button>
+          </div>
           <span class="tpl-mark">${escapeHtml((t.platform || "").toUpperCase())} · ${t.frames || "—"}F</span>
         </div>
         <div class="tpl-body">
           <h3>${escapeHtml(t.name)}</h3>
           <p class="tpl-meta">${escapeHtml((t.tags || []).join(" · "))} · ${escapeHtml(t.style || "")}</p>
+          <p class="tpl-slot-note">3 lead screens · ${Math.max(0, (t.frames || 0) - 3)} more slots</p>
           <div class="tpl-actions">
             <button type="button" data-action="use">Use</button>
+            <button type="button" data-action="new-layout">New layout</button>
             <button type="button" data-action="refresh">Refresh</button>
             <button type="button" data-action="dupe">Duplicate</button>
           </div>
@@ -84,6 +100,8 @@ export async function renderLibrary() {
       </article>`
       )
       .join("") + projectHtml;
+
+  void paintLibraryThumbs(grid as HTMLElement, filtered);
 }
 
 export async function handleLibraryAction(id: string, action: string) {
@@ -124,27 +142,17 @@ export async function handleLibraryAction(id: string, action: string) {
   }
 
   if (action === "use") {
-    const tpl = getTemplates().find((t) => t.id === id);
-    const radio = document.querySelector(
-      'input[name="mode"][value="template"]'
-    ) as HTMLInputElement | null;
-    if (radio) radio.checked = true;
-    state.mode = "template";
-    state.templateId = id;
-    showStage("intake");
-    syncTemplateArm();
-    toast(
-      tpl
-        ? `Template “${tpl.name}” armed — scan then Generate in Template mode`
-        : "Template loaded into intake"
-    );
-    pushHistory("template.use", id);
+    useLibraryRecipe(id);
+  } else if (action === "preview") {
+    void openLibraryPreview(id);
+  } else if (action === "new-layout") {
+    newLayoutFromLibrary(id);
   } else if (action === "refresh") {
     const src = getTemplates().find((t) => t.id === id);
     if (!src) return;
     const brief = (src.prompt as InferenceBrief | undefined) || state.inference;
     if (!brief) {
-      toast("No brief on this card — scan, then Refresh copy in Template inspector");
+      toast("No brief on this card — scan, then Refresh copy");
       return;
     }
     if (src.kind !== "user") {

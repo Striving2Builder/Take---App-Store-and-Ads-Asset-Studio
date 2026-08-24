@@ -9,6 +9,17 @@ export function worldSize(frameCount: number, sliceW: number, sliceH: number): {
   return { w: Math.max(1, frameCount) * sliceW, h: sliceH };
 }
 
+/** Strip panorama is one n·W world; isolated + image is per-slice (no fake join). */
+export function backgroundDestSize(
+  composition: "isolated" | "strip",
+  frameCount: number,
+  sliceW: number,
+  sliceH: number
+): { w: number; h: number } {
+  if (composition === "strip") return worldSize(frameCount, sliceW, sliceH);
+  return { w: sliceW, h: sliceH };
+}
+
 export function intersectArea(a: Rect, b: Rect): number {
   const x = Math.max(a.x, b.x);
   const y = Math.max(a.y, b.y);

@@ -1,0 +1,14 @@
+{
+  "id": "iab.mobile-banner-320x50",
+  "label": "Mobile Leaderboard",
+  "family": "mobile-banner",
+  "kind": "display",
+  "context": "mobile-web",
+  "exportPx": { "w": 320, "h": 50 },
+  "platform": "Generic / IAB",
+  "iabName": "Mobile Leaderboard",
+  "status": "current",
+  "source": "IAB Display Advertising Portfolio — Mobile Leaderboard",
+  "updatedAt": "2026-08-24",
+  "version": "1"
+}

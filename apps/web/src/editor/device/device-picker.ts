@@ -14,6 +14,13 @@ export type DevicePickerCallbacks = {
   onChange?: () => void;
 };
 
+/** Set from store-target-control mount to avoid a circular import. */
+let afterDevicePick: ((deviceId: string) => void) | null = null;
+
+export function setAfterDevicePick(fn: ((deviceId: string) => void) | null) {
+  afterDevicePick = fn;
+}
+
 function optionHtml(id: string, name: string, w: number, h: number, extra = "") {
   return `<option value="${id}">${name} · ${w}×${h}${extra}</option>`;
 }
@@ -33,10 +40,7 @@ function sortPlatformFirst<T extends { platform: string; formFactor: string }>(
   });
 }
 
-export function mountDevicePicker(cbs?: DevicePickerCallbacks) {
-  const select = $("#device-picker") as HTMLSelectElement | null;
-  if (!select) return;
-
+function fillDevicePickerOptions(select: HTMLSelectElement) {
   const asOf = new Date();
   const devices = sortPlatformFirst(listDevices({ asOf }), state.platform);
   const current = devices.filter((d) => resolvePickerGroup(d, asOf) === "current");
@@ -66,13 +70,20 @@ export function mountDevicePicker(cbs?: DevicePickerCallbacks) {
     );
   }
   select.innerHTML = parts.join("");
+}
+
+export function mountDevicePicker(cbs?: DevicePickerCallbacks) {
+  const select = $("#device-picker") as HTMLSelectElement | null;
+  if (!select) return;
+
+  fillDevicePickerOptions(select);
 
   if (!getDevice(state.deviceId)) {
     const def = resolveDefaultDevice(state.platform);
     if (state.deviceId) {
       toast(`Unknown device — using ${def?.name || "default"}`);
     }
-    state.deviceId = def?.id || devices[0]?.id || "";
+    state.deviceId = def?.id || "";
   }
   select.value = state.deviceId;
   applyDeviceFrame();
@@ -81,18 +92,27 @@ export function mountDevicePicker(cbs?: DevicePickerCallbacks) {
     state.deviceId = select.value;
     const set = state.sets[state.selectedSet];
     if (set) set.deviceId = state.deviceId;
+    afterDevicePick?.(state.deviceId);
     applyDeviceFrame();
     cbs?.onChange?.();
   });
 }
 
-export function syncDevicePickerToPlatform(platform: string) {
+/** Default device for platform + rebuild picker order (store-target toggle). */
+export function refreshDevicePickerForPlatform(platform: string) {
   const def = resolveDefaultDevice(platform);
   if (!def) return;
   state.deviceId = def.id;
   const select = $("#device-picker") as HTMLSelectElement | null;
-  if (select && getDevice(def.id)) select.value = def.id;
+  if (select) {
+    fillDevicePickerOptions(select);
+    if (getDevice(def.id)) select.value = def.id;
+  }
   applyDeviceFrame();
+}
+
+export function syncDevicePickerToPlatform(platform: string) {
+  refreshDevicePickerForPlatform(platform);
 }
 
 export function syncDevicePickerValue() {

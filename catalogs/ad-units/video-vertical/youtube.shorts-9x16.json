@@ -1,0 +1,15 @@
+{
+  "id": "youtube.shorts-9x16",
+  "label": "YouTube Shorts",
+  "family": "video-vertical",
+  "kind": "video",
+  "context": "video",
+  "exportPx": { "w": 1080, "h": 1920 },
+  "platform": "YouTube",
+  "maxDurationMs": 60000,
+  "iabName": "YouTube Shorts ads — vertical, ≤60s",
+  "status": "current",
+  "source": "YouTube Ads Help — Shorts ads spec",
+  "updatedAt": "2026-08-24",
+  "version": "1"
+}

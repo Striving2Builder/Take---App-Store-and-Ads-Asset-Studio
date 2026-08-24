@@ -6,20 +6,20 @@ function assert(cond: boolean, msg: string) {
 }
 
 const bound = resolveTemplateBind({
-  id: "sys-ios-story",
-  name: "iOS Story Spine",
+  id: "sys-ios-isolated-5",
+  name: "iOS · isolated 5",
   tags: ["ios"],
   platform: "ios",
   kind: "system",
   style: "premium",
-  frames: 8,
+  frames: 5,
   deviceId: "apple.iphone-16-pro-max",
   defaultOrientation: "portrait",
-  updated: "2026-08-01",
+  updated: "2026-08-15",
 });
 assert(bound?.deviceId === "apple.iphone-16-pro-max", "known device binds");
 assert(bound?.orientation === "portrait", "orientation binds");
-assert(bound?.frameHint === 8, "frame hint");
+assert(bound?.frameHint === 5, "frame hint");
 
 const unknown = resolveTemplateBind({
   id: "x",

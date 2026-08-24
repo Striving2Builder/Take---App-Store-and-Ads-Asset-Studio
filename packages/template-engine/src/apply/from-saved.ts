@@ -1,6 +1,6 @@
 /** OWNER: packages/template-engine — hydrate library cards into TemplateRecord */
 import type { TemplateRecord } from "../template.types";
-import { listSeedRecipes } from "../seeds/strip-bleed-hook";
+import { listSeedRecipes } from "../seeds/load-recipes";
 
 export type RecipeSource = {
   id: string;

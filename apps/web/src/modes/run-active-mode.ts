@@ -53,6 +53,7 @@ export async function runActiveMode(): Promise<ModeRunResult> {
     deviceId: state.deviceId,
     orientation: state.orientation,
     shotCount: selectedScreenshots().length,
+    adUnitIds: state.adUnitIds,
   });
 
   const inf = result.inference;
@@ -88,4 +89,12 @@ export function applyModeRunResult(result: ModeRunResult): void {
     for (const set of state.sets) set.deviceId = result.deviceId;
   }
   if (result.orientation) state.orientation = result.orientation;
+  const plat = result.inference?.platform;
+  if (plat === "android" || plat === "ios") {
+    state.platform = plat;
+  } else if (result.deviceId?.startsWith("google.")) {
+    state.platform = "android";
+  } else if (result.deviceId?.startsWith("apple.")) {
+    state.platform = "ios";
+  }
 }

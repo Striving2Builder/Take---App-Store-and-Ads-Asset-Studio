@@ -1,6 +1,7 @@
 /** OWNER: services/device-sync — diff candidates vs current catalog (no network) */
 import type { DeviceProfile } from "@take/device-catalog";
-import type { DeviceProposal, ProposalConfidence } from "./types";
+import type { NormalizedCandidate } from "./discover.types";
+import type { DeviceProposal, ProposalConfidence, ProposedDevice } from "./types";
 
 function px(a?: { w: number; h: number }): string {
   return a ? `${a.w}×${a.h}` : "—";
@@ -46,7 +47,7 @@ function confidence(kind: ProposalKind): ProposalConfidence {
 
 function asProposal(
   id: string,
-  proposed: DeviceProfile,
+  proposed: ProposedDevice,
   evidenceUrl: string,
   summary: string,
   kind: ProposalKind,
@@ -103,5 +104,40 @@ export function deprecateCandidates(
     const summary = `deprecate-candidate ${d.id} missing from source set`;
     out.push(asProposal(`diff-${d.id}-deprecate`, proposed, evidenceUrl, summary, "deprecate", now));
   }
+  return out;
+}
+
+/**
+ * Discovery-normalized rows keep adapter confidence (store-class + inherit ≠ high).
+ * Structured --input JSON still uses diffCatalog (new/change = high).
+ */
+export function proposalsFromNormalized(
+  current: DeviceProfile[],
+  rows: NormalizedCandidate[]
+): DeviceProposal[] {
+  const now = new Date().toISOString();
+  const byId = new Map(current.map((d) => [d.id, d]));
+  const out: DeviceProposal[] = [];
+  rows.forEach((row, i) => {
+    const p = row.proposed;
+    const prev = byId.get(p.id);
+    const { kind, summary } = classifyChange(prev, {
+      id: p.id,
+      exportPx: p.exportPx || { w: 0, h: 0 },
+      screenInset: p.screenInset || { x: 0, y: 0, w: 0, h: 0 },
+      status: p.status || "current",
+    });
+    if (kind === "unchanged" || kind === "deprecate") return;
+    out.push({
+      id: `disc-${p.id}-${i}`,
+      proposed: p,
+      evidence: row.evidence.length
+        ? row.evidence.map((e) => ({ ...e, note: e.note || summary }))
+        : [{ url: "", note: summary, fetchedAt: now }],
+      confidence: row.confidence,
+      reviewStatus: "pending",
+      createdAt: now,
+    });
+  });
   return out;
 }

@@ -1,7 +1,8 @@
 /** OWNER: services/device-sync — on-demand research job (default: no fetch) */
 import type { DeviceProfile } from "@take/device-catalog";
 import { parseProposalInput } from "./parse-pack";
-import { deprecateCandidates, diffCatalog } from "./diff-catalog";
+import { deprecateCandidates, diffCatalog, proposalsFromNormalized } from "./diff-catalog";
+import type { NormalizedCandidate } from "./discover.types";
 import type { CatalogPack } from "./types";
 
 export type FetchedSyncSource = { url: string; json: unknown };
@@ -21,6 +22,8 @@ export type RunDeviceSyncInput = {
   fetchedSources?: FetchedSyncSource[];
   /** Opt-in: propose status=deprecated for same-prefix catalog ids missing from the set. */
   deprecateMissing?: boolean;
+  /** Normalized discovery rows (snapshots / Wikidata). Confidence comes from the adapter. */
+  normalized?: NormalizedCandidate[];
 };
 
 export type RunDeviceSyncResult = {
@@ -98,26 +101,37 @@ export function runDeviceSync(input: RunDeviceSyncInput): RunDeviceSyncResult {
   }
 
   const candidates = groups.flatMap((g) => g.profiles);
-  if (!candidates.length) {
+  const normalized = input.normalized || [];
+  if (!candidates.length && !normalized.length) {
     return {
       pack: emptyPack(now),
       message:
-        "No candidates — pass a manual pack (--input) or DEVICE_SYNC_FETCH=1 with DEVICE_SYNC_SOURCES. Publisher will not write catalogs.",
+        "No candidates — pass --discover snapshots (default), --input, or DEVICE_SYNC_FETCH=1 with DEVICE_SYNC_SOURCES. Publisher will not write catalogs.",
     };
   }
 
   const proposals = groups.flatMap((g) => diffCatalog(input.current, g.profiles, g.evidenceUrl));
+  proposals.push(...proposalsFromNormalized(input.current, normalized));
   if (input.deprecateMissing) {
-    const cite = evidenceUrl || groups[0]?.evidenceUrl || "";
+    const cite =
+      evidenceUrl ||
+      groups[0]?.evidenceUrl ||
+      normalized[0]?.evidence.find((e) => /^https:\/\//i.test(e.url))?.url ||
+      "";
     if (!cite) {
       return {
         pack: emptyPack(now),
         message: "--deprecate-missing needs --evidence or a fetched source URL",
       };
     }
-    proposals.push(...deprecateCandidates(input.current, candidates, cite));
+    const present = [
+      ...candidates,
+      ...normalized.map((n) => n.proposed).filter((p) => p.id && p.exportPx),
+    ] as DeviceProfile[];
+    proposals.push(...deprecateCandidates(input.current, present, cite));
   }
 
+  const candidateCount = candidates.length + normalized.length;
   return {
     pack: {
       version: "sync",
@@ -126,7 +140,7 @@ export function runDeviceSync(input: RunDeviceSyncInput): RunDeviceSyncResult {
       proposals,
     },
     message: proposals.length
-      ? `${proposals.length} proposal(s) from ${candidates.length} candidate(s) — awaiting human review`
+      ? `${proposals.length} proposal(s) from ${candidateCount} candidate(s) — awaiting human review`
       : "Candidates match current catalog — nothing to review",
   };
 }

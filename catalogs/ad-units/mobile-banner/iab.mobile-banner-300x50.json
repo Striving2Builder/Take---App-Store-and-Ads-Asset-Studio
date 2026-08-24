@@ -1,0 +1,14 @@
+{
+  "id": "iab.mobile-banner-300x50",
+  "label": "Mobile Banner",
+  "family": "mobile-banner",
+  "kind": "display",
+  "context": "mobile-web",
+  "exportPx": { "w": 300, "h": 50 },
+  "platform": "Generic / IAB",
+  "iabName": "Mobile Banner",
+  "status": "current",
+  "source": "IAB Display Advertising Portfolio — Mobile Banner",
+  "updatedAt": "2026-08-24",
+  "version": "1"
+}

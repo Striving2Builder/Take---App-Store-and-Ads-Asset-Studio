@@ -1,0 +1,5 @@
+Caveat (SIL Open Font License 1.1)
+Copyright 2014 The Caveat Project Authors (https://github.com/googlefonts/caveat)
+
+Bundled as Take Script for ExtraSlot.face = "script" only.
+Store kicker / headline / caption stay system-ui.

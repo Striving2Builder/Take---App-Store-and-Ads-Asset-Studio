@@ -6,7 +6,7 @@ import { bindNavJumps } from "../shell/nav";
 import { toast } from "../shell/toast";
 import { $, $$ } from "../shared/dom";
 import { bindMissingWatchers, updateMissing } from "../stages/intake/intake.missing";
-import { bindUploads } from "../stages/intake/intake.uploads";
+import { bindUploads, handleFiles } from "../stages/intake/intake.uploads";
 import { bindScanReceiptTabs } from "../stages/intake/scan-receipt";
 import { mountLocaleSwitcher } from "../stages/intake/scan-locale";
 import { mountScanSources } from "../stages/intake/scan-sources";
@@ -24,11 +24,21 @@ import {
 import { bindMetaFields } from "../editor/inspectors/copy-inspector";
 import { bindStyleInspector } from "../editor/inspectors/style-inspector";
 import { bindLayerToggles } from "../editor/layers/layer-toggles";
-import { bindLayoutDrag } from "../editor/layout/layout-drag";
+import { bindLayoutDrag, onLayoutSelection } from "../editor/layout/layout-drag";
+import { ensureSetRecipe } from "../editor/layout/attach-recipe";
+import { addCopyOrVisual, applyPanoramaFromPicker, bindChromeExtras } from "../editor/inspectors/layers-inspector";
+import { bindCopyMarks, renderCopyMarksRow } from "../editor/inspectors/copy-marks";
+import { bindWidgetFields, renderWidgetFields } from "../editor/inspectors/widget-fields";
+import { bindTiltSliders, renderTiltSliders } from "../editor/inspectors/tilt-sliders";
+import { bindPositionPresets } from "../editor/inspectors/position-presets";
 import { mountDevicePicker, syncDevicePickerValue } from "../editor/device/device-picker";
 import { mountFitControl, syncFitControlUi } from "../editor/device/fit-control";
 import { mountOrientationControl, syncOrientationUi } from "../editor/device/orientation-control";
 import { mountShellViewControl, syncShellViewUi } from "../editor/device/shell-view-control";
+import {
+  mountStoreTargetControl,
+  syncStoreTargetUi,
+} from "../editor/device/store-target-control";
 import { openDevicePreview } from "../editor/device/preview-devices";
 import { mountCatalogWizard } from "../stages/catalog/catalog-wizard";
 import { mountExportPresets } from "../stages/export/mount-presets";
@@ -39,6 +49,7 @@ import {
   saveCurrentProject,
 } from "../stages/export/export.controller";
 import { handleLibraryAction, renderLibrary } from "../stages/library/library.render";
+import { bindLibraryPreview } from "../stages/library/library-preview";
 import { bindTemplateModal, openSaveTemplateModal } from "../library-ui/template-save";
 import { mountTruthLayer, mountTruthBadges } from "../shell/truth-layer";
 import { registerModes } from "../modes/register-modes";
@@ -46,6 +57,7 @@ import { applyModeRunResult, runActiveMode } from "../modes/run-active-mode";
 import { mountModePlugins, syncModePluginHighlights } from "../modes/mode-plugins";
 import { applyExportHints } from "../modes/apply-export-hints";
 import { bindTemplateArm, syncTemplateArm } from "../modes/template/template-arm";
+import { syncAdsIntakeUi } from "../stages/intake/intake-ad-units";
 
 function bindGlobalClicks() {
   document.addEventListener("click", (e) => {
@@ -54,11 +66,18 @@ function bindGlobalClicks() {
     const modePick = t.closest("[data-mode-pick]") as HTMLElement | null;
     if (modePick) {
       const m = modePick.dataset.modePick || "wizard";
+      if (m === "template") {
+        showStage("library");
+        void renderLibrary();
+        toast("Library — pick a look");
+        return;
+      }
       const radio = $(`input[name="mode"][value="${m}"]`) as HTMLInputElement | null;
       if (radio) radio.checked = true;
       state.mode = m;
       showStage("intake");
       syncTemplateArm();
+      syncAdsIntakeUi();
       updateMissing();
       toast(`${modePick.querySelector("h2")?.textContent || m} mode armed`);
       return;
@@ -75,6 +94,7 @@ function bindGlobalClicks() {
     if (frameBtn) {
       syncFrameFromDom();
       state.activeFrame = Number(frameBtn.dataset.frame);
+      if (frameBtn.closest("#set-stage")) state.editView = "slice";
       renderEditor();
       syncModePluginHighlights();
       return;
@@ -99,13 +119,20 @@ function bindGlobalClicks() {
       return;
     }
 
-    const tplAction = t.closest(".tpl-actions [data-action]") as HTMLElement | null;
+    const tplAction = t.closest("[data-action]") as HTMLElement | null;
     if (tplAction) {
+      if (tplAction.dataset.action === "upload-more") {
+        $("#library-upload-shots")?.click();
+        return;
+      }
       const card =
         (tplAction.closest("[data-tpl]") as HTMLElement | null) ||
         (tplAction.closest("[data-project]") as HTMLElement | null);
       const id = card?.dataset.tpl || card?.dataset.project;
-      if (id) void handleLibraryAction(id, tplAction.dataset.action || "");
+      if (id) {
+        void handleLibraryAction(id, tplAction.dataset.action || "");
+        return;
+      }
     }
   });
 }
@@ -133,12 +160,34 @@ function bindEditorActions() {
   $("#btn-regen-frame")?.addEventListener("click", regenFrame);
   $("#btn-remove-frame")?.addEventListener("click", removeFrame);
   $("#btn-add-frame")?.addEventListener("click", addFrame);
-  $("#btn-add-copy")?.addEventListener("click", () =>
-    toast("Copy block added to layers (editable on canvas)")
-  );
-  $("#btn-add-visual")?.addEventListener("click", () =>
-    toast("Visual element slot added — drop an asset anytime")
-  );
+  $("#btn-add-copy")?.addEventListener("click", () => {
+    const err = addCopyOrVisual("copy");
+    toast(err || "Copy block on this slice — drag on the canvas");
+    if (!err) {
+      state.editView = "slice";
+      renderEditor();
+    }
+  });
+  $("#btn-add-visual")?.addEventListener("click", () => {
+    const err = addCopyOrVisual("visual");
+    toast(err || "Visual slot on this slice — drag on the canvas");
+    if (!err) {
+      state.editView = "slice";
+      renderEditor();
+    }
+  });
+  $("#btn-strip-panorama")?.addEventListener("click", () => {
+    const err = applyPanoramaFromPicker();
+    toast(err || "Strip panorama — N clips from one world image");
+    if (!err) renderEditor();
+  });
+  $("#edit-view-control")?.addEventListener("click", (e) => {
+    const btn = (e.target as Element).closest("[data-edit-view]") as HTMLElement | null;
+    if (!btn?.dataset.editView) return;
+    state.editView = btn.dataset.editView === "set" ? "set" : "slice";
+    if (state.editView === "set") ensureSetRecipe();
+    renderEditor();
+  });
   $("#btn-refresh-variant")?.addEventListener("click", async () => {
     const set = state.sets[state.selectedSet];
     if (!set || !state.inference) return;
@@ -182,12 +231,23 @@ function bindExportActions() {
   $("#btn-export-library")?.addEventListener("click", exportLibrary);
 }
 
+function bindLibraryUploads() {
+  $("#library-upload-shots")?.addEventListener("change", async (e) => {
+    await handleFiles((e.target as HTMLInputElement).files);
+    const count = $("#library-upload-count");
+    if (count) count.textContent = `${state.uploads.length} added`;
+    const { renderLibrary } = await import("../stages/library/library.render");
+    await renderLibrary();
+  });
+}
+
 export function startApp() {
   registerModes();
   bindNavJumps();
   bindGlobalClicks();
   bindMissingWatchers();
   bindUploads();
+  bindLibraryUploads();
   bindUserProvenance();
   bindIntakeActions();
   bindEditorActions();
@@ -197,7 +257,21 @@ export function startApp() {
   bindScanReceiptTabs();
   bindLayerToggles();
   bindLayoutDrag();
+  onLayoutSelection(() => {
+    renderCopyMarksRow();
+    renderWidgetFields();
+    renderTiltSliders();
+  });
+  bindCopyMarks();
+  bindWidgetFields();
+  bindTiltSliders();
+  bindPositionPresets();
+  bindChromeExtras(() => {
+    state.editView = "slice";
+    renderEditor();
+  });
   bindTemplateModal();
+  bindLibraryPreview();
   bindTemplateArm();
   mountDevicePicker({
     onChange: () => {
@@ -209,6 +283,7 @@ export function startApp() {
     renderEditor();
     renderValidation();
   };
+  mountStoreTargetControl({ onChange: onDeviceUi });
   mountFitControl({ onChange: onDeviceUi });
   mountOrientationControl({ onChange: onDeviceUi });
   mountShellViewControl({ onChange: onDeviceUi });
@@ -239,6 +314,7 @@ export function startApp() {
       syncFitControlUi();
       syncOrientationUi();
       syncShellViewUi();
+      syncStoreTargetUi();
       mountModePlugins();
       const modeLink = $("#mode-panel-link") as HTMLElement | null;
       if (modeLink && !modeLink.hidden && state.mode !== "wizard") {

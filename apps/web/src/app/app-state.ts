@@ -3,7 +3,18 @@ import type { InferenceBrief, ProjectSet } from "@take/core";
 import type { CapturedPalette, ScanPack, ScanResult } from "@take/scan-client";
 import type { DeviceFitMode, DeviceOrientation, ShellView } from "@take/device-catalog";
 
-export type UploadItem = { name: string; url: string };
+export type UploadItem = {
+  name: string;
+  url: string;
+  kind: "image" | "video";
+  /** Video only — read from the file itself, not invented */
+  durationMs?: number;
+  width?: number;
+  height?: number;
+  bytes?: number;
+  /** Video only — first-frame thumbnail for previews */
+  posterUrl?: string;
+};
 
 export type AppState = {
   stage: string;
@@ -26,10 +37,14 @@ export type AppState = {
   scanLocked: boolean;
   selectedShotIds: string[];
   currentProjectId: string | null;
-  /** Library recipe armed for Template mode */
+  /** Library recipe armed — Wizard Generate applies this look */
   templateId: string;
   /** null = use stored/defaultOn until the user changes Export checkboxes */
   exportPresetIds: string[] | null;
+  /** Slice = one PNG; Set = store carousel */
+  editView: "slice" | "set";
+  /** Ads mode: selected @take/ad-unit-catalog ids — one StoryFrame per id on Generate */
+  adUnitIds: string[];
 };
 
 export const state: AppState = {
@@ -55,6 +70,8 @@ export const state: AppState = {
   currentProjectId: null,
   templateId: "",
   exportPresetIds: null,
+  editView: "slice",
+  adUnitIds: ["iab.mpu-300x250", "iab.leaderboard-728x90", "iab.social-feed-4x5"],
 };
 
 export function currentSet() {

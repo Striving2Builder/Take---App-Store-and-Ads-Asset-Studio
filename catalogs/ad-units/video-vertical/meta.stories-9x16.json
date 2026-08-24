@@ -1,0 +1,17 @@
+{
+  "id": "meta.stories-9x16",
+  "label": "Instagram/Facebook Stories",
+  "family": "video-vertical",
+  "kind": "video",
+  "context": "video",
+  "exportPx": { "w": 1080, "h": 1920 },
+  "platform": "Instagram/Facebook",
+  "minDurationMs": 1000,
+  "maxDurationMs": 60000,
+  "maxFileSizeBytes": 4000000000,
+  "iabName": "Meta Stories ads — 1–60s (auto-split into 15s cards beyond that)",
+  "status": "current",
+  "source": "Meta Ads Manager — Stories video spec (unified safe zone with Reels)",
+  "updatedAt": "2026-08-24",
+  "version": "1"
+}

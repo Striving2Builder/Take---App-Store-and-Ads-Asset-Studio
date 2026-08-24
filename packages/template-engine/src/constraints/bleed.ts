@@ -1,7 +1,7 @@
 /** OWNER: packages/template-engine — bleed legality (visible fraction per slice) */
 import type { DeviceInstance } from "../template.types";
-import { deviceAabb, intersectArea, sliceRect } from "./aabb";
-import { toWorldInstance } from "./world";
+import { intersectArea, sliceRect } from "./aabb";
+import { instanceAabb } from "../project/perspective";
 
 export const MIN_VISIBLE_FRAC = 0.28;
 
@@ -11,11 +11,9 @@ export function visibleFrac(
   sliceW: number,
   sliceH: number
 ): number {
-  const world = toWorldInstance(inst, sliceW, sliceH);
-  const box = deviceAabb(world.x, world.y, world.w, world.h, world.rotationDeg);
+  const box = instanceAabb(inst, sliceW, sliceH);
   const slice = sliceRect(sliceIndex, sliceW, sliceH);
-  const area = world.w * world.h;
-  if (area <= 0) return 0;
+  const area = Math.max(1, box.w * box.h);
   return intersectArea(box, slice) / area;
 }
 

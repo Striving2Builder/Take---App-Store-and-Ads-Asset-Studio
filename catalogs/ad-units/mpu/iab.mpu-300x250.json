@@ -1,0 +1,14 @@
+{
+  "id": "iab.mpu-300x250",
+  "label": "Medium Rectangle",
+  "family": "mpu",
+  "kind": "display",
+  "context": "desktop-web",
+  "exportPx": { "w": 300, "h": 250 },
+  "platform": "Generic / IAB",
+  "iabName": "Medium Rectangle",
+  "status": "current",
+  "source": "IAB Display Advertising Portfolio — Medium Rectangle (highest-volume unit)",
+  "updatedAt": "2026-08-24",
+  "version": "1"
+}

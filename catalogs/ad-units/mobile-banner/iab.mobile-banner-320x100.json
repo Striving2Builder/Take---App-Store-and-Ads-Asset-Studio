@@ -1,0 +1,14 @@
+{
+  "id": "iab.mobile-banner-320x100",
+  "label": "Large Mobile Banner",
+  "family": "mobile-banner",
+  "kind": "display",
+  "context": "mobile-web",
+  "exportPx": { "w": 320, "h": 100 },
+  "platform": "Generic / IAB",
+  "iabName": "Large Mobile Banner",
+  "status": "current",
+  "source": "IAB Display Advertising Portfolio — Large Mobile Banner",
+  "updatedAt": "2026-08-24",
+  "version": "1"
+}

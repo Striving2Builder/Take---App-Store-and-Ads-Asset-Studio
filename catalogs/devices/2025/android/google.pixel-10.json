@@ -1,0 +1,90 @@
+{
+  "id": "google.pixel-10",
+  "name": "Pixel 10",
+  "platform": "android",
+  "formFactor": "phone",
+  "releasedAt": "2025-08-28",
+  "status": "current",
+  "source": "Play phone class matching catalog Pixel 9 1080×2424 — not a measured Pixel 10 panel · inferredFrom: google.pixel-9 (family chrome, not SKU-measured) · store class play-phone",
+  "updatedAt": "2026-08-16",
+  "version": "2026.08",
+  "exportPx": {
+    "w": 1080,
+    "h": 2424
+  },
+  "exportPxLandscape": {
+    "w": 2424,
+    "h": 1080
+  },
+  "storeSizeClass": "play-phone",
+  "storeSizeNote": "Google Play phone screenshots (1080×2424 native, catalog Pixel class)",
+  "storeTargets": [
+    "play-screens"
+  ],
+  "viewportPx": {
+    "w": 412,
+    "h": 915
+  },
+  "shellPx": {
+    "w": 384,
+    "h": 832
+  },
+  "screenInset": {
+    "x": 22,
+    "y": 22,
+    "w": 340,
+    "h": 788
+  },
+  "safeArea": {
+    "top": 48,
+    "bottom": 32,
+    "left": 0,
+    "right": 0
+  },
+  "hardware": {
+    "frontCamera": {
+      "x": 182,
+      "y": 28,
+      "w": 18,
+      "h": 18
+    },
+    "buttons": [
+      {
+        "side": "right",
+        "y": 180,
+        "h": 48,
+        "kind": "power"
+      },
+      {
+        "side": "right",
+        "y": 248,
+        "h": 72,
+        "kind": "volume"
+      }
+    ],
+    "rearCameras": [
+      {
+        "x": 118,
+        "y": 36,
+        "w": 148,
+        "h": 108
+      }
+    ]
+  },
+  "shellKind": "asset",
+  "shellFamily": "pixel-punch",
+  "shellAssetFront": "/devices/shells/pixel-punch-front.svg",
+  "shellAssetBack": "/devices/shells/pixel-punch-back.svg",
+  "shellAssetFrontLandscape": "/devices/shells/pixel-punch-front-landscape.svg",
+  "shellAssetBackLandscape": "/devices/shells/pixel-punch-back-landscape.svg",
+  "shellPxLandscape": {
+    "w": 832,
+    "h": 384
+  },
+  "screenInsetLandscape": {
+    "x": 22,
+    "y": 22,
+    "w": 788,
+    "h": 340
+  }
+}

@@ -1,0 +1,126 @@
+{
+  "id": "sys-play-isolated-8",
+  "name": "Play · isolated 8",
+  "tags": [
+    "android",
+    "isolated",
+    "screenshots",
+    "needs-polish"
+  ],
+  "version": 1,
+  "composition": "isolated",
+  "deviceId": "google.pixel-9",
+  "defaultOrientation": "portrait",
+  "frameCount": 8,
+  "typeFamily": "top",
+  "typeScale": "m",
+  "background": {
+    "kind": "gradient",
+    "colorA": "#0b1018",
+    "colorB": "#ff4d1a"
+  },
+  "devices": [
+    {
+      "id": "iso-0",
+      "x": 0.5,
+      "y": 0.52,
+      "w": 0.58,
+      "h": 1.2566666666666666,
+      "rotationDeg": 0,
+      "z": 1,
+      "shotIndex": 0,
+      "placement": "center"
+    },
+    {
+      "id": "iso-1",
+      "x": 1.5,
+      "y": 0.52,
+      "w": 0.58,
+      "h": 1.2566666666666666,
+      "rotationDeg": 0,
+      "z": 1,
+      "shotIndex": 1,
+      "placement": "center"
+    },
+    {
+      "id": "iso-2",
+      "x": 2.5,
+      "y": 0.52,
+      "w": 0.58,
+      "h": 1.2566666666666666,
+      "rotationDeg": 0,
+      "z": 1,
+      "shotIndex": 2,
+      "placement": "center"
+    },
+    {
+      "id": "iso-3",
+      "x": 3.5,
+      "y": 0.52,
+      "w": 0.58,
+      "h": 1.2566666666666666,
+      "rotationDeg": 0,
+      "z": 1,
+      "shotIndex": 3,
+      "placement": "center"
+    },
+    {
+      "id": "iso-4",
+      "x": 4.5,
+      "y": 0.52,
+      "w": 0.58,
+      "h": 1.2566666666666666,
+      "rotationDeg": 0,
+      "z": 1,
+      "shotIndex": 4,
+      "placement": "center"
+    },
+    {
+      "id": "iso-5",
+      "x": 5.5,
+      "y": 0.52,
+      "w": 0.58,
+      "h": 1.2566666666666666,
+      "rotationDeg": 0,
+      "z": 1,
+      "shotIndex": 5,
+      "placement": "center"
+    },
+    {
+      "id": "iso-6",
+      "x": 6.5,
+      "y": 0.52,
+      "w": 0.58,
+      "h": 1.2566666666666666,
+      "rotationDeg": 0,
+      "z": 1,
+      "shotIndex": 6,
+      "placement": "center"
+    },
+    {
+      "id": "iso-7",
+      "x": 7.5,
+      "y": 0.52,
+      "w": 0.58,
+      "h": 1.2566666666666666,
+      "rotationDeg": 0,
+      "z": 1,
+      "shotIndex": 7,
+      "placement": "center"
+    }
+  ],
+  "extras": [],
+  "lockBrand": false,
+  "style": "bold",
+  "palette": [
+    "#3de0ff",
+    "#0b1018",
+    "#eef6ff",
+    "#ff4d1a",
+    "#151c28"
+  ],
+  "provenance": {
+    "source": "seed",
+    "grammarVersion": "2026.08"
+  }
+}

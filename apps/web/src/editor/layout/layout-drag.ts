@@ -1,26 +1,37 @@
-/** OWNER: editor/layout — drag / resize / rotate device slots on #layout-stage */
+/** OWNER: editor/layout — drag / resize / rotate devices + extras on #layout-stage */
 import {
+  extrasInSlice,
+  hasPerspective,
   hitDevice,
+  hitExtra,
+  instanceAabb,
   moveDevice,
+  moveExtra,
   resizeDevice,
+  resizeExtra,
   rotateDevice,
+  rotateExtra,
   slicesTouched,
   validateLayout,
   resolveMetrics,
+  type ExtraSlot,
   type ResizeCorner,
   type TemplateRecord,
 } from "@take/template-engine";
 import { resolveExportSize } from "@take/device-catalog";
 import { currentSet, state } from "../../app/app-state";
 import { $ } from "../../shared/dom";
+import { isTypingTarget } from "../../shared/typing-target";
 import { toast } from "../../shell/toast";
 import { paintStripSlice, stripRecipeOfSet } from "../../stages/export/paint-strip-slice";
 import { refreshStripPreview } from "../strip/strip-preview";
 
 type DragKind = "move" | "resize" | "rotate";
+type DragTarget = "device" | "extra";
 
 type DragState = {
   kind: DragKind;
+  target: DragTarget;
   id: string;
   corner?: ResizeCorner;
   lastX: number;
@@ -29,6 +40,7 @@ type DragState = {
 };
 
 let selectedId: string | null = null;
+let selectedTarget: DragTarget = "device";
 let drag: DragState | null = null;
 let bound = false;
 
@@ -36,16 +48,12 @@ function exportSize() {
   return resolveExportSize(state.deviceId, state.platform, state.orientation).size;
 }
 
-function canvasNorm(e: PointerEvent): { nx: number; ny: number; rect: DOMRect } | null {
+function canvasNorm(e: PointerEvent): { nx: number; ny: number } | null {
   const canvas = $("#layout-slice-canvas") as HTMLCanvasElement | null;
   if (!canvas) return null;
   const rect = canvas.getBoundingClientRect();
   if (rect.width < 4 || rect.height < 4) return null;
-  return {
-    nx: (e.clientX - rect.left) / rect.width,
-    ny: (e.clientY - rect.top) / rect.height,
-    rect,
-  };
+  return { nx: (e.clientX - rect.left) / rect.width, ny: (e.clientY - rect.top) / rect.height };
 }
 
 function patchDevice(id: string, fn: (inst: TemplateRecord["devices"][number]) => TemplateRecord["devices"][number]) {
@@ -56,17 +64,41 @@ function patchDevice(id: string, fn: (inst: TemplateRecord["devices"][number]) =
   recipe.devices[i] = fn(recipe.devices[i]);
 }
 
-function boxStyle(inst: TemplateRecord["devices"][number], sliceIndex: number, sliceW: number, sliceH: number): string {
+function patchExtra(id: string, fn: (slot: ExtraSlot) => ExtraSlot) {
+  const recipe = stripRecipeOfSet();
+  if (!recipe?.extras) return;
+  const i = recipe.extras.findIndex((d) => d.id === id);
+  if (i < 0) return;
+  recipe.extras[i] = fn(recipe.extras[i]);
+}
+
+function boxStyle(
+  inst: { x: number; y: number; w: number; h: number; rotationDeg: number },
+  sliceIndex: number,
+  sliceW: number,
+  sliceH: number
+): string {
   const hSlice = (inst.h * sliceW) / Math.max(1, sliceH);
   const left = (inst.x - sliceIndex - inst.w / 2) * 100;
   const top = (inst.y - hSlice / 2) * 100;
-  return [
-    `left:${left}%`,
-    `top:${top}%`,
-    `width:${inst.w * 100}%`,
-    `height:${hSlice * 100}%`,
-    `transform:rotate(${inst.rotationDeg}deg)`,
-  ].join(";");
+  return `left:${left}%;top:${top}%;width:${inst.w * 100}%;height:${hSlice * 100}%;transform:rotate(${inst.rotationDeg}deg)`;
+}
+
+function deviceBoxStyle(
+  inst: TemplateRecord["devices"][number],
+  sliceIndex: number,
+  sliceW: number,
+  sliceH: number
+): string {
+  if (hasPerspective(inst)) {
+    const box = instanceAabb(inst, sliceW, sliceH);
+    const left = ((box.x - sliceIndex * sliceW) / sliceW) * 100;
+    const top = (box.y / sliceH) * 100;
+    const width = (box.w / sliceW) * 100;
+    const height = (box.h / sliceH) * 100;
+    return `left:${left}%;top:${top}%;width:${width}%;height:${height}%;transform:none`;
+  }
+  return boxStyle(inst, sliceIndex, sliceW, sliceH);
 }
 
 const HANDLE_HTML = `
@@ -81,36 +113,58 @@ function rebuildHandles() {
   const host = $("#layout-handles") as HTMLElement | null;
   const stage = $("#layout-stage") as HTMLElement | null;
   const recipe = stripRecipeOfSet();
-  if (!host || !stage) return;
+  if (!host || !stage) {
+    notifySelection();
+    return;
+  }
   if (!recipe || stage.hidden) {
     host.hidden = true;
     host.innerHTML = "";
+    notifySelection();
     return;
   }
   host.hidden = false;
   const { w, h } = exportSize();
   const slice = state.activeFrame;
-  host.innerHTML = recipe.devices
+  const devices = recipe.devices
     .filter((d) => slicesTouched(d, recipe.frameCount, w, h).includes(slice))
     .map((d) => {
-      const sel = d.id === selectedId ? " is-selected" : "";
-      const handles = d.id === selectedId ? HANDLE_HTML : "";
-      return `<div class="layout-device-box${sel}" data-device-id="${d.id}" style="${boxStyle(d, slice, w, h)}">${handles}</div>`;
-    })
-    .join("");
+      const sel = selectedTarget === "device" && d.id === selectedId ? " is-selected" : "";
+      const handles = sel ? HANDLE_HTML : "";
+      return `<div class="layout-device-box${sel}" data-device-id="${d.id}" style="${deviceBoxStyle(d, slice, w, h)}">${handles}</div>`;
+    });
+  const extras = extrasInSlice(recipe, slice).map((e) => {
+    const sel = selectedTarget === "extra" && e.id === selectedId ? " is-selected" : "";
+    const handles = sel ? HANDLE_HTML : "";
+    return `<div class="layout-device-box layout-extra-box${sel}" data-extra-id="${e.id}" style="${boxStyle(e, slice, w, h)}">${handles}</div>`;
+  });
+  host.innerHTML = devices.join("") + extras.join("");
+  notifySelection();
 }
 
 function updateSelectedBox() {
   if (!selectedId) return;
   const recipe = stripRecipeOfSet();
-  const inst = recipe?.devices.find((d) => d.id === selectedId);
-  const box = document.querySelector<HTMLElement>(`.layout-device-box[data-device-id="${selectedId}"]`);
+  const inst =
+    selectedTarget === "extra"
+      ? recipe?.extras?.find((d) => d.id === selectedId)
+      : recipe?.devices.find((d) => d.id === selectedId);
+  const sel =
+    selectedTarget === "extra"
+      ? `.layout-extra-box[data-extra-id="${selectedId}"]`
+      : `.layout-device-box[data-device-id="${selectedId}"]`;
+  const box = document.querySelector<HTMLElement>(sel);
   if (!inst || !box) {
     rebuildHandles();
     return;
   }
   const { w, h } = exportSize();
-  box.setAttribute("style", boxStyle(inst, state.activeFrame, w, h));
+  box.setAttribute(
+    "style",
+    selectedTarget === "device" && "placement" in inst
+      ? deviceBoxStyle(inst as TemplateRecord["devices"][number], state.activeFrame, w, h)
+      : boxStyle(inst, state.activeFrame, w, h)
+  );
 }
 
 async function livePaint() {
@@ -144,56 +198,60 @@ function finishDrag() {
   void refreshStripPreview();
 }
 
+function selectAt(e: PointerEvent, recipe: TemplateRecord): { id: string; target: DragTarget } | null {
+  const extraBox = (e.target as HTMLElement).closest("[data-extra-id]") as HTMLElement | null;
+  if (extraBox?.dataset.extraId) return { id: extraBox.dataset.extraId, target: "extra" };
+  const box = (e.target as HTMLElement).closest("[data-device-id]") as HTMLElement | null;
+  if (box?.dataset.deviceId) return { id: box.dataset.deviceId, target: "device" };
+  const norm = canvasNorm(e);
+  if (!norm) return null;
+  const { w, h } = exportSize();
+  const extra = hitExtra(recipe.extras || [], state.activeFrame, norm.nx, norm.ny, w, h);
+  if (extra) return { id: extra.id, target: "extra" };
+  const hit = hitDevice(recipe.devices, state.activeFrame, norm.nx, norm.ny, w, h);
+  return hit ? { id: hit.id, target: "device" } : null;
+}
+
 function onPointerDown(e: PointerEvent) {
   const stage = $("#layout-stage") as HTMLElement | null;
   if (!stage || stage.hidden) return;
   const target = e.target as HTMLElement;
   if (target.isContentEditable) return;
-
-  const handle = target.closest("[data-layout-handle]") as HTMLElement | null;
-  const box = target.closest("[data-device-id]") as HTMLElement | null;
   const recipe = stripRecipeOfSet();
   if (!recipe) return;
 
-  const { w, h } = exportSize();
-  let id = box?.dataset.deviceId || null;
+  const handle = target.closest("[data-layout-handle]") as HTMLElement | null;
+  const picked = selectAt(e, recipe);
   let kind: DragKind = "move";
   let corner: ResizeCorner | undefined;
-
-  if (handle && box) {
-    id = box.dataset.deviceId || null;
+  if (handle && picked) {
     const hKind = handle.dataset.layoutHandle || "";
     if (hKind === "rotate") kind = "rotate";
     else {
       kind = "resize";
       corner = hKind as ResizeCorner;
     }
-  } else if (!id) {
-    const norm = canvasNorm(e);
-    if (!norm) return;
-    const hit = hitDevice(recipe.devices, state.activeFrame, norm.nx, norm.ny, w, h);
-    id = hit?.id || null;
-    if (!id) {
-      selectedId = null;
-      rebuildHandles();
-      return;
-    }
-    kind = e.altKey ? "rotate" : "move";
+  } else if (!picked) {
+    selectedId = null;
+    rebuildHandles();
+    return;
   } else if (e.altKey) {
     kind = "rotate";
   }
 
-  if (!id) return;
+  if (!picked) return;
   e.preventDefault();
-  selectedId = id;
-  const inst = recipe.devices.find((d) => d.id === id);
+  selectedId = picked.id;
+  selectedTarget = picked.target;
+  const inst =
+    picked.target === "extra"
+      ? recipe.extras?.find((d) => d.id === picked.id)
+      : recipe.devices.find((d) => d.id === picked.id);
   const norm = canvasNorm(e);
   const cx = inst ? inst.x - state.activeFrame : 0.5;
   const cy = inst?.y ?? 0.5;
-  const lastAngle = norm
-    ? (Math.atan2(norm.ny - cy, norm.nx - cx) * 180) / Math.PI
-    : 0;
-  drag = { kind, id, corner, lastX: e.clientX, lastY: e.clientY, lastAngle };
+  const lastAngle = norm ? (Math.atan2(norm.ny - cy, norm.nx - cx) * 180) / Math.PI : 0;
+  drag = { kind, target: picked.target, id: picked.id, corner, lastX: e.clientX, lastY: e.clientY, lastAngle };
   stage.setPointerCapture(e.pointerId);
   rebuildHandles();
 }
@@ -206,21 +264,27 @@ function onPointerMove(e: PointerEvent) {
   const dx = (e.clientX - drag.lastX) / rect.width;
   const dy = (e.clientY - drag.lastY) / rect.height;
   const { w, h } = exportSize();
+  const extra = drag.target === "extra";
 
   if (drag.kind === "move") {
-    patchDevice(drag.id, (inst) => moveDevice(inst, dx, dy));
+    if (extra) patchExtra(drag.id, (s) => moveExtra(s, dx, dy));
+    else patchDevice(drag.id, (inst) => moveDevice(inst, dx, dy));
   } else if (drag.kind === "resize" && drag.corner) {
-    patchDevice(drag.id, (inst) => resizeDevice(inst, drag!.corner!, dx, dy, w, h));
+    if (extra) patchExtra(drag.id, (s) => resizeExtra(s, drag!.corner!, dx, dy, w, h));
+    else patchDevice(drag.id, (inst) => resizeDevice(inst, drag!.corner!, dx, dy, w, h));
   } else if (drag.kind === "rotate") {
     const recipe = stripRecipeOfSet();
-    const inst = recipe?.devices.find((d) => d.id === drag!.id);
+    const inst = extra
+      ? recipe?.extras?.find((d) => d.id === drag!.id)
+      : recipe?.devices.find((d) => d.id === drag!.id);
     const norm = canvasNorm(e);
     if (inst && norm && drag.lastAngle != null) {
       const cx = inst.x - state.activeFrame;
       const angle = (Math.atan2(norm.ny - inst.y, norm.nx - cx) * 180) / Math.PI;
       const delta = angle - drag.lastAngle;
       drag.lastAngle = angle;
-      patchDevice(drag.id, (d) => rotateDevice(d, delta));
+      if (extra) patchExtra(drag.id, (s) => rotateExtra(s, delta));
+      else patchDevice(drag.id, (d) => rotateDevice(d, delta));
     }
   }
   drag.lastX = e.clientX;
@@ -239,7 +303,7 @@ function onKeyDown(e: KeyboardEvent) {
   if (!selectedId) return;
   const stage = $("#layout-stage") as HTMLElement | null;
   if (!stage || stage.hidden) return;
-  if ((e.target as HTMLElement)?.isContentEditable) return;
+  if (isTypingTarget(e.target)) return;
   const step = e.shiftKey ? 0.005 : 0.02;
   let dx = 0;
   let dy = 0;
@@ -249,7 +313,8 @@ function onKeyDown(e: KeyboardEvent) {
   else if (e.key === "ArrowDown") dy = step;
   else return;
   e.preventDefault();
-  patchDevice(selectedId, (inst) => moveDevice(inst, dx, dy));
+  if (selectedTarget === "extra") patchExtra(selectedId, (s) => moveExtra(s, dx, dy));
+  else patchDevice(selectedId, (inst) => moveDevice(inst, dx, dy));
   void livePaint().then(() => refreshStripPreview());
 }
 
@@ -262,6 +327,36 @@ export function bindLayoutDrag() {
   stage?.addEventListener("pointerup", onPointerUp);
   stage?.addEventListener("pointercancel", onPointerUp);
   window.addEventListener("keydown", onKeyDown);
+}
+
+export function selectedLayoutDeviceId(): string | null {
+  return selectedTarget === "device" ? selectedId : null;
+}
+
+export function selectedLayoutExtraId(): string | null {
+  return selectedTarget === "extra" ? selectedId : null;
+}
+
+export function selectLayoutDevice(id: string): void {
+  selectedId = id;
+  selectedTarget = "device";
+  rebuildHandles();
+}
+
+export function selectLayoutExtra(id: string): void {
+  selectedId = id;
+  selectedTarget = "extra";
+  rebuildHandles();
+}
+
+const selectionListeners: Array<() => void> = [];
+
+function notifySelection() {
+  for (const fn of selectionListeners) fn();
+}
+
+export function onLayoutSelection(fn: () => void) {
+  selectionListeners.push(fn);
 }
 
 export function syncLayoutDrag() {

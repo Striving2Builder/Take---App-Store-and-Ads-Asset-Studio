@@ -6,6 +6,8 @@ export type {
   DeviceProfile,
   DeviceStatus,
   FormFactor,
+  HardwareButton,
+  HardwareButtonKind,
   HardwareHotspots,
   ListDevicesOpts,
   PxSize,

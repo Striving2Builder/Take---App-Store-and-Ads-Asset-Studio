@@ -18,6 +18,8 @@
       "@take/storage": ["../../packages/storage/src/index.ts"],
       "@take/template-engine": ["../../packages/template-engine/src/index.ts"],
       "@take/export-presets": ["../../packages/export-presets/src/index.ts"],
+      "@take/ad-unit-catalog": ["../../packages/ad-unit-catalog/src/index.ts"],
+      "@take/ad-compliance": ["../../packages/ad-compliance/src/index.ts"],
       "@take/device-sync": ["../../services/device-sync/src/index.ts"]
     }
   },

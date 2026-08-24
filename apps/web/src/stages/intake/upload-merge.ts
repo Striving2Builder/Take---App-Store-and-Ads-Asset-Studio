@@ -10,13 +10,16 @@ function kindFromName(name: string): CapturedAsset["kind"] {
   return "screenshot";
 }
 
+/** Video uploads are Ads-mode creative source, not a store screenshot/icon/feature asset. */
 export function uploadsToAssets(uploads: UploadItem[]): CapturedAsset[] {
-  return uploads.map((u, i) => ({
-    id: `upload-${i}-${u.name}`,
-    kind: kindFromName(u.name),
-    url: u.url,
-    provenance: "user" as const,
-  }));
+  return uploads
+    .filter((u) => u.kind !== "video")
+    .map((u, i) => ({
+      id: `upload-${i}-${u.name}`,
+      kind: kindFromName(u.name),
+      url: u.url,
+      provenance: "user" as const,
+    }));
 }
 
 /** Merge user uploads into capture: fill missing screens; user icon wins. */

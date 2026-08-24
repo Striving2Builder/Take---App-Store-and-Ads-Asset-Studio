@@ -12,21 +12,40 @@ export type PxSize = { w: number; h: number };
 export type ScreenInset = { x: number; y: number; w: number; h: number };
 export type SafeArea = { top: number; bottom: number; left: number; right: number };
 
+export type HardwareButtonKind =
+  | "mute"
+  | "action"
+  | "volume"
+  | "power"
+  | "camera-control";
+
+export type HardwareButton = {
+  side: "left" | "right";
+  /** Top of button in shellPx */
+  y: number;
+  /** Height in shellPx */
+  h: number;
+  kind?: HardwareButtonKind;
+};
+
 export type HardwareHotspots = {
   /** Front camera / punch-hole in shellPx */
   frontCamera?: ScreenInset;
   /** Dynamic Island / pill in shellPx */
   dynamicIsland?: ScreenInset;
   /** Side buttons (y/h in shellPx; side of device) */
-  buttons?: { side: "left" | "right"; y: number; h: number }[];
+  buttons?: HardwareButton[];
   /** Rear camera module rects in shellPx (back view) */
   rearCameras?: ScreenInset[];
+  /** iOS home indicator bar in shellPx (optional; painter can derive) */
+  homeIndicator?: ScreenInset;
 };
 
 /**
  * Device hardware / export profile.
  * `screenInset` is in `shellPx` coordinates.
- * Store PNG uses exportPx as the screen slot — bezels are editor preview only.
+ * Store / layout paint uses exportPx screen + geometric shell chrome from `hardware`
+ * (island / punch / buttons). Catalog SVG assets remain Edit #phone-mock preview.
  */
 export type DeviceProfile = {
   id: string;

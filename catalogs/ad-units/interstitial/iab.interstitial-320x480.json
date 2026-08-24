@@ -1,0 +1,14 @@
+{
+  "id": "iab.interstitial-320x480",
+  "label": "Mobile Interstitial",
+  "family": "interstitial",
+  "kind": "display",
+  "context": "mobile-app",
+  "exportPx": { "w": 320, "h": 480 },
+  "platform": "Generic / IAB",
+  "iabName": "Mobile Interstitial (Portrait)",
+  "status": "current",
+  "source": "IAB Display Advertising Portfolio — Mobile Interstitial",
+  "updatedAt": "2026-08-24",
+  "version": "1"
+}

@@ -13,6 +13,7 @@ const REVIEW_TITLES: Record<string, string> = {
   template: "Template set",
   replicator: "Replicator structure",
   slideshow: "Slideshow storyboard",
+  ads: "Ad units generated",
 };
 
 function asRecipe(raw: unknown): TemplateRecord | null {
@@ -33,9 +34,15 @@ export function renderReview() {
   const sub = $("#review-sub");
   if (sub) {
     if (state.mode === "wizard") {
-      sub.textContent = `${state.sets.length} directed take${
-        state.sets.length === 1 ? "" : "s"
-      } for ${inf.name}. Pick the story that fits.`;
+      const look = state.templateId;
+      sub.textContent = look
+        ? `Armed Library look for ${inf.name}. Generate filled this canvas — not a new grammar layout.`
+        : `${state.sets.length} directed take${
+            state.sets.length === 1 ? "" : "s"
+          } for ${inf.name}. Pick the story that fits.`;
+    } else if (state.mode === "ads") {
+      const n = state.sets[0]?.frames.filter((f) => f.adUnitId).length || 0;
+      sub.textContent = `${n} ad unit${n === 1 ? "" : "s"} for ${inf.name}. Native previews below — not a concept to pick between.`;
     } else {
       sub.textContent = `${mode?.label || state.mode} · ${state.sets[0]?.frames.length || 0} frames for ${inf.name}.`;
     }
@@ -51,8 +58,19 @@ export function renderReview() {
       .join("");
   }
 
-  const rail = $("#set-rail");
+  const rail = $("#set-rail") as HTMLElement | null;
   if (!rail) return;
+
+  if (state.mode === "ads") {
+    // Ads mode always builds exactly one set — there's nothing to "choose between," and this
+    // rail can only paint TemplateRecord layout recipes, which ads sets don't have (it falls
+    // back to fake placeholder tiles). The real native previews live in #mode-review-slot.
+    rail.hidden = true;
+    rail.innerHTML = "";
+    mountModePlugins();
+    return;
+  }
+  rail.hidden = false;
 
   rail.innerHTML = state.sets
     .map((set, i) => {

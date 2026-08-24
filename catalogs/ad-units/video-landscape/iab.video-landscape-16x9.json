@@ -1,0 +1,16 @@
+{
+  "id": "iab.video-landscape-16x9",
+  "label": "Generic In-Stream Video (16:9)",
+  "family": "video-landscape",
+  "kind": "video",
+  "context": "video",
+  "exportPx": { "w": 1920, "h": 1080 },
+  "platform": "Generic / IAB",
+  "maxDurationMs": 30000,
+  "recommendedDurationMs": { "min": 6000, "max": 30000 },
+  "iabName": "Digital Video — 16:9 in-stream / out-stream",
+  "status": "current",
+  "source": "IAB Digital Video Ad Format Guidelines — 16:9 landscape, common bumper/standard durations",
+  "updatedAt": "2026-08-24",
+  "version": "1"
+}

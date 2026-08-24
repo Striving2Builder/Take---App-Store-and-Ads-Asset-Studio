@@ -1,0 +1,85 @@
+{
+  "id": "seed-strip-bleed-hook",
+  "name": "Strip · bleed hook",
+  "tags": [
+    "strip",
+    "bleed",
+    "ios",
+    "needs-polish"
+  ],
+  "version": 1,
+  "composition": "strip",
+  "deviceId": "apple.iphone-16-pro-max",
+  "defaultOrientation": "portrait",
+  "frameCount": 5,
+  "typeFamily": "top",
+  "typeScale": "m",
+  "background": {
+    "kind": "gradient",
+    "colorA": "#3d1a5c",
+    "colorB": "#e07a3a"
+  },
+  "lockBrand": false,
+  "style": "premium",
+  "provenance": {
+    "source": "seed",
+    "grammarVersion": "2026.08-plan"
+  },
+  "devices": [
+    {
+      "id": "bleed-0",
+      "x": 1,
+      "y": 0.62,
+      "w": 0.78,
+      "h": 1.688,
+      "rotationDeg": -12,
+      "z": 1,
+      "shotIndex": 0,
+      "placement": "bleed-next"
+    },
+    {
+      "id": "local-1",
+      "x": 1.5,
+      "y": 0.58,
+      "w": 0.52,
+      "h": 1.1253333333333333,
+      "rotationDeg": 4,
+      "z": 2,
+      "shotIndex": 1,
+      "placement": "center"
+    },
+    {
+      "id": "local-2",
+      "x": 2.5,
+      "y": 0.55,
+      "w": 0.62,
+      "h": 1.3417435897435896,
+      "rotationDeg": -3,
+      "z": 1,
+      "shotIndex": 2,
+      "placement": "center"
+    },
+    {
+      "id": "local-3",
+      "x": 3.5,
+      "y": 0.55,
+      "w": 0.62,
+      "h": 1.3417435897435896,
+      "rotationDeg": 2,
+      "z": 1,
+      "shotIndex": 3,
+      "placement": "center"
+    },
+    {
+      "id": "local-4",
+      "x": 4.5,
+      "y": 0.55,
+      "w": 0.62,
+      "h": 1.3417435897435896,
+      "rotationDeg": -2,
+      "z": 1,
+      "shotIndex": 4,
+      "placement": "center"
+    }
+  ]
+}

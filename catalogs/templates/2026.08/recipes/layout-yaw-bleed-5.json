@@ -1,0 +1,100 @@
+{
+  "tags": [
+    "mobile",
+    "layout",
+    "screenshots",
+    "needs-polish"
+  ],
+  "version": 1,
+  "deviceId": "apple.iphone-16-pro-max",
+  "defaultOrientation": "portrait",
+  "typeScale": "m",
+  "lockBrand": false,
+  "provenance": {
+    "source": "seed",
+    "grammarVersion": "2026.08"
+  },
+  "id": "layout-yaw-bleed-5",
+  "name": "Layout · yaw bleed",
+  "composition": "strip",
+  "frameCount": 5,
+  "typeFamily": "top",
+  "style": "premium",
+  "background": {
+    "kind": "gradient",
+    "colorA": "#0c1220",
+    "colorB": "#1a2840"
+  },
+  "palette": [
+    "#f3f1ec",
+    "#0c1220",
+    "#4d7cff",
+    "#888888",
+    "#1e2129"
+  ],
+  "devices": [
+    {
+      "id": "yaw-bleed",
+      "x": 1,
+      "y": 0.62,
+      "w": 0.76,
+      "h": 1.6447179487179486,
+      "rotationDeg": 0,
+      "rotateYDeg": 28,
+      "depth": 0.05,
+      "z": 1,
+      "shotIndex": 0,
+      "placement": "bleed-next",
+      "authored": true
+    },
+    {
+      "id": "local-1",
+      "x": 1.5,
+      "y": 0.56,
+      "w": 0.5,
+      "h": 1.082051282051282,
+      "rotationDeg": 4,
+      "z": 2,
+      "shotIndex": 1,
+      "placement": "center",
+      "authored": true
+    },
+    {
+      "id": "loc-2",
+      "x": 2.5,
+      "y": 0.56,
+      "w": 0.56,
+      "h": 1.211897435897436,
+      "rotationDeg": 0,
+      "z": 1,
+      "shotIndex": 2,
+      "placement": "center",
+      "authored": true
+    },
+    {
+      "id": "loc-3",
+      "x": 3.5,
+      "y": 0.56,
+      "w": 0.56,
+      "h": 1.211897435897436,
+      "rotationDeg": 0,
+      "z": 1,
+      "shotIndex": 3,
+      "placement": "center",
+      "authored": true
+    },
+    {
+      "id": "loc-4",
+      "x": 4.5,
+      "y": 0.56,
+      "w": 0.56,
+      "h": 1.211897435897436,
+      "rotationDeg": 0,
+      "z": 1,
+      "shotIndex": 4,
+      "placement": "center",
+      "authored": true
+    }
+  ],
+  "extras": []
+}

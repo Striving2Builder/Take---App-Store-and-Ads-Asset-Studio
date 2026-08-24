@@ -1,6 +1,7 @@
 /** OWNER: stages/export — validation + ZIP export + project save + motion */
 import { getMode } from "@take/modes-sdk";
 import { screenshotCountOk } from "@take/core";
+import { getDevice } from "@take/device-catalog";
 import { motionStretchTarget } from "@take/export-presets";
 import { getTemplates, pushHistory, saveProject } from "@take/storage";
 import { currentSet, state } from "../../app/app-state";
@@ -9,13 +10,97 @@ import { escapeHtml } from "../../shared/escape";
 import { downloadText, downloadZip } from "../../shared/download";
 import { toast } from "../../shell/toast";
 import { currentExportSize } from "./frame-render";
+import { stripRecipeOfSet } from "./paint-strip-slice";
 import { downloadSlideshowVideo } from "./slideshow-video";
 import { applyDeviceFrame } from "../../editor/device/apply-device-frame";
 import { selectedPresetIds } from "./mount-presets";
 import { persistExportPresetIds } from "./persist-presets";
 import { buildExportFiles, currentExportPlan } from "./export-zip";
+import { runAdExport } from "./ad-export";
+import { getAdUnit, checkVideoCompliance } from "@take/ad-unit-catalog";
+import { checkLegalCompliance } from "@take/ad-compliance";
+
+function countPlatform(infPlatform: string): string {
+  const fromDevice = getDevice(state.deviceId)?.platform;
+  if (fromDevice === "android" || fromDevice === "ios") return fromDevice;
+  if (state.platform === "android" || state.platform === "ios") return state.platform;
+  return infPlatform;
+}
+
+function renderAdValidation(): void {
+  const set = currentSet();
+  const list = $("#validation-list");
+  if (!list) return;
+  if (!set?.adCopy) {
+    list.innerHTML = `<li class="warn">No ad set selected</li>`;
+    return;
+  }
+  const c = set.adCopy;
+  const unitCount = set.frames.filter((f) => f.adUnitId).length;
+  const checks = [
+    { ok: unitCount > 0, text: `${unitCount} ad unit${unitCount === 1 ? "" : "s"} selected` },
+    { ok: c.headline.length > 0 && c.headline.length <= 60, text: `Headline ${c.headline.length}/60` },
+    { ok: c.cta.length > 0 && c.cta.length <= 24, text: `CTA ${c.cta.length}/24` },
+    { ok: !!c.clickThroughUrl.trim(), text: c.clickThroughUrl.trim() ? `Click-through set` : "Click-through URL missing — export blocks" },
+    { ok: true, text: "Native composition per unit — not a resized screenshot" },
+    ...videoComplianceChecks(set),
+    ...legalComplianceChecks(set),
+  ];
+  list.innerHTML = checks
+    .map((x) => `<li class="${x.ok ? "ok" : "warn"}">${escapeHtml(x.text)}</li>`)
+    .join("");
+}
+
+/** Same posture as videoComplianceChecks — real checklist, not a hard export block. Legal
+ *  requirements are inherently fuzzier than a duration/file-size number, so this always warns
+ *  rather than errors even when a requirement is missing. */
+function legalComplianceChecks(set: NonNullable<ReturnType<typeof currentSet>>): { ok: boolean; text: string }[] {
+  const category = set.adCopy?.regulatedCategory;
+  const jurisdiction = set.adCopy?.jurisdiction;
+  if (!category || category === "none" || !jurisdiction) return [];
+  const result = checkLegalCompliance(category, jurisdiction, set.adCopy!);
+  const out: { ok: boolean; text: string }[] = [];
+  for (const r of result.prohibitions) out.push({ ok: false, text: `${category}/${jurisdiction}: verify legality — ${r.label}` });
+  for (const r of result.missing) out.push({ ok: false, text: `${category}/${jurisdiction}: missing — ${r.label} (checklist, not legal advice)` });
+  for (const r of result.advisories) out.push({ ok: true, text: `${category}/${jurisdiction}: verify — ${r.label}` });
+  if (result.missing.length === 0 && result.satisfied.length > 0) {
+    out.push({ ok: true, text: `${category}/${jurisdiction}: copy covers the ${result.satisfied.length} checkable disclosure${result.satisfied.length === 1 ? "" : "s"}` });
+  }
+  return out;
+}
+
+/** Flags real per-platform duration/file-size mismatches against the uploaded clip — not
+ *  decorative, this is the same check ad-export.ts's recording will hit. */
+function videoComplianceChecks(set: NonNullable<ReturnType<typeof currentSet>>): { ok: boolean; text: string }[] {
+  const videoUpload = state.uploads.find((u) => u.kind === "video");
+  const out: { ok: boolean; text: string }[] = [];
+  for (const frame of set.frames) {
+    if (!frame.adUnitId) continue;
+    const unit = getAdUnit(frame.adUnitId);
+    if (!unit) continue;
+    const hasSpec = unit.maxDurationMs != null || unit.recommendedDurationMs != null || unit.maxFileSizeBytes != null;
+    if (!hasSpec) continue;
+    if (!videoUpload) {
+      if (unit.kind === "video") {
+        out.push({ ok: false, text: `${unit.label}: no video uploaded — will export a static fallback frame` });
+      }
+      continue;
+    }
+    const result = checkVideoCompliance(unit, { durationMs: videoUpload.durationMs, bytes: videoUpload.bytes });
+    for (const e of result.errors) out.push({ ok: false, text: `${unit.label}: ${e}` });
+    for (const w of result.warnings) out.push({ ok: true, text: `${unit.label}: ${w}` });
+    if (result.ok && !result.warnings.length) {
+      out.push({ ok: true, text: `${unit.label}: clip fits ${unit.platform}'s spec` });
+    }
+  }
+  return out;
+}
 
 export function renderValidation() {
+  if (state.mode === "ads") {
+    renderAdValidation();
+    return;
+  }
   const set = currentSet();
   const inf = state.inference;
   const list = $("#validation-list");
@@ -29,7 +114,7 @@ export function renderValidation() {
   const selected = selectedPresetIds();
   const plan = currentExportPlan(selected, set.frames.length);
   const { w: EXPORT_W, h: EXPORT_H } = currentExportSize();
-  const count = screenshotCountOk(inf.platform, set.frames.length);
+  const count = screenshotCountOk(countPlatform(inf.platform), set.frames.length);
   const c = set.copy;
   const hasShots = Boolean(
     state.lastScan?.capture?.assets?.some((a) => a.kind === "screenshot")
@@ -71,6 +156,13 @@ export function renderValidation() {
       text: dwellNote,
     },
   ];
+  const recipe = stripRecipeOfSet();
+  if (recipe?.background.kind === "image" && recipe.composition === "strip") {
+    checks.push({
+      ok: true,
+      text: `Strip panorama · ${recipe.frameCount} clips from one world image`,
+    });
+  }
 
   list.innerHTML = checks
     .map((x) => `<li class="${x.ok ? "ok" : "warn"}">${escapeHtml(x.text)}</li>`)
@@ -78,6 +170,12 @@ export function renderValidation() {
 }
 
 export async function runExport() {
+  if (state.mode === "ads") {
+    await runAdExport();
+    void saveCurrentProject();
+    return;
+  }
+
   const set = currentSet();
   const inf = state.inference;
   if (!set || !inf) {

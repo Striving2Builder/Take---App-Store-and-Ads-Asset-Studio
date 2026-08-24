@@ -9,4 +9,8 @@ export type StoryFrame = {
   cta: string;
   /** Slideshow dwell in ms — ignored by still export */
   dwellMs?: number;
+  /** Ads mode: bound ad-unit-catalog id — absent for store/social frames */
+  adUnitId?: string;
+  /** Ads mode: bound ad-grammar wireframe id — absent for store/social frames */
+  wireframeId?: string;
 };

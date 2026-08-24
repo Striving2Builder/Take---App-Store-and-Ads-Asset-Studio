@@ -4,6 +4,7 @@ import { currentSet, state } from "../../app/app-state";
 import { downloadBlob } from "../../shared/download";
 import { currentExportSize, paintExportFrame } from "./frame-render";
 import { fitCanvas } from "./fit-canvas";
+import { pickVideoMime } from "./video-mime";
 import { frameDwellMs } from "../../modes/slideshow/slideshow-builder";
 
 const TARGET_SECONDS = 15;
@@ -12,22 +13,6 @@ export type SlideshowRecordOpts = {
   dest?: { w: number; h: number; fit: ExportFit };
   tag?: string;
 };
-
-function pickMime(): { mime: string; ext: string } {
-  const candidates = [
-    { mime: "video/mp4;codecs=avc1.42E01E", ext: "mp4" },
-    { mime: "video/mp4", ext: "mp4" },
-    { mime: "video/webm;codecs=vp9", ext: "webm" },
-    { mime: "video/webm;codecs=vp8", ext: "webm" },
-    { mime: "video/webm", ext: "webm" },
-  ];
-  for (const c of candidates) {
-    if (typeof MediaRecorder !== "undefined" && MediaRecorder.isTypeSupported(c.mime)) {
-      return c;
-    }
-  }
-  return { mime: "", ext: "webm" };
-}
 
 /** Record ~15s slideshow from current set frames. Returns filename + blob. */
 export async function recordSlideshowVideo(
@@ -40,7 +25,7 @@ export async function recordSlideshowVideo(
     throw new Error("MediaRecorder unavailable in this browser");
   }
 
-  const { mime, ext } = pickMime();
+  const { mime, ext } = pickVideoMime();
   if (!mime) throw new Error("No supported video MIME type (try Chrome/Edge/Firefox)");
 
   const catalog = currentExportSize();

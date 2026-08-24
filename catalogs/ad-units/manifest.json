@@ -1,0 +1,18 @@
+{
+  "version": "2",
+  "updatedAt": "2026-08-24",
+  "families": [
+    "leaderboard",
+    "billboard",
+    "mpu",
+    "skyscraper",
+    "mobile-banner",
+    "interstitial",
+    "video-landscape",
+    "video-vertical",
+    "social-feed",
+    "pinterest"
+  ],
+  "unitCount": 24,
+  "note": "Video/social units carry real per-platform duration + file-size limits (platform field, min/max/recommendedDurationMs, maxFileSizeBytes) — not one generic number shared across TikTok/Meta/YouTube."
+}

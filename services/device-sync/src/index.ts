@@ -12,7 +12,23 @@ export { parseProposalInput } from "./parse-pack";
 export type { ParsePackResult } from "./parse-pack";
 export { createMemoryReviewGate, createStubReviewGate, type ReviewGate } from "./review-gate";
 export { materializeDevice } from "./materialize";
-export { diffCatalog, deprecateCandidates, classifyChange, type ProposalKind } from "./diff-catalog";
+export { approveEvidencedPack } from "./approve-pack";
+export type { ApprovePackResult } from "./approve-pack";
+export {
+  diffCatalog,
+  deprecateCandidates,
+  classifyChange,
+  proposalsFromNormalized,
+  type ProposalKind,
+} from "./diff-catalog";
+export { normalizeDiscovery } from "./normalize-discovery";
+export { normalizeDiscoveries } from "./run-discover";
+export { parseSnapshotFile } from "./adapters/snapshots";
+export { bundledSnapshotRows, proposeBundledSnapshots } from "./bundled-snapshots";
+export type { BundledSnapshotResult } from "./bundled-snapshots";
+export { parseWikidataBindings, slugModelName, wikidataSparqlUrl } from "./adapters/wikidata-parse";
+export { lookupStoreSizeClass } from "./store-size-classes";
+export type { RawDiscovery, NormalizedCandidate, NormalizeResult, DiscoverPlatform } from "./discover.types";
 export {
   assertAllowedSyncUrl,
   assertNoPrivateRecords,

@@ -1,8 +1,8 @@
 /** OWNER: packages/template-engine — score a legal candidate */
 import type { TemplateRecord } from "../template.types";
-import { deviceAabb, intersectArea } from "../constraints/aabb";
+import { intersectArea } from "../constraints/aabb";
 import { slicesTouched, visibleFrac } from "../constraints/bleed";
-import { toWorldInstance } from "../constraints/world";
+import { instanceAabb } from "../project/perspective";
 
 export function scoreLayout(recipe: TemplateRecord, sliceW: number, sliceH: number): number {
   let s = 0;
@@ -28,12 +28,10 @@ export function scoreLayout(recipe: TemplateRecord, sliceW: number, sliceH: numb
     );
     for (let a = 0; a < here.length; a++) {
       for (let b = a + 1; b < here.length; b++) {
-        const wa = toWorldInstance(here[a], sliceW, sliceH);
-        const wb = toWorldInstance(here[b], sliceW, sliceH);
-        const ia = deviceAabb(wa.x, wa.y, wa.w, wa.h, wa.rotationDeg);
-        const ib = deviceAabb(wb.x, wb.y, wb.w, wb.h, wb.rotationDeg);
+        const ia = instanceAabb(here[a], sliceW, sliceH);
+        const ib = instanceAabb(here[b], sliceW, sliceH);
         const overlap = intersectArea(ia, ib);
-        const minA = Math.min(wa.w * wa.h, wb.w * wb.h);
+        const minA = Math.min(ia.w * ia.h, ib.w * ib.h);
         s -= (overlap / Math.max(1, minA)) * 10;
       }
     }

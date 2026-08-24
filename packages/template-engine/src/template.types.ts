@@ -3,11 +3,23 @@ export type CompositionKind = "isolated" | "strip";
 export type TypeFamily = "top" | "bottom" | "split";
 export type TypeScale = "s" | "m" | "l";
 export type DevicePlacement = "center" | "left" | "right" | "bleed-next" | "bleed-prev";
+export type ExtraKind = "copy" | "visual";
+export type ImageFit = "cover" | "contain";
+export type TypeBandKind = TypeFamily | "none";
+export const EXTRA_SHAPES = ["blob", "wave", "star", "dots", "scribble"] as const;
+export type ExtraShape = (typeof EXTRA_SHAPES)[number];
+export const EXTRA_WIDGETS = ["rating", "review", "pills"] as const;
+export type ExtraWidget = (typeof EXTRA_WIDGETS)[number];
+export const EXTRA_FACES = ["display", "script"] as const;
+export type ExtraFace = (typeof EXTRA_FACES)[number];
 
 export type BackgroundLayer = {
-  kind: "solid" | "gradient";
+  kind: "solid" | "gradient" | "image";
   colorA: string;
   colorB?: string;
+  /** data-URL or https — world panorama when composition is strip */
+  imageUrl?: string;
+  fit?: ImageFit;
 };
 
 export type DeviceInstance = {
@@ -20,12 +32,52 @@ export type DeviceInstance = {
   w: number;
   /** Height in slice-widths (same unit as w so aspect is explicit). */
   h: number;
+  /** In-plane Z rotation (picture plane). */
   rotationDeg: number;
+  /** Lean toward/away (top recedes when positive). */
+  rotateXDeg?: number;
+  /** Yaw — positive shows the right edge. */
+  rotateYDeg?: number;
+  /** Box thickness in slice-widths. Default 0.045 when yaw/pitch is set. */
+  depth?: number;
   z: number;
   shotIndex: number;
   placement: DevicePlacement;
   /** User dragged/resized this instance — solver span rules relax. */
   authored?: boolean;
+  /** Shell orientation; default = recipe defaultOrientation. Export PNG size stays the set's. */
+  orientation?: "portrait" | "landscape";
+};
+
+/** Extra copy/visual on the export slice — not kicker/headline/caption, not world bg. */
+export type ExtraSlot = {
+  id: string;
+  kind: ExtraKind;
+  /** Home slice (0-based). x is still world slice-widths like devices. */
+  sliceIndex: number;
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+  rotationDeg: number;
+  z: number;
+  text?: string;
+  imageUrl?: string;
+  fill?: string;
+  authored?: boolean;
+  /** Procedural chrome — not an uploaded competitor asset. */
+  shape?: ExtraShape;
+  widget?: ExtraWidget;
+  score?: number;
+  storeLabel?: string;
+  quote?: string;
+  attribution?: string;
+  stars?: number;
+  pills?: string[];
+  /** Mini-screen extra: scan shot index (not a DeviceInstance). */
+  shotIndex?: number;
+  /** Extra copy face only — not kicker/headline. */
+  face?: ExtraFace;
 };
 
 export type LayoutProvenance = {
@@ -45,9 +97,12 @@ export type TemplateRecord = {
   defaultOrientation?: "portrait" | "landscape";
   frameCount: number;
   typeFamily: TypeFamily;
+  /** Per-PNG type band; missing index falls back to typeFamily. */
+  typeBand?: TypeBandKind[];
   typeScale: TypeScale;
   background: BackgroundLayer;
   devices: DeviceInstance[];
+  extras?: ExtraSlot[];
   lockBrand?: boolean;
   style?: string;
   palette?: string[];

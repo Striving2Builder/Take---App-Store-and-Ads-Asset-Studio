@@ -19,13 +19,13 @@ Those must stay separate. **Device Catalog (Phase 2)** owns hardware specs, geom
 
 - Versioned JSON specs (size-class reps, 5-year catalog / 3-year picker “Current”)
 - Geometric PARTIAL frames until photoreal `shellAsset` files exist (F25)
-- Updated later by **Device Sync** (Phase 5 — ReviewGate + CLI publish; fetch off by default; no cron)
+- Updated later by **Device Sync** (Phase 5 — snapshot discover + ReviewGate + CLI publish; fetch off by default; no HTML scrape; no cron)
 
 ### Where you select the phone
 
 1. **Intake** — Platform (iOS / Android / Both) sets default device family  
 2. **Editor toolbar** — Device picker + Cover/Contain/Safe-area fit  
-3. **Template mode** — Template binds to a `deviceId`  
+3. **Library recipe** — TemplateRecord binds to a `deviceId`  
 4. **Export** — Sizes from `resolveExportSize(deviceId)` (not hardcoded 1290×2796)  
 
 ---
@@ -47,7 +47,7 @@ Do not mix these.
 | Device / shell | Editor top toolbar + Template bindings | Frame aspect, bezel, export size |
 | Style family | Intake + Style panel | Creative look, not hardware |
 | Palette / brand lock | Style panel | Color system |
-| Template family | Template mode / Library | Layout recipe referencing a `deviceId` |
+| Template family | Library recipes | Layout recipe referencing a `deviceId` |
 
 ---
 
@@ -87,7 +87,7 @@ take/
 │   └── storage/                  # local-first project/template repos (IndexedDB)
 ├── services/
 │   ├── scan-api/                 # URL fetch, Apple Lookup, OG parse, Play adapter
-│   ├── device-sync/              # scheduled catalog updater
+│   ├── device-sync/              # on-demand catalog proposer (ReviewGate)
 │   └── render-worker/            # optional: PNG/MP4 render (later)
 ├── catalogs/                     # versioned published data
 │   ├── devices/
@@ -133,7 +133,7 @@ Every creation mode implements the same interface so future modes plug in withou
 
 **Depth policy:** Catalog retains ≤5 years; picker “Current” = ≤3 years; older IDs never deleted (projects may reference them).
 
-**Composition:** Store PNG fills `exportPx` (no bezel). Editor chrome is preview-only. Cross-OS fit is geometric mimic — not OS UI conversion (F26).
+**Composition:** Store PNG fills `exportPx` with geometric device shells. Catalog `hardware` hotspots (Dynamic Island, punch-hole, side buttons, home indicator) paint on the shared `paintDevice` path. Photoreal OEM photos stay F25. Catalog SVG assets remain `#phone-mock` preview when no layout recipe.
 
 ### Browser vs server
 
@@ -226,7 +226,7 @@ Intake URL(s) + locale
 
 ### Still deferred
 
-ASO depth · photoreal device shells · Device Sync auto-publish / HTML scrape / cron (F66) · extra copy/visual layers (F53) · LLM narrative NLP · layered/bundle ZIP (F71) · render-worker ffmpeg (F72)
+ASO depth · photoreal device shells · Device Sync HTML scrape (F100) / auto-publish / cron (F66) · LLM narrative NLP · layered/bundle ZIP (F71) · render-worker ffmpeg (F72)
 
 ---
 
@@ -240,18 +240,20 @@ Do not throw away the shell. Extract in place.
 | **1 — Real App Scan** | Apple + OG + receipt Captured/Inferred | **Done** |
 | **1b — Scan Phase 2** | Adapter registry, Play, locale, pack, palette | **Done** |
 | **2 — Device Catalog** | Device JSON + picker; export sizes from catalog; fit pipeline | **Partial** (geometric shells; photoreal F25) |
-| **3 — Mode SDK** | Wizard + distinct Template/Replicator/Slideshow | **Partial** (plugins on shared canvas; Template generateLayout + consume; extra layers F53) |
-| **4 — Template engine** | Layout recipes + strip clip + grammar generator + slot drag | **Done** (locked scope + device drag; F53 extra layers parked; F52 identity cards still SEED) |
-| **5 — Device Sync** | On-demand job + human review + CLI publish | **Partial** (session wizard + CLI; fetch off; no cron F66) |
+| **3 — Mode SDK** | Wizard + distinct Template/Replicator/Slideshow | **Partial** (Template door opens Library; Slideshow is Wizard+dwells) |
+| **4 — Template engine** | Layout recipes + strip clip + grammar + slot drag + extras/panorama/Set | **Done** |
+| **5 — Device Sync** | On-demand job + human review + CLI publish | **Partial** (snapshot discover + wizard + CLI; fetch off; no HTML F100; no cron F66) |
 | **6 — Render** | Multi-size ZIP from export presets (store + social/IAB) | **Partial** (extra PNG sizes real; TikTok stretch video; layered/bundle FAKE; worker stub) |
+| **Next — Template / Library** | Wizard = Scan; templates live in Library (Use applies) | **Done** ([template-library-sprint.md](./template-library-sprint.md) · F79/F52) |
+| **Next — Competitor parity** | A–E shipped (geometry Library pack). C2 WebGL still parked. Post-impl honesty + C1 sliders | **Done** ([competitor-parity-sprint.md](./competitor-parity-sprint.md) · F82/F89–F93) |
 
-See also: [template-layout-engine.md](./template-layout-engine.md), [template-engine-mvp-sprint.md](./template-engine-mvp-sprint.md), [mode-sdk-mvp-sprint.md](./mode-sdk-mvp-sprint.md), [device-catalog-mvp-sprint.md](./device-catalog-mvp-sprint.md), [device-sync-mvp-sprint.md](./device-sync-mvp-sprint.md), [render-mvp-sprint.md](./render-mvp-sprint.md), [scan-phase-2-implementation-plan.md](./scan-phase-2-implementation-plan.md), [file-map.md](./file-map.md), ADR [0001-scan-adapter-registry](./adr/0001-scan-adapter-registry.md).
+See also: [template-layout-engine.md](./template-layout-engine.md), [template-engine-mvp-sprint.md](./template-engine-mvp-sprint.md), [template-library-sprint.md](./template-library-sprint.md), [competitor-parity-sprint.md](./competitor-parity-sprint.md), [mode-sdk-mvp-sprint.md](./mode-sdk-mvp-sprint.md), [device-catalog-mvp-sprint.md](./device-catalog-mvp-sprint.md), [device-sync-mvp-sprint.md](./device-sync-mvp-sprint.md), [render-mvp-sprint.md](./render-mvp-sprint.md), [extra-layers-sprint.md](./extra-layers-sprint.md), [scan-phase-2-implementation-plan.md](./scan-phase-2-implementation-plan.md), [file-map.md](./file-map.md), ADR [0001-scan-adapter-registry](./adr/0001-scan-adapter-registry.md).
 
 ---
 
 ## As-built: Device Catalog (Phase 2)
 
-**Status (2026-08):** Catalog JSON is SSOT with front/back SVG families. Preview Devices skips Generate. Orientation + Catalog sync wizard (session apply) are wired. Foldables are size stubs only.
+**Status (2026-08-15):** Catalog JSON is SSOT with front/back SVG families (19 devices). 2025 flagships + iPhone 16/16 Plus landed via Device Sync ReviewGate (inherited chrome, labeled). Preview Devices skips Generate. Orientation + Catalog sync wizard (session apply) are wired. Foldables are size stubs only.
 
 ### Data flow
 
@@ -278,7 +280,7 @@ catalogs/devices/{year}/{platform}/*.json
 | Device picker | REAL list from catalog; PARTIAL shells |
 | Export size | REAL from selected device |
 | Cross-OS shot reuse | PARTIAL geometric fit only |
-| Device Sync | PARTIAL — wizard + CLI publish; fetch off by default; never auto |
+| Device Sync | PARTIAL — snapshot discover + wizard + CLI; fetch off; never auto |
 
 Verify: `npm run test:devices` · Scan still `npm run test:gold`
 
@@ -286,12 +288,15 @@ Verify: `npm run test:devices` · Scan still `npm run test:gold`
 
 ## As-built: Device Sync (Phase 5)
 
-**Status (2026-08-15):** Locked scope + P2 leftovers done. On-demand job + ReviewGate + session wizard + CLI disk publish. Fetch is off unless `DEVICE_SYNC_FETCH=1` with allowlisted https JSON (DNS private-IP blocked). File-gate queue at `.take-sync/queue.json`. Opt-in `--deprecate-missing`. No cron (F66). Never “synced.”
+**Status (2026-08-15):** On-demand job + snapshot discovery + ReviewGate + session wizard + CLI approve/publish. First pack published: iPhone 16/16 Plus/17 family, Pixel 10, S25 (inherited chrome, F102). `npm run sync:devices` defaults to cited snapshots (not HTML). Optional Wikidata SPARQL JSON behind `DEVICE_SYNC_FETCH=1`. DNS private-IP blocked. File-gate queue at `.take-sync/queue.json`. Opt-in `--deprecate-missing`. No HTML scrape (F100). No cron (F66). Never “synced.” Catalog UI is Check for new devices / Add (F101); pack import is Advanced.
 
 ### Data flow
 
 ```
-manual pack / optional allowlisted JSON
+snapshots (default) / optional Wikidata JSON / manual pack / allowlisted JSON
+        │
+        ▼
+normalize (store-size-class table + family inherit, labeled inferredFrom)
         │
         ▼
 runDeviceSync (diff vs catalog) → CatalogPack.proposals
@@ -314,7 +319,8 @@ npm run catalog:publish — approved pack
 | Propose / review | REAL — gate + evidence |
 | Session apply | REAL — `replaceCatalog()` |
 | Disk publish | REAL CLI — refuses unapproved / unevidenced |
-| Live scrape | FAKE/off — default offline; fetch is JSON allowlist only, not HTML |
+| Discover missing devices | REAL — cited snapshots (offline) + optional Wikidata identity JSON. Not HTML. Shell chrome is inherited and labeled — not SKU-measured. |
+| Live scrape / in-app crawl | FAKE — Check for new devices uses a bundled research list (not HTML). Add is session-only. HTML vendor pages are F100. |
 
 Verify: `npm run test:sync` · `npm run test:devices`
 
@@ -364,7 +370,7 @@ Verify: `npm run test:export` · web build
 
 ## As-built: Mode SDK (Phase 3)
 
-**Status (2026-08):** Four `CreationMode` adapters still `run` after Scan. Review/Edit keep **one device canvas** (layout recipes swap in `#layout-stage`). Distinct feel comes from `getEditorPlugins()` / `getExportHints()` mounted in `#mode-review-slot` and `#mode-inspector-slot`. Regen goes through `runActiveMode` (no Wizard back door). Template Generate = `generateLayout` × qty; library Apply keeps the card. Replicator maps competitor pack structure (no art merge). Slideshow dwells feed existing MediaRecorder. Extra copy/visual layers stay parked (F53).
+**Status (2026-08):** Four `CreationMode` adapters still `run` after Scan. Review/Edit keep **one device canvas** (layout recipes swap in `#layout-stage`). Distinct feel comes from `getEditorPlugins()` / `getExportHints()` mounted in `#mode-review-slot` and `#mode-inspector-slot`. Regen goes through `runActiveMode` (no Wizard back door). Template Generate = `generateLayout` × qty; library Apply keeps the card. Replicator maps competitor pack structure (no art merge). Slideshow dwells feed existing MediaRecorder. Wizard Set view / extras / panorama call `ensureIsolatedRecipe` so they share `#layout-stage`.
 
 ### Data flow
 
@@ -375,8 +381,8 @@ Intake mode radio + Library Use (templateId)
   runActiveMode → getMode(id).run(input, ctx)
         │              ctx: priorBrief, seedPalette, lastPack,
         │                   templateId, deviceId, orientation
-        ├─ Wizard     → generateSets (qty concepts)
-        ├─ Template   → generateLayout × qty + catalog bind
+        ├─ Wizard     → generateSets (qty concepts) OR applyTemplate if templateId armed
+        ├─ Template   → landing door → Library (radio hidden)
         ├─ Replicator → competitor beats / upload refs
         └─ Slideshow  → 6 beats + dwellMs
                 │
@@ -391,10 +397,12 @@ Intake mode radio + Library Use (templateId)
 
 | Claim | Truth |
 |-------|-------|
-| Modes feel different | PARTIAL — plugins + generate strategy; same canvas |
-| Template | PARTIAL — generateLayout + strip clip + lockBrand + device drag; not extra layers; not LLM |
+| Modes feel different | PARTIAL — same Scan→Review→Edit→Export stages; plugins + generate strategy |
+| Template **mode** | Landing Template opens **Library**. Intake Template radio is hidden. Grammar `generateLayout` is Library **New layout**. |
+| Template **engine** | REAL — sample-five JSON recipes + strip clip, drag, ExtraSlot, Set view |
+| Library Use | REAL — apply when a brief exists; otherwise Wizard intake with the look armed |
 | Replicator | PARTIAL — competitor structure map; not CV trace |
-| Slideshow | PARTIAL — dwells + MediaRecorder; not a full NLE |
+| Slideshow | PARTIAL — Wizard `generateSets` + 6 dwells + MediaRecorder; same destination as Wizard |
 
 Verify: `npm run test:modes`
 
@@ -402,7 +410,7 @@ Verify: `npm run test:modes`
 
 ## As-built: Template engine (Phase 4)
 
-**Status (2026-08-14):** Locked scope **Done**, including device-slot drag. Template Generate calls `generateLayout` (K-resample, grammar `2026.08`). Illegal draws fall back to isolated-center (`provenance.fallback`). Save stores seed + grammarVersion. Strip/isolated with devices paint via `paintStripSlice` (Review thumbs, `#layout-stage`, export). Drag/resize/rotate mutates recipe `x/y/w/h` (`authored`). Extra copy/visual layers stay F53.
+**Status (2026-08-15):** Locked scope **Done**, including device-slot drag, ExtraSlot, strip panorama, and Edit Set view. **New layout** (Library) calls `generateLayout` (K-resample, grammar `2026.08`). Illegal draws fall back to isolated-center (`provenance.fallback`). Save stores seed + grammarVersion. Strip/isolated with devices paint via `paintStripSlice` (Review thumbs, `#layout-stage`, `#set-stage`, export, Library thumbs). Devices with `rotateXDeg`/`rotateYDeg` use a projected box + affine screen warp (`paint-devices.ts`); Z `rotationDeg` stays 2D. Drag/resize/rotate mutates recipe `x/y/w/h` (`authored`). First Set view / panorama / + Add extra on Wizard writes `ensureIsolatedRecipe`.
 
 ### Data flow
 
@@ -428,7 +436,7 @@ applyTemplate(brief) → ProjectSet.layout.recipe
 | Claim | Truth |
 |-------|-------|
 | Strip bleed | REAL — one world canvas, integer slice clip |
-| Device in PNG | PARTIAL — geometric rounded-rect, not catalog SVG photoreal |
+| Device in PNG | REAL geometric chrome from `hardware` (island / punch / buttons / home bar); not photoreal OEM (F25); per-device landscape-in-portrait |
 | Layout generator | PARTIAL — combinatorics + jitter inside tokens; not LLM |
 | Shot map | REAL — frame i uses shot i; extras stay empty |
 | Unique forever | Finite grammar × seed; Save keeps that seed |
@@ -437,7 +445,48 @@ applyTemplate(brief) → ProjectSet.layout.recipe
 | Library Refresh | REAL on user cards (`refreshCopy`); system cards ask to duplicate first |
 | Editor surface | REAL — `#layout-stage` is the export slice; overlay copy, `skipType` |
 | Device drag | REAL — move / corner resize / Alt-rotate on recipe devices; Save stores `authored` x/y/w/h |
-| Extra layers | FAKE — + Add copy / visual still toast (F53) |
+| Position presets | REAL — Layers grid stamps x/y/w/h; Bleed next/prev is one phone across two PNGs (`composition: strip`) |
+| Extra layers | REAL — ExtraSlot copy/visual/shape/widget on `#layout-stage` (cap 6/slice); copy marks `**pill**` / `++underline++`; `face: script` is one bundled face, not the headline |
+| Strip panorama | REAL — `BackgroundLayer.kind: image` across `n·W`; isolated paints per PNG |
+| Set view | REAL — `#set-stage` carousel shares `paintStripSlice`; 72px rail stays minimap |
+
+Verify: `npm run test:templates`
+
+---
+
+## As-built: Template / Library product (F79)
+
+**Status (2026-08-15):** Shipped — [template-library-sprint.md](./template-library-sprint.md). **Wizard = Scan.** Templates live in Library. Landing Template opens the gallery. Five store-count canvases (5 / 8 / 10, iOS + Play, isolated + strip) plus **21 mobile geometry cards** (dual-store: one look each; Edit **iOS | Android** store-target swaps shell + aspect). Empty visual plates where a user photo is required. No competitor screenshots, logos, or stock people. **15 is not a store slot.** Device Sync discovery is CLI snapshots (F80); HTML scrape stays F100. Slideshow stays Wizard+dwells.
+
+Base recipes are JSON in `catalogs/templates/2026.08/recipes/` loaded by `load-recipes.ts` (explicit Vite imports). Geometry pack is tagged `mobile` (not twin iOS/Play cards); Library iOS/Android filters also show mobile cards. Armed Wizard Generate / Use / Apply bind shell from intake brief. Library thumbs paint `paintStripSlice(0)`. Click the thumb to browse every slice. Use applies `projectSetFromRecipe` when a brief exists, otherwise arms Wizard. Armed Wizard Generate calls `applyTemplate`, not `generateSets`. **New layout** on a Library card is `generateLayout` (combinatorics).
+
+| Claim | Truth |
+|-------|-------|
+| Landing Template | REAL — `showStage("library")` |
+| Sample five | REAL — bleed-hook 5, iOS isolated 5/10, Play isolated 8, iOS strip 8 |
+| Use | REAL — apply or Wizard-arm |
+| Click thumb | REAL — all slices in a preview dialog |
+| Title SEED cards | gone (`sys-ios-story` etc.) |
+| Play count | `screenshotCountOk` Android max **8** |
+
+Verify: `npm run test:templates` · `npm run test:modes`
+
+---
+
+## As-built: Extra layers, panorama, Set view
+
+**Status (2026-08-15):** Shipped — [extra-layers-sprint.md](./extra-layers-sprint.md). No Adobe Flash. Bleed stays device-across-cut. Visual extras are not the world background.
+
+Wizard first Set view / panorama / + Add copy or visual calls `ensureIsolatedRecipe` so everything shares `paintStripSlice` + `#layout-stage`. Paint order: background → devices → extras → type.
+
+| Claim | Truth |
+|-------|-------|
+| Set view | REAL — `#set-stage` N canvases, same paint as export |
+| Panorama | REAL — one image across strip world, clip at `i·W` |
+| Isolated + image | REAL — per-slice draw (no fake continuity) |
+| Extra copy/visual | REAL — ExtraSlot + drag; max 6 per slice; shapes + proof widgets; `**pill**` / `++underline++`; `face: script` |
+| Per-PNG type | REAL — `typeBand[]`; `none` hides kicker/headline on that file |
+| Layered ZIP | FAKE — F71 still deferred |
 
 Verify: `npm run test:templates`
 
@@ -482,7 +531,7 @@ Verify: `npm run test:templates`
 | F29 | 2026-08-14 | P2 | RESOLVED | Play/iOS store presets emit a second store folder when the device platform differs | export-zip + plan-export |
 | F30 | 2026-08-14 | P1 | RESOLVED | Front shell identity cues (island/punch/buttons) via SVG families | Epic A |
 | F31 | 2026-08-14 | P2 | RESOLVED | Back shells + landscape fronts/backs for phone/tablet families | shells pass |
-| F32 | 2026-08-14 | P2 | WATCH | Catalog enriched (12 devices incl. fold/flip) | Epic C |
+| F32 | 2026-08-14 | P2 | RESOLVED | Catalog enriched to 19 devices (incl. fold/flip + 2025 snapshot publish). Inherited chrome tracked on F102 | catalogs/devices |
 | F33 | 2026-08-14 | P2 | RESOLVED | Device preview ungate — Preview devices skips Generate | `preview-devices.ts` |
 | F34 | 2026-08-14 | P2 | WATCH | Shell asset licensing / provenance must stay cited in JSON `source` | catalog policy |
 | F35 | 2026-08-14 | P2 | WATCH | Orientation toggle wired (editor + export size) | orientation-control |
@@ -502,8 +551,8 @@ Verify: `npm run test:templates`
 | F49 | 2026-08-14 | P1 | RESOLVED | Template mode calls `applyTemplate` (copy still rule-based) | `applyTemplate` + adapter |
 | F50 | 2026-08-14 | P2 | RESOLVED | `lockBrand` stamps Generate palette (adapter + recipe + projectSetFromRecipe) | template.adapter + generateLayout |
 | F51 | 2026-08-14 | P2 | RESOLVED | Library Refresh = `refreshCopy` on user cards; system cards ask to duplicate | library.render.ts |
-| F52 | 2026-08-14 | P2 | WATCH | Grammar JSON in `catalogs/templates/2026.08`; identity cards still storage SEED | catalogs |
-| F53 | 2026-08-14 | P2 | WATCH | + Add copy / + Add visual still FAKE — stay parked unless extra slots ship | layers inspector |
+| F52 | 2026-08-14 | P2 | RESOLVED | Grammar JSON + sample-five recipes in `catalogs/templates/2026.08`; title SEED gone | catalogs + `load-recipes.ts` |
+| F53 | 2026-08-14 | P2 | RESOLVED | ExtraSlot copy/visual + paint on `#layout-stage`; + Add buttons real | extra-layers sprint |
 | F54 | 2026-08-14 | P2 | RESOLVED | Per-device x/y/w/h authored via drag/resize (`DeviceInstance.authored`) | transform-device + layout-drag |
 | F55 | 2026-08-14 | P2 | RESOLVED | Social/IAB/feature checkboxes emit listed WxH PNGs (cover / contain+pad) | plan-export + fit-canvas |
 | F56 | 2026-08-14 | P2 | DEFERRED | User templates still localStorage (not IndexedDB) | after recipe SSOT |
@@ -526,6 +575,33 @@ Verify: `npm run test:templates`
 | F73 | 2026-08-15 | P2 | RESOLVED | TikTok + motion records extra 1080×1920 video (cover from catalog paint) | `slideshow-video.ts` |
 | F74 | 2026-08-15 | P2 | RESOLVED | `ExportPreset.emit` per-frame \| hero; `folder` for ZIP path | `preset.types.ts` |
 | F75 | 2026-08-15 | P2 | RESOLVED | Preset checks in `take.export-presets.v1` + project `exportPresetIds` | persist-presets.ts |
+| F76 | 2026-08-15 | P1 | RESOLVED | ExtraSlot copy/visual schema + z-order paint on `#layout-stage` | extras/ + paint-extras.ts |
+| F77 | 2026-08-15 | P1 | RESOLVED | `BackgroundLayer.kind: image` — strip panorama clipped at `i·W` | paint-background.ts |
+| F78 | 2026-08-15 | P2 | RESOLVED | Edit Set view (side-by-side carousel) for Wizard + Template | set-view.ts |
+| F79 | 2026-08-15 | P1 | RESOLVED | Templates live in Library; Landing Template opens gallery; armed Wizard Generate applies the look | [template-library-sprint.md](./template-library-sprint.md) |
+| F80 | 2026-08-15 | P1 | RESOLVED | Node discovery → normalize → ReviewGate. Cited snapshots (default) + optional Wikidata JSON. Not HTML. Not auto-publish. Wizard stays pack import (F101) | `run-discover.ts` + snapshots + `normalize-discovery.ts` |
+| F81 | 2026-08-15 | P2 | RESOLVED | Position presets stamp selected device; bleed-next/prev parks on the integer cut | `apply-placement.ts` + Layers grid |
+| F82 | 2026-08-15 | P1 | RESOLVED | C1 projected shell (`rotateXDeg`/`rotateYDeg` + depth, affine screen warp); not F25 OEM photos; not hands; C2 WebGL still deferred | `project/perspective.ts` + `paint-devices.ts` |
+| F83 | 2026-08-15 | P2 | RESOLVED | Proof-only slice: 0 devices legal iff extras ≥ 1 on that slice | validateLayout |
+| F84 | 2026-08-15 | P2 | RESOLVED | Procedural ExtraSlot shapes (blob / wave / star / dots / scribble) | paint-shapes.ts |
+| F85 | 2026-08-15 | P2 | RESOLVED | Per-frame type band (`typeBand[]`); recipe typeFamily is the default | type-band.ts |
+| F86 | 2026-08-15 | P2 | RESOLVED | Proof widgets: rating wreath, review card, pill row; extra cap 6/slice | ExtraSlot.widget |
+| F87 | 2026-08-15 | P2 | RESOLVED | Solver max devices/slice 2 → 3; 7-phone collage = mini extras | validateLayout + ExtraSlot.shotIndex |
+| F88 | 2026-08-15 | P2 | RESOLVED | Per-device orientation (landscape phone inside portrait store PNG) | DeviceInstance.orientation |
+| F89 | 2026-08-15 | P2 | RESOLVED | ExtraSlot type marks (`**pill**` / `++underline++`) + one bundled script face; headline stays system-ui | copy-marks.ts + paint-copy-marks.ts |
+| F90 | 2026-08-15 | P2 | RESOLVED | Library geometry pack for the 20 refs — layout names, empty photo plates, no competitor art | catalogs/templates recipes |
+| F91 | 2026-08-15 | P1 | RESOLVED | Proof widgets are sample chrome until the user types score/quote; inspector fields; no 4.8/Alex/App Store in seeds | widget-copy.ts + widget-fields.ts |
+| F92 | 2026-08-15 | P2 | RESOLVED | C1 yaw/pitch sliders on selected device; bleed cap 3; landscape cutStamp aspect; back-face cull | tilt-sliders.ts + apply-placement.ts + perspective.ts |
+| F93 | 2026-08-15 | P2 | DEFERRED | generateLayout stays Z-only devices — does not invent yaw, marks, or proof extras | generate-layout.ts |
+| F94 | 2026-08-15 | P1 | RESOLVED | Layout/ZIP bake island vs punch + side buttons from catalog `hardware`; SKU-tuned mute / Action / Camera Control; picker syncs recipe.deviceId | paint-shell-chrome.ts |
+| F95 | 2026-08-15 | P1 | RESOLVED | Library Android filter starved — interim Play twin cards; superseded by F96 mobile + store-target | layout-android-port.ts |
+| F96 | 2026-08-15 | P1 | RESOLVED | Dual-store layouts: one mobile geometry pack; Edit iOS\|Android store-target remaps shell/aspect; Play >8 frames warns | store-target-control.ts |
+| F97 | 2026-08-15 | P1 | RESOLVED | Armed Wizard Generate binds mobile recipes via bindRecipeShell + brief/device shell | wizard.adapter.ts |
+| F98 | 2026-08-15 | P1 | RESOLVED | Brief/intake owns platform on Use; New layout uses defaultDeviceIdForShell; intake radio sets state.platform | library-use.ts · store-target-control.ts |
+| F99 | 2026-08-15 | P2 | RESOLVED | Mobile geometry appears under Mobile + iOS + Android Library filters | library-filter.ts |
+| F100 | 2026-08-15 | P2 | DEFERRED | HTML scrape of Apple/Play/Samsung spec pages — isolate later; Phase 5 lock stands | after snapshot/Wikidata |
+| F101 | 2026-08-15 | P2 | RESOLVED | Catalog UI: Check for new devices + Add (bundled list). Customer copy. Still not a live vendor crawl | catalog-wizard.ts |
+| F102 | 2026-08-15 | P2 | WATCH | Published iPhone 16/17, Pixel 10, S25 use sibling family chrome — not SKU-measured bezels | snapshot inherit |
 
 ### How to raise a flag
 
@@ -570,3 +646,28 @@ Verify: `npm run test:templates`
 | 2026-08-15 | Phase 6 Render build | Multi-size ZIP + fitCanvas; presets from package; F29/F55/F70 RESOLVED; F71/F72 stay deferred |
 | 2026-08-15 | Phase 6 post-impl review | Locked scope done; 0 P0/P1; leftovers F73–F75; impact: checkboxes change ZIP pixels |
 | 2026-08-15 | Phase 6 P2 close-out | TikTok stretch video; emit/folder on presets; persist checkboxes; F73–F75 RESOLVED |
+| 2026-08-15 | Extra layers / panorama / Set view plan | `docs/extra-layers-sprint.md`; F53 OPEN; F76–F78 OPEN; no Flash |
+| 2026-08-15 | Extra layers as-built mapping | ensureIsolatedRecipe; one paintStripSlice; set-view.ts; image BackgroundLayer |
+| 2026-08-15 | Extra layers / panorama / Set view | Set carousel; strip image bg; ExtraSlot drag; F53/F76–F78 RESOLVED; F71 still FAKE |
+| 2026-08-15 | Honesty: modes vs product | Template mode ≠ Library gallery (F79); Catalog UI ≠ web crawl (F80); Slideshow = Wizard path + dwells |
+| 2026-08-15 | Next: Template / Library plan | `docs/template-library-sprint.md`; F79 next; F80 + Slideshow queued |
+| 2026-08-15 | Template / Library product | Sample-five JSON; Library Use applies; Landing Template → Library; F52/F79 RESOLVED; F80 stays OPEN |
+| 2026-08-15 | Library look-inside | Click thumb opens all slices (same paint as export); Use still applies |
+| 2026-08-15 | Position presets | Layers grid stamps Center/tilt/crop; Bleed next/prev = one device clipped at i·W; F81 RESOLVED |
+| 2026-08-15 | Competitor parity | Traffic-light vs 20 refs; 5 layout-only Library cards; F82/F83 deferred (3D, empty-device slice) |
+| 2026-08-15 | Parity sprint plan | Chrome → rules → 3D C1 → type marks → Library pack last; F82–F90 OPEN; no clones until paint exists |
+| 2026-08-15 | Parity Epic A | Shapes, per-PNG type band, proof widgets; extra cap 6; F84–F86 RESOLVED |
+| 2026-08-15 | Parity Epic B | Proof-only PNG, max 3 phones, landscape-in-portrait, mini-screen extra; F83/F87/F88 RESOLVED |
+| 2026-08-15 | Parity Epic C1 | Yaw/pitch projected box + screen warp; `layout-yaw-bleed-5`; F82 RESOLVED; C2 WebGL not started |
+| 2026-08-15 | Parity Epic D | ExtraSlot `**pill**` / `++underline++` + bundled Caveat as Take Script; `layout-type-marks-5`; F89 RESOLVED |
+| 2026-08-15 | Parity Epic E | 21 geometry Library cards for the 20 refs; empty photo plates; F90 RESOLVED |
+| 2026-08-15 | Parity post-impl | Arrow-key caret; sample widgets + inspector; yaw/pitch sliders; landscape bleed; bleed cap 3; F91/F92 RESOLVED; F93 deferred |
+| 2026-08-15 | Shell chrome bake-in | Geometric island/punch/buttons on paintDevice; SKU hardware cues; F94 RESOLVED |
+| 2026-08-15 | Android Library ports | Interim 21 Play twins (F95); replaced by mobile + store-target |
+| 2026-08-15 | Mobile store-target | Collapse twins → mobile pack; Edit iOS\|Android toggle; F96 RESOLVED |
+| 2026-08-15 | Store-target post-impl | Armed Generate / New layout / filter gaps → F97–F99 OPEN |
+| 2026-08-15 | Store-target close-out | Armed bind + brief precedence + filter mobile under iOS/Android; F97–F99 RESOLVED |
+| 2026-08-15 | Device Sync F80 discover | Snapshot adapter + size-class map + family inherit; optional Wikidata JSON; F80 RESOLVED; F100 HTML deferred; F101 wizard import WATCH |
+| 2026-08-15 | Device Sync F80 publish | ReviewGate CLI approve + 7 devices into catalogs/devices/ + barrel; F32 RESOLVED; F102 inherited chrome WATCH |
+| 2026-08-15 | Catalog wizard snapshots | Propose cited snapshots in UI (bundled, no scrape); F101 RESOLVED |
+| 2026-08-15 | Catalog customer copy | Check / You’re up to date / Add cards — no CLI jargon in the primary UI |

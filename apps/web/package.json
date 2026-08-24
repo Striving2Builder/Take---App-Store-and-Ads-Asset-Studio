@@ -10,6 +10,8 @@
   },
   "dependencies": {
     "@take/core": "*",
+    "@take/ad-unit-catalog": "*",
+    "@take/ad-compliance": "*",
     "@take/device-catalog": "*",
     "@take/export-presets": "*",
     "@take/modes-sdk": "*",

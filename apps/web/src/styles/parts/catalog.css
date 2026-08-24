@@ -1,61 +1,104 @@
-/* OWNER: styles — catalog sync wizard */
+/* OWNER: styles — catalog sync wizard (customer) */
 .catalog-wizard {
   max-width: 48rem;
   margin: 0 auto;
   padding: var(--pad);
 }
 
-.catalog-steps {
-  display: flex;
-  gap: 1rem;
-  margin: 1rem 0 1.25rem;
-  font-size: 0.7rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--paper-dim);
+.catalog-hero {
+  padding: 1.35rem 1.4rem 1.25rem;
+  margin-bottom: 1.5rem;
+  border: 1px solid var(--line-strong);
+  background: var(--ink-2);
 }
 
-.catalog-steps .is-on {
+.catalog-hero[data-state="current"],
+.catalog-hero[data-state="added"] {
+  border-color: var(--cyan);
+}
+
+.catalog-hero-kicker {
+  margin: 0 0 0.35rem;
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
   color: var(--cyan);
+}
+
+.catalog-hero .section-title {
+  margin: 0 0 0.4rem;
+}
+
+.catalog-hero .section-sub {
+  margin: 0 0 1rem;
+  max-width: 36rem;
 }
 
 .catalog-actions {
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
-  margin: 0.75rem 0 1rem;
 }
 
+.catalog-block-title {
+  margin: 0 0 0.65rem;
+  font-size: 0.85rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--paper-dim);
+}
+
+.catalog-now,
 .catalog-proposal-list {
   list-style: none;
-  margin: 0;
+  margin: 0 0 1.5rem;
   padding: 0;
-  border-top: 1px solid var(--line);
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(14.5rem, 1fr));
+  gap: 0.65rem;
 }
 
-.catalog-proposal-list li {
-  padding: 0.75rem 0;
-  border-bottom: 1px solid var(--line);
+.catalog-device-card,
+.catalog-update-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  padding: 0.85rem 0.9rem;
+  border: 1px solid var(--line);
+  background: var(--ink);
 }
 
-.catalog-proposal-list label {
+.catalog-update-card {
+  border-color: var(--line-strong);
+}
+
+.catalog-device-family {
+  font-size: 0.62rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--cyan);
+}
+
+.catalog-device-size {
+  font-size: 0.75rem;
+  color: var(--paper-dim);
+}
+
+.catalog-device-note {
+  font-size: 0.72rem;
+  color: var(--paper-dim);
+}
+
+.catalog-card-actions {
   display: flex;
   flex-wrap: wrap;
-  align-items: center;
-  gap: 0.5rem 0.75rem;
-  cursor: pointer;
+  gap: 0.4rem;
+  margin-top: 0.55rem;
 }
 
-.catalog-proposal-list .mono {
-  font-size: 0.65rem;
-  color: var(--paper-dim);
-}
-
-.catalog-diff,
-.catalog-evidence {
-  margin: 0.25rem 0 0;
-  font-size: 0.65rem;
-  color: var(--paper-dim);
+.catalog-added {
+  font-size: 0.75rem;
+  color: var(--cyan);
 }
 
 #catalog-pack-input {
@@ -71,4 +114,16 @@
 
 #catalog-pack-file {
   margin-top: 0.35rem;
+}
+
+.catalog-advanced {
+  margin-top: 0.5rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--line);
+}
+
+.catalog-advanced summary {
+  cursor: pointer;
+  color: var(--paper-dim);
+  font-size: 0.8rem;
 }

@@ -6,7 +6,13 @@ export async function fetchAllowlistedJson(url: string): Promise<unknown> {
     throw new Error("DEVICE_SYNC_FETCH is not 1 — default path is offline");
   }
   const u = await assertAllowedSyncUrlResolved(url);
-  const res = await fetch(u.toString(), { redirect: "error" });
+  const res = await fetch(u.toString(), {
+    redirect: "error",
+    headers: {
+      Accept: "application/json, application/sparql-results+json, text/plain",
+      "User-Agent": "TAKE-device-sync/0.1 (local maintainer; not a crawler)",
+    },
+  });
   if (!res.ok) throw new Error(`Fetch failed ${res.status} for ${url}`);
   const ct = (res.headers.get("content-type") || "").toLowerCase();
   if (!ct.includes("json") && !ct.includes("text/plain")) {

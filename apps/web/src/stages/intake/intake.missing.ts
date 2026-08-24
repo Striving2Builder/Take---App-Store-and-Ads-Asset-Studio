@@ -1,6 +1,4 @@
 /** OWNER: stages/intake — missing field guidance */
-import { listLayoutTemplates } from "@take/storage";
-import { state } from "../../app/app-state";
 import { $ } from "../../shared/dom";
 import { escapeHtml } from "../../shared/escape";
 import { replicatorReady } from "../../modes/replicator/replicator-ready";
@@ -12,6 +10,8 @@ export function updateMissing() {
 
   if (d.mode === "replicator") {
     if (!replicatorReady(d.uploads)) missing.push("Competitor URL (Extra Sources) or upload refs");
+  } else if (d.mode === "ads") {
+    if (!d.url && d.uploads === 0) missing.push("Creative imagery upload, or a URL to scan for copy/palette");
   } else if (!d.url && d.uploads === 0) {
     missing.push("App URL or uploaded screenshots");
   }
@@ -19,9 +19,6 @@ export function updateMissing() {
   if (!d.name) missing.push("App name (helps titles & filenames)");
   if (!d.audience) missing.push("Audience (sharpens narrative)");
   if (!d.positioning && d.mode === "wizard") missing.push("Positioning (optional but powerful)");
-  if (d.mode === "template" && !state.templateId && !listLayoutTemplates().length) {
-    missing.push("Save or pick a library recipe");
-  }
 
   const box = $("#missing-box") as HTMLElement | null;
   const list = $("#missing-list");

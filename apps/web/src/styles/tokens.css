@@ -19,6 +19,7 @@
   --font-display: "Syne", system-ui, sans-serif;
   --font-body: "Newsreader", Georgia, serif;
   --font-mono: "Fragment Mono", ui-monospace, monospace;
+  --font-script: "Take Script", cursive;
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
   --pad: clamp(1rem, 3vw, 2.5rem);
 }

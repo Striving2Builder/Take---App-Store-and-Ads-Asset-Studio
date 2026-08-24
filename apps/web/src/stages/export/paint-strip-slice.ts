@@ -1,16 +1,19 @@
 /** OWNER: stages/export — clip one store PNG from a strip world canvas */
 import {
+  typeBandForSlice,
   typeBandRect,
-  toWorldInstance,
   worldSize,
-  resolveMetrics,
+  backgroundDestSize,
   type TemplateRecord,
 } from "@take/template-engine";
 import type { StoryFrame } from "@take/core";
 import { currentSet, state } from "../../app/app-state";
 import { goalCta } from "../../modes/wizard/copy-builder";
 import { loadImg, wrapText } from "./canvas-text";
-import { scanIconUrl, shotUrlAt } from "./selected-shots";
+import { scanIconUrl } from "./selected-shots";
+import { paintBackground } from "./paint-background";
+import { paintDevice } from "./paint-devices";
+import { paintExtras } from "./paint-extras";
 
 export type PaintSliceOpts = {
   w?: number;
@@ -36,95 +39,19 @@ export function stripRecipeOfSet(): TemplateRecord | null {
   return asRecipe(set.layout?.recipe);
 }
 
-function roundRect(
-  ctx: CanvasRenderingContext2D,
-  x: number,
-  y: number,
-  w: number,
-  h: number,
-  r: number
-) {
-  const rad = Math.min(r, w / 2, h / 2);
-  ctx.beginPath();
-  ctx.moveTo(x + rad, y);
-  ctx.arcTo(x + w, y, x + w, y + h, rad);
-  ctx.arcTo(x + w, y + h, x, y + h, rad);
-  ctx.arcTo(x, y + h, x, y, rad);
-  ctx.arcTo(x, y, x + w, y, rad);
-  ctx.closePath();
-}
-
-function paintBackground(
-  ctx: CanvasRenderingContext2D,
-  recipe: TemplateRecord,
-  worldW: number,
-  worldH: number
-) {
-  const bg = recipe.background;
-  if (bg.kind === "gradient" && bg.colorB) {
-    const g = ctx.createLinearGradient(0, 0, worldW, worldH);
-    g.addColorStop(0, bg.colorA);
-    g.addColorStop(1, bg.colorB);
-    ctx.fillStyle = g;
-  } else {
-    ctx.fillStyle = bg.colorA || "#0c0d10";
-  }
-  ctx.fillRect(0, 0, worldW, worldH);
-}
-
-async function paintDevice(
-  ctx: CanvasRenderingContext2D,
-  sliceW: number,
-  sliceH: number,
-  inst: TemplateRecord["devices"][number],
-  deviceId?: string
-) {
-  const world = toWorldInstance(inst, sliceW, sliceH);
-  const imgUrl = shotUrlAt(inst.shotIndex);
-  const img = imgUrl ? await loadImg(imgUrl) : null;
-  const inset = resolveMetrics(
-    deviceId || state.deviceId,
-    state.platform,
-    state.orientation
-  ).inset;
-  ctx.save();
-  ctx.translate(world.x, world.y);
-  ctx.rotate((world.rotationDeg * Math.PI) / 180);
-  const x = -world.w / 2;
-  const y = -world.h / 2;
-  ctx.fillStyle = "#14151a";
-  roundRect(ctx, x, y, world.w, world.h, world.w * 0.12);
-  ctx.fill();
-  const sx = x + world.w * inset.x;
-  const sy = y + world.h * inset.y;
-  const sw = world.w * inset.w;
-  const sh = world.h * inset.h;
-  ctx.save();
-  roundRect(ctx, sx, sy, sw, sh, world.w * 0.08);
-  ctx.clip();
-  ctx.fillStyle = "#0c0d10";
-  ctx.fillRect(sx, sy, sw, sh);
-  if (img) {
-    const iw = img.naturalWidth || img.width;
-    const ih = img.naturalHeight || img.height;
-    const scale = Math.max(sw / iw, sh / ih);
-    const dw = iw * scale;
-    const dh = ih * scale;
-    ctx.drawImage(img, sx + (sw - dw) / 2, sy + (sh - dh) / 2, dw, dh);
-  }
-  ctx.restore();
-  ctx.restore();
-}
-
 function paintType(
   ctx: CanvasRenderingContext2D,
   recipe: TemplateRecord,
+  sliceIndex: number,
   sliceW: number,
   sliceH: number,
   frame: StoryFrame,
   accent: string
 ) {
-  const band = typeBandRect(recipe.typeFamily, sliceW, sliceH, recipe.typeScale);
+  const family = typeBandForSlice(recipe, sliceIndex);
+  if (family === "none") return;
+  const band = typeBandRect(family, sliceW, sliceH, recipe.typeScale);
+  if (band.w <= 0 || band.h <= 0) return;
   const padX = Math.round(sliceW * 0.07);
   const maxTextW = sliceW - padX * 2;
   const scale = sliceW / 1290;
@@ -168,25 +95,27 @@ export async function paintStripSlice(
   if (!ctx) return false;
 
   const { w: worldW, h: worldH } = worldSize(recipe.frameCount, sliceW, sliceH);
+  const bgDest = backgroundDestSize(recipe.composition, recipe.frameCount, sliceW, sliceH);
   ctx.save();
   ctx.beginPath();
   ctx.rect(0, 0, sliceW, sliceH);
   ctx.clip();
   if (recipe.composition === "strip") {
     ctx.translate(-sliceIndex * sliceW, 0);
-    paintBackground(ctx, recipe, worldW, worldH);
+    await paintBackground(ctx, recipe, worldW, worldH);
   } else {
-    paintBackground(ctx, recipe, sliceW, sliceH);
+    await paintBackground(ctx, recipe, bgDest.w, bgDest.h);
     ctx.translate(-sliceIndex * sliceW, 0);
   }
   const ordered = [...recipe.devices].sort((a, b) => a.z - b.z);
-  const deviceId = opts?.deviceId || recipe.deviceId || state.deviceId;
+  const deviceId = opts?.deviceId || state.deviceId || recipe.deviceId;
   for (const inst of ordered) {
-    await paintDevice(ctx, sliceW, sliceH, inst, deviceId);
+    await paintDevice(ctx, sliceW, sliceH, inst, deviceId, recipe.defaultOrientation);
   }
+  await paintExtras(ctx, recipe.extras, sliceW, sliceH);
   ctx.restore();
 
-  if (!opts?.skipType) {
+  if (!opts?.skipType && typeBandForSlice(recipe, sliceIndex) !== "none") {
     const iconUrl = scanIconUrl();
     if (iconUrl) {
       const img = await loadImg(iconUrl);
@@ -198,7 +127,7 @@ export async function paintStripSlice(
     const frame = frames[sliceIndex];
     if (frame) {
       const accent = (opts?.palette || set?.palette)?.[0] || "#ff4d1a";
-      paintType(ctx, recipe, sliceW, sliceH, frame, accent);
+      paintType(ctx, recipe, sliceIndex, sliceW, sliceH, frame, accent);
     }
   }
   return true;

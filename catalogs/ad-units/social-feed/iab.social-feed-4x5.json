@@ -1,0 +1,14 @@
+{
+  "id": "iab.social-feed-4x5",
+  "label": "Social Feed · 4:5",
+  "family": "social-feed",
+  "kind": "social",
+  "context": "social",
+  "exportPx": { "w": 1080, "h": 1350 },
+  "platform": "Instagram/Facebook",
+  "iabName": "Feed image/video — 4:5 (preferred over 1:1 for feed dwell time)",
+  "status": "current",
+  "source": "Meta Ads Manager — feed placement guidance, 4:5",
+  "updatedAt": "2026-08-24",
+  "version": "1"
+}

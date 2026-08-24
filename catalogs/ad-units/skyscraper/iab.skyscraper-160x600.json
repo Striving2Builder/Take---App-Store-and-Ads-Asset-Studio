@@ -1,0 +1,14 @@
+{
+  "id": "iab.skyscraper-160x600",
+  "label": "Wide Skyscraper",
+  "family": "skyscraper",
+  "kind": "display",
+  "context": "desktop-web",
+  "exportPx": { "w": 160, "h": 600 },
+  "platform": "Generic / IAB",
+  "iabName": "Wide Skyscraper",
+  "status": "current",
+  "source": "IAB Display Advertising Portfolio — Wide Skyscraper",
+  "updatedAt": "2026-08-24",
+  "version": "1"
+}

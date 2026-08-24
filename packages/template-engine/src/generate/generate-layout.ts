@@ -1,4 +1,7 @@
-/** OWNER: packages/template-engine — K-resample orchestrator */
+/** OWNER: packages/template-engine — K-resample orchestrator
+ * New layout stays Z-only devices. Yaw, type marks, and proof extras are authored
+ * Library cards / inspector — generateLayout does not invent ratings or 3D.
+ */
 import type { TemplateRecord } from "../template.types";
 import { validateLayout } from "../constraints/validate-layout";
 import { loadGrammar, GRAMMAR_VERSION } from "../grammar/load-grammar";

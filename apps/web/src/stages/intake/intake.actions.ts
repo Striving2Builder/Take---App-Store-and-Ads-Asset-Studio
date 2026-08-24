@@ -5,6 +5,7 @@ import { toast } from "../../shell/toast";
 import { $, $$ } from "../../shared/dom";
 import { syncDevicePickerToPlatform, syncDevicePickerValue } from "../../editor/device/device-picker";
 import { syncOrientationUi } from "../../editor/device/orientation-control";
+import { syncStoreTargetUi } from "../../editor/device/store-target-control";
 import { runScanTheater } from "../generate/generate.controller";
 import { collectIntake } from "./intake.form";
 import { updateMissing } from "./intake.missing";
@@ -14,6 +15,7 @@ import { persistScanSession } from "./persist-scan-session";
 import { finalizeScan, runIntakeScan } from "./scan-pipeline";
 import { applyModeRunResult, runActiveMode } from "../../modes/run-active-mode";
 import { syncTemplateArm } from "../../modes/template/template-arm";
+import { syncAdsIntakeUi } from "./intake-ad-units";
 
 let scanInFlight = false;
 
@@ -126,6 +128,7 @@ export function bindIntakeActions() {
       const result = await runActiveMode();
       applyModeRunResult(result);
       syncDevicePickerValue();
+      syncStoreTargetUi();
       syncOrientationUi();
       await runScanTheater(state.inference!);
     } catch (err) {
@@ -143,7 +146,9 @@ export function bindIntakeActions() {
 
   document.querySelectorAll<HTMLInputElement>('input[name="platform"]').forEach((el) => {
     el.addEventListener("change", () => {
-      if (el.checked) syncDevicePickerToPlatform(el.value);
+      if (!el.checked) return;
+      state.platform = el.value;
+      syncDevicePickerToPlatform(el.value);
     });
   });
 
@@ -152,7 +157,10 @@ export function bindIntakeActions() {
       if (!el.checked) return;
       state.mode = el.value;
       syncTemplateArm();
+      syncAdsIntakeUi();
       updateMissing();
     });
   });
+
+  syncAdsIntakeUi();
 }

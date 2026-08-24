@@ -1,0 +1,18 @@
+{
+  "id": "tiktok.infeed-9x16",
+  "label": "TikTok In-Feed",
+  "family": "video-vertical",
+  "kind": "video",
+  "context": "video",
+  "exportPx": { "w": 1080, "h": 1920 },
+  "platform": "TikTok",
+  "minDurationMs": 5000,
+  "maxDurationMs": 600000,
+  "recommendedDurationMs": { "min": 9000, "max": 15000 },
+  "maxFileSizeBytes": 500000000,
+  "iabName": "TikTok In-Feed (Non-Spark) — up to 10min, 9–15s recommended",
+  "status": "current",
+  "source": "TikTok Ads Manager — In-Feed video spec",
+  "updatedAt": "2026-08-24",
+  "version": "1"
+}

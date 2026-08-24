@@ -1,0 +1,16 @@
+{
+  "id": "iab.video-vertical-9x16",
+  "label": "Generic Vertical Video (9:16)",
+  "family": "video-vertical",
+  "kind": "video",
+  "context": "video",
+  "exportPx": { "w": 1080, "h": 1920 },
+  "platform": "Generic / IAB",
+  "maxDurationMs": 30000,
+  "recommendedDurationMs": { "min": 6000, "max": 30000 },
+  "iabName": "Digital Video — 9:16 vertical, generic out-stream",
+  "status": "current",
+  "source": "IAB Digital Video Ad Format Guidelines — 9:16 vertical, common bumper/standard durations",
+  "updatedAt": "2026-08-24",
+  "version": "1"
+}
