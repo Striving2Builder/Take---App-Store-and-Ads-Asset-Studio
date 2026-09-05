@@ -49,7 +49,7 @@ function setHero(state: CatalogHeroState, updateCount = 0) {
     addedCount: appliedCount,
     deviceCount: listDevices({ includeDeprecated: true }).length,
   });
-  const hero = $("#catalog-hero");
+  const hero = $<HTMLElement>("#catalog-hero");
   if (hero) hero.dataset.state = state;
   const kicker = $("#catalog-hero-kicker");
   const title = $("#catalog-hero-title");
@@ -86,7 +86,7 @@ function renderCatalogNow() {
 async function renderList() {
   const all = await gate.listAll();
   const open = all.filter((p) => p.reviewStatus !== "rejected");
-  const box = $("#catalog-updates");
+  const box = $<HTMLElement>("#catalog-updates");
   const list = $("#catalog-proposal-list");
   const addAll = $("#btn-catalog-add-all") as HTMLButtonElement | null;
   if (box) box.hidden = open.length === 0;

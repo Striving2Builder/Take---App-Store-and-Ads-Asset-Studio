@@ -122,7 +122,7 @@ function bindGlobalClicks() {
     const tplAction = t.closest("[data-action]") as HTMLElement | null;
     if (tplAction) {
       if (tplAction.dataset.action === "upload-more") {
-        $("#library-upload-shots")?.click();
+        $<HTMLElement>("#library-upload-shots")?.click();
         return;
       }
       const card =
