@@ -132,6 +132,26 @@ body.is-ads-intake .upload-strip {
   border: 1px solid var(--line-strong);
 }
 
+.upload-thumb-wrap {
+  position: relative;
+  display: inline-block;
+}
+
+.upload-thumb-warn {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  font-size: 0.55rem;
+  font-style: normal;
+  text-align: center;
+  padding: 0.1rem 0.2rem;
+  background: rgba(12, 13, 16, 0.75);
+  color: var(--warn);
+  border: 1px solid var(--warn);
+  border-width: 1px 0 0 0;
+}
+
 .upload-thumb-video {
   position: relative;
   width: 56px;

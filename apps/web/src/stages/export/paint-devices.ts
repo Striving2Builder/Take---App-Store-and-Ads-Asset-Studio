@@ -1,5 +1,5 @@
 /** OWNER: stages/export — geometric device shells (2D + projected 2.5D) */
-import { getDevice } from "@take/device-catalog";
+import { getDevice, MAX_SCREENSHOT_UPSCALE } from "@take/device-catalog";
 import {
   hasPerspective,
   projectDeviceBox,
@@ -38,7 +38,10 @@ function coverShot(
   const iw = img.naturalWidth || img.width;
   const ih = img.naturalHeight || img.height;
   if (iw < 1 || ih < 1) return;
-  const scale = Math.max(sw / iw, sh / ih);
+  // Cover the screen box, but never stretch a low-res source past the point of
+  // visible blur — pad with the shell color instead of smearing pixels that
+  // don't exist. Well-matched screenshots (the common case) render pixel-sharp.
+  const scale = Math.min(Math.max(sw / iw, sh / ih), MAX_SCREENSHOT_UPSCALE);
   const dw = iw * scale;
   const dh = ih * scale;
   off.drawImage(img, (sw - dw) / 2, (sh - dh) / 2, dw, dh);

@@ -1,4 +1,9 @@
 /** OWNER: stages/intake — local upload previews (data URLs so refresh survives) */
+import {
+  matchDeviceToScreenshots,
+  screenshotUpscaleFactor,
+  MAX_SCREENSHOT_UPSCALE,
+} from "@take/device-catalog";
 import { state } from "../../app/app-state";
 import { $ } from "../../shared/dom";
 import { escapeHtml } from "../../shared/escape";
@@ -17,6 +22,16 @@ function fileToDataUrl(file: File): Promise<string> {
 }
 
 type VideoMeta = { durationMs: number; width: number; height: number; posterUrl: string };
+
+/** Reads real pixel dimensions off the file — used to auto-match a device template. */
+function readImageSize(url: string): Promise<{ width: number; height: number } | null> {
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.onload = () => resolve({ width: img.naturalWidth, height: img.naturalHeight });
+    img.onerror = () => resolve(null);
+    img.src = url;
+  });
+}
 
 /** Reads real duration/dimensions off the file and captures a poster frame — nothing invented. */
 function readVideoMeta(url: string): Promise<VideoMeta> {
@@ -56,6 +71,26 @@ function readVideoMeta(url: string): Promise<VideoMeta> {
   });
 }
 
+/** Auto-pick the device template that fits what the user actually uploaded, instead
+ *  of always defaulting to the biggest store slot and letting mismatches upscale
+ *  silently. Runs on every upload — no manual "pick a device first" step required. */
+function applyAutoDeviceMatch() {
+  const sizes: { w: number; h: number }[] = [];
+  for (const u of state.uploads) {
+    if (u.kind === "image" && u.width && u.height) sizes.push({ w: u.width, h: u.height });
+  }
+  if (!sizes.length) return;
+  const match = matchDeviceToScreenshots(sizes, state.platform);
+  if (match) state.deviceId = match.id;
+}
+
+function qualityBadge(u: (typeof state.uploads)[number]): string {
+  if (u.kind !== "image" || !u.width || !u.height) return "";
+  const factor = screenshotUpscaleFactor(state.deviceId, state.platform, u.width, u.height);
+  if (factor <= MAX_SCREENSHOT_UPSCALE) return "";
+  return `<em class="upload-thumb-warn" title="${escapeHtml(u.name)} is lower-res than the store frame (${u.width}×${u.height}) — it'll be shown padded, not stretched blurry">low-res</em>`;
+}
+
 function paintUploadPreview() {
   const prev = $("#upload-preview") as HTMLElement | null;
   if (!prev) return;
@@ -71,7 +106,7 @@ function paintUploadPreview() {
         const dur = u.durationMs ? `${(u.durationMs / 1000).toFixed(1)}s` : "";
         return `<span class="upload-thumb-video" title="${escapeHtml(u.name)}"><img src="${u.posterUrl || ""}" alt="${escapeHtml(u.name)}" /><em>▶ ${dur}</em></span>`;
       }
-      return `<img class="upload-thumb" src="${u.url}" alt="${escapeHtml(u.name)}" />`;
+      return `<span class="upload-thumb-wrap"><img class="upload-thumb" src="${u.url}" alt="${escapeHtml(u.name)}" />${qualityBadge(u)}</span>`;
     })
     .join("");
 }
@@ -80,7 +115,14 @@ async function handleImageFiles(files: File[]) {
   for (const file of files) {
     try {
       const url = await fileToDataUrl(file);
-      state.uploads.push({ name: file.name, url, kind: "image" });
+      const size = await readImageSize(url);
+      state.uploads.push({
+        name: file.name,
+        url,
+        kind: "image",
+        width: size?.width,
+        height: size?.height,
+      });
     } catch {
       toast(`Could not read ${file.name}`);
     }
@@ -110,6 +152,7 @@ export async function handleFiles(files: FileList | null) {
   const videos = list.filter((f) => f.type.startsWith("video/"));
   await handleImageFiles(images);
   await handleVideoFiles(videos);
+  applyAutoDeviceMatch();
   paintUploadPreview();
   updateMissing();
 }

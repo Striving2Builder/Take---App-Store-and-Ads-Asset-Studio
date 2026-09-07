@@ -24,6 +24,8 @@ export {
   resetCatalogFromDisk,
 } from "./catalog";
 export { resolveDefaultDevice } from "./resolve-default";
+export { matchDeviceToScreenshots } from "./match-device";
+export { MAX_SCREENSHOT_UPSCALE, screenshotUpscaleFactor } from "./screenshot-quality";
 export { resolveExportSize } from "./resolve-export-size";
 export type { ResolveExportSizeResult } from "./resolve-export-size";
 export { resolveShellAsset } from "./resolve-shell-asset";

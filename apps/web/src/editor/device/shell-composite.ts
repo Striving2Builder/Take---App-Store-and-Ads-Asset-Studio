@@ -4,10 +4,29 @@ import {
   fullCanvasInset,
   getDevice,
   resolveExportSize,
+  MAX_SCREENSHOT_UPSCALE,
   type DeviceFitMode,
   type FitRect,
 } from "@take/device-catalog";
 import { state } from "../../app/app-state";
+
+/** Cover/contain both let a small source get stretched to fill the box; past
+ *  MAX_SCREENSHOT_UPSCALE that reads as blur, so pull dest back to a capped,
+ *  centered size instead — same source crop, just not smeared as wide. */
+function capFitUpscale(fit: FitRect, inset: { x: number; y: number; w: number; h: number }): FitRect {
+  if (fit.sw <= 0 || fit.sh <= 0 || fit.dw <= 0 || fit.dh <= 0) return fit;
+  const scale = fit.dw / fit.sw;
+  if (scale <= MAX_SCREENSHOT_UPSCALE) return fit;
+  const dw = fit.sw * MAX_SCREENSHOT_UPSCALE;
+  const dh = fit.sh * MAX_SCREENSHOT_UPSCALE;
+  return {
+    ...fit,
+    dx: inset.x + (inset.w - dw) / 2,
+    dy: inset.y + (inset.h - dh) / 2,
+    dw,
+    dh,
+  };
+}
 
 export type ScreenFillPlan = {
   canvasW: number;
@@ -33,13 +52,16 @@ export function planScreenFill(
   const resolved = resolveExportSize(deviceId, platform, state.orientation);
   const device = getDevice(resolved.deviceId);
   const inset = fullCanvasInset(resolved.size.w, resolved.size.h);
-  const fit = fitScreenshot({
-    srcW,
-    srcH,
-    inset,
-    mode: fitMode,
-    safeArea: device?.safeArea,
-  });
+  const fit = capFitUpscale(
+    fitScreenshot({
+      srcW,
+      srcH,
+      inset,
+      mode: fitMode,
+      safeArea: device?.safeArea,
+    }),
+    inset
+  );
   return {
     canvasW: resolved.size.w,
     canvasH: resolved.size.h,
