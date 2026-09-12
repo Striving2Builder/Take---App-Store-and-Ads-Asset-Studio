@@ -18,9 +18,17 @@ function toneHint(inf: InferenceBrief): string {
   return t.slice(0, 80);
 }
 
+/** Prefix `name — line`, unless line already opens with the name (captured
+ *  subtitles/descriptions often do) — avoids "Aurabase — Aurabase — ...". */
+function leadWithName(name: string, line: string): string {
+  const trimmed = line.trim();
+  if (trimmed.toLowerCase().startsWith(name.toLowerCase())) return trimmed;
+  return `${name} — ${trimmed}`;
+}
+
 function buildPlayFull(inf: InferenceBrief) {
   const lines = [
-    `${inf.name} — ${inf.positioning || inf.value || inf.category}`,
+    leadWithName(inf.name, inf.positioning || inf.value || inf.category),
     "",
     "WHAT IT DOES",
     inf.value || inf.positioning || "—",
@@ -80,7 +88,7 @@ export function buildCopy(inf: InferenceBrief, conceptIndex: number): StoreCopy 
         META_LIMITS.iosKeywords
       ),
       playTitle: clip(n, META_LIMITS.playTitle),
-      playShort: clip(`${n} — ${valueLine}`, META_LIMITS.playShort),
+      playShort: clip(leadWithName(n, valueLine), META_LIMITS.playShort),
       playFull: buildPlayFull(inf),
       cta: goalCta(inf.goal),
     },
