@@ -80,7 +80,7 @@ export function renderReview() {
         .map(
           (f, fi) => `
           <div class="story-frame">
-            <span class="sf-label">${escapeHtml(f.role.slice(0, 4))}</span>
+            <span class="sf-label">${escapeHtml(f.role)}</span>
             ${
               recipe
                 ? `<canvas data-review-set="${i}" data-review-frame="${fi}"></canvas>`
@@ -107,8 +107,8 @@ export function renderReview() {
 
 async function paintReviewThumbs() {
   const { w, h } = resolveExportSize(state.deviceId, state.platform, state.orientation).size;
-  const tw = 72;
-  const th = Math.round(tw * (h / w));
+  const aspect = h / w;
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
   const canvases = document.querySelectorAll<HTMLCanvasElement>("[data-review-set]");
   for (const canvas of canvases) {
     const si = Number(canvas.dataset.reviewSet);
@@ -116,6 +116,12 @@ async function paintReviewThumbs() {
     const set = state.sets[si];
     const recipe = asRecipe(set?.layout?.recipe);
     if (!set || !recipe) continue;
+    // Raster at the tile's actual on-screen size (not a fixed thumb size) — a lone
+    // set-card stretches to fill the whole rail, so a small fixed width here would
+    // get blown up by CSS and look blurry.
+    const cssW = canvas.parentElement?.clientWidth || 72;
+    const tw = Math.max(72, Math.round(cssW * dpr));
+    const th = Math.round(tw * aspect);
     await paintStripSlice(canvas, fi, {
       w: tw,
       h: th,

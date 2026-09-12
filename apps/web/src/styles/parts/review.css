@@ -110,11 +110,15 @@
   position: absolute;
   left: 4px;
   top: 4px;
+  right: 4px;
   font-family: var(--font-mono);
   font-size: 0.45rem;
   letter-spacing: 0.06em;
   color: var(--cyan);
   z-index: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .story-frame canvas {
