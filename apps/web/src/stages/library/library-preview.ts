@@ -41,7 +41,10 @@ export async function openLibraryPreview(id: string): Promise<void> {
   );
   meta.textContent = `${device?.name || recipe.deviceId || "device"} · ${size.size.w}×${size.size.h} · ${recipe.frameCount} frames · ${recipe.composition}`;
 
-  const w = 160;
+  // CSS fixes the displayed width at 160px (library.css); raster at 160px x
+  // devicePixelRatio so the bitmap isn't upscaled on scaled/HiDPI displays.
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  const w = Math.round(160 * dpr);
   const h = Math.max(1, Math.round((w * size.size.h) / size.size.w));
   const frames = dummyFrames(recipe.frameCount);
   rail.innerHTML = Array.from({ length: recipe.frameCount }, (_, i) => {

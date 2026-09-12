@@ -230,6 +230,8 @@
 
 .library-preview-slice canvas {
   display: block;
+  width: 160px;
+  height: auto;
   background: #0c0d10;
   border: 1px solid var(--line);
 }

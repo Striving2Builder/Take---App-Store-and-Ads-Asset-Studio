@@ -24,6 +24,23 @@ function assert(cond: boolean, msg: string) {
 }
 
 {
+  // maxUpscale: a small source stretched into a much bigger box should be
+  // pulled back to a centered, capped size instead of smeared past the cap.
+  const uncapped = fitRect(50, 50, 200, 200, "cover");
+  assert(uncapped.dw === 200 && uncapped.dh === 200, "sanity: cover fills dest with no cap");
+
+  const cappedCover = fitRect(50, 50, 200, 200, "cover", 1.5);
+  assert(cappedCover.dw === 75 && cappedCover.dh === 75, "cover upscale capped at 1.5x source");
+  assert(cappedCover.dx === 63 && cappedCover.dy === 63, "capped cover re-centers in dest");
+
+  const cappedContain = fitRect(50, 50, 200, 200, "contain", 1.5);
+  assert(cappedContain.dw === 75 && cappedContain.dh === 75, "contain upscale capped at 1.5x source");
+
+  const withinCap = fitRect(50, 50, 60, 60, "cover", 1.5);
+  assert(withinCap.dw === 60 && withinCap.dh === 60, "scale under the cap is left alone");
+}
+
+{
   const rows = sizedPresetsHaveTargets();
   assert(rows.every((r) => r.ok), `every sized preset has numeric targets: ${JSON.stringify(rows.filter((r) => !r.ok))}`);
   const ig = allPresets().find((p) => p.id === "ig");

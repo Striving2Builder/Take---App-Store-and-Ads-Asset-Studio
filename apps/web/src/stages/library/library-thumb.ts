@@ -19,6 +19,7 @@ export function dummyFrames(n: number): StoryFrame[] {
 
 export async function paintLibraryThumbs(root: HTMLElement, cards: SavedTemplate[]): Promise<void> {
   const canvases = [...root.querySelectorAll<HTMLCanvasElement>("canvas[data-thumb]")];
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
   await Promise.all(
     canvases.map(async (canvas) => {
       const id = canvas.dataset.thumb;
@@ -31,7 +32,11 @@ export async function paintLibraryThumbs(root: HTMLElement, cards: SavedTemplate
         tpl.platform || "ios",
         recipe.defaultOrientation || "portrait"
       );
-      const w = 180;
+      // .tpl-card sits in an auto-fill grid (minmax(220px, 1fr)) so its actual
+      // width varies with viewport/row-fill; raster at that real width x dpr
+      // instead of a fixed literal, or CSS width:100% upscales a small bitmap.
+      const cssW = canvas.clientWidth || 180;
+      const w = Math.round(cssW * dpr);
       const h = Math.max(1, Math.round((w * size.size.h) / size.size.w));
       await paintStripSlice(canvas, Number(canvas.dataset.thumbSlice || 0), {
         recipe,

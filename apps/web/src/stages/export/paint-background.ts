@@ -1,5 +1,6 @@
 /** OWNER: stages/export — solid / gradient / image world or per-slice fill */
 import { fitRect } from "@take/export-presets";
+import { MAX_SCREENSHOT_UPSCALE } from "@take/device-catalog";
 import type { TemplateRecord } from "@take/template-engine";
 import { loadImg } from "./canvas-text";
 
@@ -26,6 +27,6 @@ export async function paintBackground(
   const iw = img.naturalWidth || img.width;
   const ih = img.naturalHeight || img.height;
   const fit = bg.fit === "contain" ? "contain" : "cover";
-  const r = fitRect(iw, ih, destW, destH, fit);
+  const r = fitRect(iw, ih, destW, destH, fit, MAX_SCREENSHOT_UPSCALE);
   ctx.drawImage(img, r.sx, r.sy, r.sw, r.sh, r.dx, r.dy, r.dw, r.dh);
 }

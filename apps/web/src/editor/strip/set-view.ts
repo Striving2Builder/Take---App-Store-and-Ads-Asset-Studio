@@ -38,7 +38,11 @@ export async function refreshSetView() {
   ensureSetRecipe();
   const recipe = stripRecipeOfSet();
   const { w, h } = resolveExportSize(state.deviceId, state.platform, state.orientation).size;
-  const setH = Math.round(SET_W * (h / w));
+  // CSS fixes the displayed width at SET_W regardless of raster size; raster at
+  // SET_W x devicePixelRatio so the bitmap isn't upscaled on scaled/HiDPI displays.
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  const rasterW = Math.round(SET_W * dpr);
+  const setH = Math.round(rasterW * (h / w));
   const n = set.frames.length;
   rail.innerHTML = "";
   const canvases: HTMLCanvasElement[] = [];
@@ -49,7 +53,7 @@ export async function refreshSetView() {
     btn.dataset.frame = String(i);
     btn.setAttribute("aria-label", `Frame ${i + 1}`);
     const canvas = document.createElement("canvas");
-    canvas.width = SET_W;
+    canvas.width = rasterW;
     canvas.height = setH;
     btn.appendChild(canvas);
     rail.appendChild(btn);
@@ -58,7 +62,7 @@ export async function refreshSetView() {
 
   for (let i = 0; i < n; i++) {
     if (recipe) {
-      await paintStripSlice(canvases[i], i, { w: SET_W, h: setH });
+      await paintStripSlice(canvases[i], i, { w: rasterW, h: setH });
     } else {
       await paintExportFrame(canvases[i], i);
     }

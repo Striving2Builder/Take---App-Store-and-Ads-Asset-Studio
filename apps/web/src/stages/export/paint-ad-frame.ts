@@ -2,6 +2,7 @@
 import type { AdCopy } from "@take/core";
 import type { AdWireframe, AdZone } from "@take/template-engine";
 import { fitRect } from "@take/export-presets";
+import { MAX_SCREENSHOT_UPSCALE } from "@take/device-catalog";
 import { roundRect } from "./canvas-round-rect";
 import { wrapText } from "./canvas-text";
 
@@ -38,7 +39,7 @@ function paintImageZone(
   ctx.beginPath();
   ctx.rect(r.x, r.y, r.w, r.h);
   ctx.clip();
-  const place = fitRect(image.width, image.height, r.w, r.h, "cover");
+  const place = fitRect(image.width, image.height, r.w, r.h, "cover", MAX_SCREENSHOT_UPSCALE);
   ctx.drawImage(
     image,
     place.sx,
@@ -65,7 +66,7 @@ function paintLogoZone(
 ) {
   const r = rectOf(z, W, H);
   if (logo) {
-    const place = fitRect(logo.width, logo.height, r.w, r.h, "contain");
+    const place = fitRect(logo.width, logo.height, r.w, r.h, "contain", MAX_SCREENSHOT_UPSCALE);
     ctx.drawImage(
       logo,
       place.sx,

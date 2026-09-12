@@ -1,8 +1,9 @@
 /** OWNER: modes/ads — build native ad creative set from uploads + selected ad units */
+import { clip } from "@take/core";
 import type { AdCopy, InferenceBrief, ProjectSet, StoryFrame } from "@take/core";
 import { getAdUnit } from "@take/ad-unit-catalog";
 import { wireframesForFamily } from "@take/template-engine";
-import { goalCta } from "../wizard/copy-builder";
+import { goalCta, leadWithName } from "../wizard/copy-builder";
 
 const PALETTE = ["#ff4d1a", "#0c0d10", "#f3f1ec", "#3de0ff", "#1e2129"];
 const DEFAULT_AD_UNIT_ID = "iab.mpu-300x250";
@@ -10,8 +11,8 @@ const DEFAULT_AD_UNIT_ID = "iab.mpu-300x250";
 export function buildAdCopy(brief: InferenceBrief): AdCopy {
   const valueLine = brief.value || brief.positioning || `${brief.name} for ${brief.category}`.trim();
   return {
-    headline: (brief.name ? `${brief.name}: ${valueLine}` : valueLine).slice(0, 60),
-    description: (brief.narrative || brief.value || brief.positioning || "").slice(0, 160),
+    headline: clip(brief.name ? leadWithName(brief.name, valueLine, ": ") : valueLine, 60),
+    description: clip(brief.narrative || brief.value || brief.positioning || "", 160),
     cta: goalCta(brief.goal),
     clickThroughUrl: "",
     advertiserName: brief.name || "",
@@ -58,12 +59,12 @@ export function buildAdSets(
       blurb: `${ids.length} ad unit${ids.length === 1 ? "" : "s"} — headline, CTA, and logo composed per size, not a resized screenshot.`,
       frames,
       copy: {
-        iosTitle: copy.headline.slice(0, 30),
-        iosSubtitle: copy.description.slice(0, 30),
-        iosPromo: copy.description.slice(0, 170),
+        iosTitle: clip(copy.headline, 30),
+        iosSubtitle: clip(copy.description, 30),
+        iosPromo: clip(copy.description, 170),
         iosKeywords: "",
-        playTitle: copy.headline.slice(0, 30),
-        playShort: copy.description.slice(0, 80),
+        playTitle: clip(copy.headline, 30),
+        playShort: clip(copy.description, 80),
         playFull: copy.description,
         cta: copy.cta,
       },

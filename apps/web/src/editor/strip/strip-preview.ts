@@ -28,7 +28,12 @@ export async function refreshStripPreview() {
   }
 
   const { w, h } = resolveExportSize(state.deviceId, state.platform, state.orientation).size;
-  const previewH = Math.round(PREVIEW_W * (h / w));
+  // CSS fixes the displayed width at PREVIEW_W regardless of raster size (see
+  // strip-preview.css); raster at PREVIEW_W x devicePixelRatio so the bitmap
+  // isn't upscaled on scaled/HiDPI displays.
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  const rasterW = Math.round(PREVIEW_W * dpr);
+  const previewH = Math.round(rasterW * (h / w));
   const n = recipe.frameCount;
   rail.innerHTML = "";
   const canvases: HTMLCanvasElement[] = [];
@@ -39,7 +44,7 @@ export async function refreshStripPreview() {
     btn.dataset.frame = String(i);
     btn.setAttribute("aria-label", `Slice ${i + 1}`);
     const canvas = document.createElement("canvas");
-    canvas.width = PREVIEW_W;
+    canvas.width = rasterW;
     canvas.height = previewH;
     btn.appendChild(canvas);
     rail.appendChild(btn);
@@ -47,6 +52,6 @@ export async function refreshStripPreview() {
   }
 
   for (let i = 0; i < n; i++) {
-    await paintStripSlice(canvases[i], i, { w: PREVIEW_W, h: previewH });
+    await paintStripSlice(canvases[i], i, { w: rasterW, h: previewH });
   }
 }

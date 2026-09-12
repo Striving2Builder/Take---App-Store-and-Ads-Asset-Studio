@@ -1,5 +1,7 @@
 /** OWNER: stages/export — ExtraSlot on top of devices, under store type */
 import { toWorldInstance, type ExtraSlot } from "@take/template-engine";
+import { fitRect } from "@take/export-presets";
+import { MAX_SCREENSHOT_UPSCALE } from "@take/device-catalog";
 import { loadImg } from "./canvas-text";
 import { roundRect } from "./canvas-round-rect";
 import { ensureScriptFace, paintMarkedCopy } from "./paint-copy-marks";
@@ -51,7 +53,20 @@ export async function paintExtras(
       if (img) {
         roundRect(ctx, x, y, world.w, world.h, Math.min(18, world.w * 0.12));
         ctx.clip();
-        ctx.drawImage(img, x, y, world.w, world.h);
+        const iw = img.naturalWidth || img.width;
+        const ih = img.naturalHeight || img.height;
+        const place = fitRect(iw, ih, world.w, world.h, "cover", MAX_SCREENSHOT_UPSCALE);
+        ctx.drawImage(
+          img,
+          place.sx,
+          place.sy,
+          place.sw,
+          place.sh,
+          x + place.dx,
+          y + place.dy,
+          place.dw,
+          place.dh
+        );
       } else {
         ctx.fillStyle = slot.fill || "#f3f1ec";
         roundRect(ctx, x, y, world.w, world.h, Math.min(12, world.w * 0.08));
