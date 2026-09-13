@@ -6,6 +6,7 @@ import type {
   ScanPack,
   CapturedPalette,
 } from "@take/scan-client";
+import { clip } from "@take/core";
 import { clearScanSession } from "@take/storage";
 import { state } from "../../app/app-state";
 import { $ } from "../../shared/dom";
@@ -49,7 +50,7 @@ function rowsFromCapture(capture: AppCapture) {
     renderFieldRow("Subtitle / short", String(f.subtitle.value ?? ""), f.subtitle.provenance),
     renderFieldRow(
       "Description",
-      f.description.value ? String(f.description.value).slice(0, 280) : "",
+      f.description.value ? clip(String(f.description.value), 280) : "",
       f.description.provenance
     ),
     renderFieldRow("Category", String(f.category.value ?? ""), f.category.provenance),
@@ -73,7 +74,7 @@ function rowsFromLoose(result: ScanResult) {
       const fromCap = k in result.captured;
       const raw = fromCap ? result.captured[k] : result.inferred[k];
       const value = Array.isArray(raw) ? raw.join(", ") : String(raw ?? "");
-      return renderFieldRow(k, value.slice(0, 280), fromCap ? "captured" : "inferred");
+      return renderFieldRow(k, clip(value, 280), fromCap ? "captured" : "inferred");
     })
     .join("");
 }

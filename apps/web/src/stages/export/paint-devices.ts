@@ -13,6 +13,7 @@ import { loadImg } from "./canvas-text";
 import { shotUrlAt } from "./selected-shots";
 import { roundRect } from "./canvas-round-rect";
 import { paintShellChromeLocal, paintShellChromeProjected } from "./paint-shell-chrome";
+import { applyHighQualitySmoothing } from "../../shared/canvas-quality";
 
 function fillQuad(
   ctx: CanvasRenderingContext2D,
@@ -59,6 +60,7 @@ async function screenBitmap(
   canvas.height = h;
   const ctx = canvas.getContext("2d");
   if (!ctx) return null;
+  applyHighQualitySmoothing(ctx);
   if (img) coverShot(ctx, img, w, h);
   else {
     ctx.fillStyle = "#0c0d10";

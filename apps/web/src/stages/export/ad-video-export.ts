@@ -5,6 +5,7 @@ import type { AdUnit } from "@take/ad-unit-catalog";
 import type { AdWireframe } from "@take/template-engine";
 import { pickVideoMime } from "./video-mime";
 import { paintAdOverlayZones, paintVideoFrameIntoZones } from "./paint-ad-frame";
+import { applyHighQualitySmoothing } from "../../shared/canvas-quality";
 
 export type AdVideoResult = { blob: Blob; ext: string; mime: string; durationMs: number };
 
@@ -64,6 +65,7 @@ export async function recordAdVideo(
   canvas.height = unit.exportPx.h;
   const ctx = canvas.getContext("2d");
   if (!ctx) throw new Error("Canvas unavailable");
+  applyHighQualitySmoothing(ctx);
 
   const canvasStream = canvas.captureStream(30);
   const stream = new MediaStream([...canvasStream.getVideoTracks(), ...audioTracksOf(video)]);

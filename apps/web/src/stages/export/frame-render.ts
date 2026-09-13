@@ -6,6 +6,7 @@ import { drawFittedImage, planScreenFill } from "../../editor/device/shell-compo
 import { loadImg, wrapText } from "./canvas-text";
 import { scanIconUrl, shotUrlAt } from "./selected-shots";
 import { paintStripSlice, stripRecipeOfSet } from "./paint-strip-slice";
+import { applyHighQualitySmoothing } from "../../shared/canvas-quality";
 
 /** Current catalog export size for the selected device + orientation. */
 export function currentExportSize(): { w: number; h: number } {
@@ -31,6 +32,7 @@ export async function paintExportFrame(
 
   const ctx = canvas.getContext("2d");
   if (!ctx) return false;
+  applyHighQualitySmoothing(ctx);
 
   const accent = set.palette[0] || "#ff4d1a";
   const bg = set.palette[1] || "#0c0d10";

@@ -1,5 +1,5 @@
 /** OWNER: generate — frame sequence builder (Advanced ux/tone influence captions) */
-import { FRAME_ROLES, type InferenceBrief, type StoryFrame } from "@take/core";
+import { clip, FRAME_ROLES, type InferenceBrief, type StoryFrame } from "@take/core";
 import { goalCta } from "./copy-builder";
 
 function softUx(inf: InferenceBrief): boolean {
@@ -33,7 +33,7 @@ export function buildFrames(
     ["Leave with something", valueBit],
     ["Trusted by design", "Platform-native. Store-compliant."],
     [goalCta(inf.goal), "Your next honest take"],
-    [`${inf.name}`, inf.refs ? `Structure: ${inf.refs.slice(0, 48)}` : "Ship the story."],
+    [`${inf.name}`, inf.refs ? `Structure: ${clip(inf.refs, 48)}` : "Ship the story."],
   ];
 
   return Array.from({ length: n }, (_, i) => {

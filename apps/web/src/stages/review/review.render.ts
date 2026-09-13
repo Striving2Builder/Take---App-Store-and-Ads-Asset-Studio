@@ -6,7 +6,7 @@ import { $ } from "../../shared/dom";
 import { escapeHtml } from "../../shared/escape";
 import { mountModePlugins } from "../../modes/mode-plugins";
 import { paintStripSlice } from "../export/paint-strip-slice";
-import { resolveExportSize } from "@take/device-catalog";
+import { rasterSizeFor } from "../../shared/hidpi-raster";
 
 const REVIEW_TITLES: Record<string, string> = {
   wizard: "Choose a concept",
@@ -106,9 +106,7 @@ export function renderReview() {
 }
 
 async function paintReviewThumbs() {
-  const { w, h } = resolveExportSize(state.deviceId, state.platform, state.orientation).size;
-  const aspect = h / w;
-  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  const dpr = window.devicePixelRatio || 1;
   const canvases = document.querySelectorAll<HTMLCanvasElement>("[data-review-set]");
   for (const canvas of canvases) {
     const si = Number(canvas.dataset.reviewSet);
@@ -116,12 +114,13 @@ async function paintReviewThumbs() {
     const set = state.sets[si];
     const recipe = asRecipe(set?.layout?.recipe);
     if (!set || !recipe) continue;
-    // Raster at the tile's actual on-screen size (not a fixed thumb size) — a lone
-    // set-card stretches to fill the whole rail, so a small fixed width here would
-    // get blown up by CSS and look blurry.
-    const cssW = canvas.parentElement?.clientWidth || 72;
-    const tw = Math.max(72, Math.round(cssW * dpr));
-    const th = Math.round(tw * aspect);
+    // Raster at the tile's actual on-screen width AND height (not derived from
+    // the selected device's aspect ratio) — .story-frame is a CSS-fixed 9:16
+    // box regardless of orientation, so a landscape device's real aspect would
+    // under-raster the height and blur. A lone set-card also stretches to
+    // fill the whole rail, so a small fixed width would get blown up too.
+    const tw = rasterSizeFor(canvas.parentElement?.clientWidth || 0, dpr, 72);
+    const th = rasterSizeFor(canvas.parentElement?.clientHeight || 0, dpr, 128);
     await paintStripSlice(canvas, fi, {
       w: tw,
       h: th,

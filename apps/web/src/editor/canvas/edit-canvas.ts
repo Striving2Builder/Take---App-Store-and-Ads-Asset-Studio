@@ -25,17 +25,7 @@ import { renderWidgetFields } from "../inspectors/widget-fields";
 import { renderTiltSliders } from "../inspectors/tilt-sliders";
 import { resolveExportSize } from "@take/device-catalog";
 import { renderAdsThumbGrid } from "../../modes/ads/ads.plugin";
-
-/**
- * Raster width for a CSS-stretched preview canvas: the box's actual on-screen
- * width times device pixel ratio (capped at 2), so scaled/HiDPI displays don't
- * force the browser to upscale a too-small bitmap. Falls back to 264 (the
- * .layout-stage CSS width) when the box hasn't been laid out yet (clientWidth 0).
- */
-export function resolveStageRasterWidth(cssWidth: number, dpr: number): number {
-  const width = cssWidth > 0 ? cssWidth : 264;
-  return Math.round(width * Math.min(dpr > 0 ? dpr : 1, 2));
-}
+import { rasterSizeFor } from "../../shared/hidpi-raster";
 
 export function syncFrameFromDom() {
   const frame = currentFrame();
@@ -196,7 +186,7 @@ async function syncLayoutStage() {
     stage.hidden = false;
     stage.appendChild(content);
     const { w, h } = resolveExportSize(state.deviceId, state.platform, state.orientation).size;
-    const cw = resolveStageRasterWidth(stage.clientWidth, window.devicePixelRatio || 1);
+    const cw = rasterSizeFor(stage.clientWidth, window.devicePixelRatio || 1, 264);
     await paintStripSlice(canvas, state.activeFrame, {
       w: cw,
       h: Math.round(cw * (h / w)),

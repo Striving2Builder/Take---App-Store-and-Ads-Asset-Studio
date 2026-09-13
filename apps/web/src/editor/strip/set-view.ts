@@ -5,6 +5,7 @@ import { $ } from "../../shared/dom";
 import { paintExportFrame } from "../../stages/export/frame-render";
 import { paintStripSlice, stripRecipeOfSet } from "../../stages/export/paint-strip-slice";
 import { ensureSetRecipe } from "../layout/attach-recipe";
+import { rasterSizeFor } from "../../shared/hidpi-raster";
 
 const SET_W = 168;
 
@@ -40,8 +41,7 @@ export async function refreshSetView() {
   const { w, h } = resolveExportSize(state.deviceId, state.platform, state.orientation).size;
   // CSS fixes the displayed width at SET_W regardless of raster size; raster at
   // SET_W x devicePixelRatio so the bitmap isn't upscaled on scaled/HiDPI displays.
-  const dpr = Math.min(window.devicePixelRatio || 1, 2);
-  const rasterW = Math.round(SET_W * dpr);
+  const rasterW = rasterSizeFor(SET_W, window.devicePixelRatio || 1, SET_W);
   const setH = Math.round(rasterW * (h / w));
   const n = set.frames.length;
   rail.innerHTML = "";

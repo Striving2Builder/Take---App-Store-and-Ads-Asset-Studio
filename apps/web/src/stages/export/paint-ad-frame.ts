@@ -5,6 +5,7 @@ import { fitRect } from "@take/export-presets";
 import { MAX_SCREENSHOT_UPSCALE } from "@take/device-catalog";
 import { roundRect } from "./canvas-round-rect";
 import { wrapText } from "./canvas-text";
+import { applyHighQualitySmoothing } from "../../shared/canvas-quality";
 
 export type PaintAdFrameInput = {
   size: { w: number; h: number };
@@ -259,6 +260,7 @@ export function paintAdFrame(canvas: HTMLCanvasElement, input: PaintAdFrameInput
   canvas.height = size.h;
   const ctx = canvas.getContext("2d");
   if (!ctx) return;
+  applyHighQualitySmoothing(ctx);
 
   const fallbackBg = palette[1] || "#1e2129";
   ctx.fillStyle = fallbackBg;

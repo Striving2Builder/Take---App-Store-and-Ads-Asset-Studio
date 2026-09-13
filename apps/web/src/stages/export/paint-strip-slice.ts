@@ -14,6 +14,7 @@ import { scanIconUrl } from "./selected-shots";
 import { paintBackground } from "./paint-background";
 import { paintDevice } from "./paint-devices";
 import { paintExtras } from "./paint-extras";
+import { applyHighQualitySmoothing } from "../../shared/canvas-quality";
 
 export type PaintSliceOpts = {
   w?: number;
@@ -93,6 +94,7 @@ export async function paintStripSlice(
   canvas.height = sliceH;
   const ctx = canvas.getContext("2d");
   if (!ctx) return false;
+  applyHighQualitySmoothing(ctx);
 
   const { w: worldW, h: worldH } = worldSize(recipe.frameCount, sliceW, sliceH);
   const bgDest = backgroundDestSize(recipe.composition, recipe.frameCount, sliceW, sliceH);

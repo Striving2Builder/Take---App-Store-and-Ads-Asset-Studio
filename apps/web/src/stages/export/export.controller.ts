@@ -1,7 +1,7 @@
 /** OWNER: stages/export — validation + ZIP export + project save + motion */
 import { getMode } from "@take/modes-sdk";
 import { screenshotCountOk } from "@take/core";
-import { getDevice } from "@take/device-catalog";
+import { getDevice, screenshotUpscaleFactor, MAX_SCREENSHOT_UPSCALE } from "@take/device-catalog";
 import { motionStretchTarget } from "@take/export-presets";
 import { getTemplates, pushHistory, saveProject } from "@take/storage";
 import { currentSet, state } from "../../app/app-state";
@@ -19,6 +19,8 @@ import { buildExportFiles, currentExportPlan } from "./export-zip";
 import { runAdExport } from "./ad-export";
 import { getAdUnit, checkVideoCompliance } from "@take/ad-unit-catalog";
 import { checkLegalCompliance } from "@take/ad-compliance";
+import { loadImg } from "./canvas-text";
+import { selectedScreenshots } from "./selected-shots";
 
 function countPlatform(infPlatform: string): string {
   const fromDevice = getDevice(state.deviceId)?.platform;
@@ -96,7 +98,35 @@ function videoComplianceChecks(set: NonNullable<ReturnType<typeof currentSet>>):
   return out;
 }
 
-export function renderValidation() {
+/** Warn (never block — a real screenshot can't be un-lowres'd) when a selected
+ *  screenshot is below the resolution the target device needs. The render
+ *  pipeline already pads instead of stretching past MAX_SCREENSHOT_UPSCALE
+ *  (see paint-devices.ts), so this is purely a heads-up, not a blocker. */
+async function lowResScreenshotCheck(): Promise<{ ok: boolean; text: string } | null> {
+  const shots = selectedScreenshots();
+  if (!shots.length) return null;
+  let lowRes = 0;
+  for (const shot of shots) {
+    const img = await loadImg(shot.url);
+    const w = img?.naturalWidth || img?.width || 0;
+    const h = img?.naturalHeight || img?.height || 0;
+    if (!w || !h) continue;
+    if (screenshotUpscaleFactor(state.deviceId, state.platform, w, h) > MAX_SCREENSHOT_UPSCALE) {
+      lowRes += 1;
+    }
+  }
+  const deviceName = getDevice(state.deviceId)?.name || "the target device";
+  const total = shots.length;
+  if (lowRes === 0) {
+    return { ok: true, text: `All ${total} screenshot${total === 1 ? "" : "s"} meet ${deviceName}'s resolution` };
+  }
+  return {
+    ok: false,
+    text: `${lowRes} of ${total} screenshot${total === 1 ? "" : "s"} lower-res than ${deviceName} needs — padded, not stretched blurry`,
+  };
+}
+
+export async function renderValidation() {
   if (state.mode === "ads") {
     renderAdValidation();
     return;
@@ -111,6 +141,7 @@ export function renderValidation() {
   }
 
   applyDeviceFrame();
+  const lowResCheckPromise = lowResScreenshotCheck();
   const selected = selectedPresetIds();
   const plan = currentExportPlan(selected, set.frames.length);
   const { w: EXPORT_W, h: EXPORT_H } = currentExportSize();
@@ -163,6 +194,8 @@ export function renderValidation() {
       text: `Strip panorama · ${recipe.frameCount} clips from one world image`,
     });
   }
+  const lowResCheck = await lowResCheckPromise;
+  if (lowResCheck) checks.push(lowResCheck);
 
   list.innerHTML = checks
     .map((x) => `<li class="${x.ok ? "ok" : "warn"}">${escapeHtml(x.text)}</li>`)

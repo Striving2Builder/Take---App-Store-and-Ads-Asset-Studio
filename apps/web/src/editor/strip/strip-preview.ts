@@ -3,6 +3,7 @@ import { resolveExportSize } from "@take/device-catalog";
 import { state } from "../../app/app-state";
 import { $ } from "../../shared/dom";
 import { paintStripSlice, stripRecipeOfSet } from "../../stages/export/paint-strip-slice";
+import { rasterSizeFor } from "../../shared/hidpi-raster";
 
 const PREVIEW_W = 72;
 
@@ -31,8 +32,7 @@ export async function refreshStripPreview() {
   // CSS fixes the displayed width at PREVIEW_W regardless of raster size (see
   // strip-preview.css); raster at PREVIEW_W x devicePixelRatio so the bitmap
   // isn't upscaled on scaled/HiDPI displays.
-  const dpr = Math.min(window.devicePixelRatio || 1, 2);
-  const rasterW = Math.round(PREVIEW_W * dpr);
+  const rasterW = rasterSizeFor(PREVIEW_W, window.devicePixelRatio || 1, PREVIEW_W);
   const previewH = Math.round(rasterW * (h / w));
   const n = recipe.frameCount;
   rail.innerHTML = "";

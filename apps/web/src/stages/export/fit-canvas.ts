@@ -1,5 +1,6 @@
 /** OWNER: stages/export — scale a painted frame onto a target canvas */
 import { fitRect, type ExportFit } from "@take/export-presets";
+import { applyHighQualitySmoothing } from "../../shared/canvas-quality";
 
 export function fitCanvas(
   src: HTMLCanvasElement,
@@ -9,6 +10,7 @@ export function fitCanvas(
 ): void {
   const ctx = dest.getContext("2d");
   if (!ctx) return;
+  applyHighQualitySmoothing(ctx);
   ctx.fillStyle = padColor || "#0c0d10";
   ctx.fillRect(0, 0, dest.width, dest.height);
   const place = fitRect(src.width, src.height, dest.width, dest.height, fit);

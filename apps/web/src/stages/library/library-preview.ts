@@ -7,6 +7,7 @@ import { escapeHtml } from "../../shared/escape";
 import { toast } from "../../shell/toast";
 import { paintStripSlice } from "../export/paint-strip-slice";
 import { dummyFrames } from "./library-thumb";
+import { rasterSizeFor } from "../../shared/hidpi-raster";
 import { useLibraryRecipe } from "./library-use";
 
 function dialogEl(): HTMLDialogElement | null {
@@ -43,8 +44,7 @@ export async function openLibraryPreview(id: string): Promise<void> {
 
   // CSS fixes the displayed width at 160px (library.css); raster at 160px x
   // devicePixelRatio so the bitmap isn't upscaled on scaled/HiDPI displays.
-  const dpr = Math.min(window.devicePixelRatio || 1, 2);
-  const w = Math.round(160 * dpr);
+  const w = rasterSizeFor(160, window.devicePixelRatio || 1, 160);
   const h = Math.max(1, Math.round((w * size.size.h) / size.size.w));
   const frames = dummyFrames(recipe.frameCount);
   rail.innerHTML = Array.from({ length: recipe.frameCount }, (_, i) => {

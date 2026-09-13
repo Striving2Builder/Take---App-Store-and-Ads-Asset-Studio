@@ -276,19 +276,19 @@ export function startApp() {
   mountDevicePicker({
     onChange: () => {
       renderEditor();
-      renderValidation();
+      void renderValidation();
     },
   });
   const onDeviceUi = () => {
     renderEditor();
-    renderValidation();
+    void renderValidation();
   };
   mountStoreTargetControl({ onChange: onDeviceUi });
   mountFitControl({ onChange: onDeviceUi });
   mountOrientationControl({ onChange: onDeviceUi });
   mountShellViewControl({ onChange: onDeviceUi });
   mountCatalogWizard();
-  mountExportPresets({ onChange: renderValidation });
+  mountExportPresets({ onChange: () => void renderValidation() });
   $("#btn-device-preview")?.addEventListener("click", () => openDevicePreview());
   $("#btn-device-preview-nav")?.addEventListener("click", () => openDevicePreview());
   $("#btn-device-preview-lib")?.addEventListener("click", () => openDevicePreview());
@@ -307,7 +307,7 @@ export function startApp() {
     if (name === "catalog") mountTruthBadges();
     if (name === "export") {
       applyExportHints();
-      renderValidation();
+      void renderValidation();
     }
     if (name === "edit") {
       syncDevicePickerValue();

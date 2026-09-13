@@ -1,5 +1,5 @@
 /** OWNER: modes/wizard — multi-set generator */
-import type { InferenceBrief, ProjectSet } from "@take/core";
+import { clip, type InferenceBrief, type ProjectSet } from "@take/core";
 import { buildCopy } from "./copy-builder";
 import { buildFrames } from "./frames-builder";
 
@@ -33,10 +33,10 @@ function guidanceBlurb(inf: InferenceBrief, i: number): string {
     "Kinetic crop and playful pacing.",
   ][i % 5];
   const bits: string[] = [base];
-  if (inf.tone) bits.push(`Tone: ${inf.tone.slice(0, 60)}`);
-  if (inf.ux) bits.push(`UX: ${inf.ux.slice(0, 60)}`);
-  if (inf.refs) bits.push(`Structure refs: ${inf.refs.slice(0, 72)}`);
-  if (inf.donot) bits.push(`Do not: ${inf.donot.slice(0, 60)}`);
+  if (inf.tone) bits.push(`Tone: ${clip(inf.tone, 60)}`);
+  if (inf.ux) bits.push(`UX: ${clip(inf.ux, 60)}`);
+  if (inf.refs) bits.push(`Structure refs: ${clip(inf.refs, 72)}`);
+  if (inf.donot) bits.push(`Do not: ${clip(inf.donot, 60)}`);
   return bits.join(" · ");
 }
 
@@ -55,7 +55,7 @@ export function generateSets(
   return Array.from({ length: qty }, (_, i) => {
     const [name, styleLabel] = CONCEPT_NAMES[i % CONCEPT_NAMES.length];
     const palette = i === 0 && seed ? seed : PALETTES[i % PALETTES.length];
-    const toneLabel = inf.tone ? ` · ${inf.tone.slice(0, 24)}` : "";
+    const toneLabel = inf.tone ? ` · ${clip(inf.tone, 24)}` : "";
     return {
       id: `set-${Date.now()}-${i}`,
       name,
