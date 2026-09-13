@@ -293,8 +293,10 @@ body.is-ads-edit [data-panel="layers"] {
   font-size: 0.55rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--cyan);
+  color: var(--slice-ink-accent, var(--cyan));
   outline: none;
+  overflow-wrap: normal;
+  word-break: keep-all;
 }
 
 .shot-headline {
@@ -304,7 +306,10 @@ body.is-ads-edit [data-panel="layers"] {
   font-size: 1.35rem;
   line-height: 1.1;
   letter-spacing: -0.03em;
+  color: var(--slice-ink, var(--paper));
   outline: none;
+  overflow-wrap: normal;
+  word-break: keep-all;
 }
 
 .shot-ui-block {
@@ -358,8 +363,10 @@ body.is-ads-edit [data-panel="layers"] {
 .shot-caption {
   margin: 0;
   font-size: 0.85rem;
-  color: var(--paper-dim);
+  color: var(--slice-ink-dim, var(--paper-dim));
   outline: none;
+  overflow-wrap: normal;
+  word-break: keep-all;
 }
 
 [contenteditable]:focus {

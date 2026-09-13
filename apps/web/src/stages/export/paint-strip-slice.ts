@@ -10,6 +10,7 @@ import type { StoryFrame } from "@take/core";
 import { currentSet, state } from "../../app/app-state";
 import { goalCta } from "../../modes/wizard/copy-builder";
 import { loadImg, wrapText } from "./canvas-text";
+import { inkForBackground } from "../../shared/contrast-ink";
 import { scanIconUrl } from "./selected-shots";
 import { paintBackground } from "./paint-background";
 import { paintDevice } from "./paint-devices";
@@ -56,7 +57,8 @@ function paintType(
   const padX = Math.round(sliceW * 0.07);
   const maxTextW = sliceW - padX * 2;
   const scale = sliceW / 1290;
-  ctx.fillStyle = "#f3f1ec";
+  const ink = inkForBackground(recipe.background.colorA, recipe.background.colorB);
+  ctx.fillStyle = ink.text;
   ctx.font = `600 ${Math.round(28 * scale)}px ui-monospace, monospace`;
   ctx.fillText(frame.kicker.slice(0, 48), padX, band.y + Math.round(band.h * 0.28));
   ctx.font = `700 ${Math.round(56 * scale)}px system-ui, sans-serif`;

@@ -1,7 +1,50 @@
 /** OWNER: modes/wizard — multi-set generator */
 import { clip, type InferenceBrief, type ProjectSet } from "@take/core";
+import { getTemplates, isLayoutRecipe, type SavedTemplate } from "@take/storage";
+import {
+  bindRecipeShell,
+  ensureIsolatedRecipe,
+  recipeFromSaved,
+  type StoreShell,
+  type TemplateRecord,
+} from "@take/template-engine";
+import { isDraftTemplate } from "../../stages/library/library-filter";
 import { buildCopy } from "./copy-builder";
 import { buildFrames } from "./frames-builder";
+
+function isMobileTagged(tags: string[] | undefined, platform?: string): boolean {
+  return (tags || []).includes("mobile") || platform === "mobile";
+}
+
+/** Finished (non-draft) catalog layouts for a store shell, shuffled once per
+ *  generate call so a batch of concepts lands on different compositions
+ *  instead of every wizard set falling back to one bare centered device per
+ *  screen with no composition at all (see ensureIsolatedRecipe). */
+function shuffledRecipePool(shell: StoreShell): SavedTemplate[] {
+  const pool = getTemplates().filter(
+    (t) =>
+      isLayoutRecipe(t) &&
+      !isDraftTemplate(t) &&
+      (t.platform === shell || isMobileTagged(t.tags, t.platform))
+  );
+  for (let i = pool.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [pool[i], pool[j]] = [pool[j], pool[i]];
+  }
+  return pool;
+}
+
+/** Hydrate + shell-bind a catalog card. Frame count follows the recipe —
+ *  forcing a 5-frame composition to a fixed 8-frame count would just pad the
+ *  extra slots with the same bare fallback we're trying to get away from. */
+function buildRecipe(chosen: SavedTemplate, shell: StoreShell, deviceId?: string): TemplateRecord | null {
+  let recipe = recipeFromSaved({ ...chosen, layout: chosen.layout });
+  if (!recipe.devices.length) return null;
+  if (isMobileTagged(recipe.tags, chosen.platform)) {
+    recipe = bindRecipeShell(recipe, shell);
+  }
+  return ensureIsolatedRecipe({ existing: recipe, frameCount: recipe.frameCount, deviceId });
+}
 
 const CONCEPT_NAMES: [string, string][] = [
   ["Signal Cut", "Editorial · Direct"],
@@ -46,7 +89,9 @@ export function generateSets(
   deviceId?: string,
   options: GenerateSetsOptions = {}
 ): ProjectSet[] {
-  const frameCount = inf.platform === "both" ? 8 : inf.platform === "android" ? 7 : 8;
+  const fallbackFrameCount = inf.platform === "android" ? 7 : 8;
+  const shell: StoreShell = inf.platform === "android" ? "android" : "ios";
+  const pool = shuffledRecipePool(shell);
   const rawSeed = (options.seedPalette || []).filter(Boolean);
   const seed =
     rawSeed.length > 0
@@ -56,7 +101,9 @@ export function generateSets(
     const [name, styleLabel] = CONCEPT_NAMES[i % CONCEPT_NAMES.length];
     const palette = i === 0 && seed ? seed : PALETTES[i % PALETTES.length];
     const toneLabel = inf.tone ? ` · ${clip(inf.tone, 24)}` : "";
-    return {
+    const recipe = pool.length ? buildRecipe(pool[i % pool.length], shell, deviceId) : null;
+    const frameCount = recipe?.frameCount || fallbackFrameCount;
+    const set: ProjectSet = {
       id: `set-${Date.now()}-${i}`,
       name,
       styleLabel: `${styleLabel}${toneLabel}`,
@@ -67,5 +114,10 @@ export function generateSets(
       palette,
       deviceId,
     };
+    if (recipe) {
+      set.composition = recipe.composition;
+      set.layout = { composition: recipe.composition, recipe };
+    }
+    return set;
   });
 }

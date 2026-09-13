@@ -26,6 +26,7 @@ import { renderTiltSliders } from "../inspectors/tilt-sliders";
 import { resolveExportSize } from "@take/device-catalog";
 import { renderAdsThumbGrid } from "../../modes/ads/ads.plugin";
 import { rasterSizeFor } from "../../shared/hidpi-raster";
+import { inkForBackground } from "../../shared/contrast-ink";
 
 export function syncFrameFromDom() {
   const frame = currentFrame();
@@ -185,6 +186,10 @@ async function syncLayoutStage() {
     phone.hidden = true;
     stage.hidden = false;
     stage.appendChild(content);
+    const ink = inkForBackground(recipe.background.colorA, recipe.background.colorB);
+    content.style.setProperty("--slice-ink", ink.text);
+    content.style.setProperty("--slice-ink-dim", ink.dim);
+    content.style.setProperty("--slice-ink-accent", ink.accent);
     const { w, h } = resolveExportSize(state.deviceId, state.platform, state.orientation).size;
     const cw = rasterSizeFor(stage.clientWidth, window.devicePixelRatio || 1, 264);
     await paintStripSlice(canvas, state.activeFrame, {
@@ -199,6 +204,9 @@ async function syncLayoutStage() {
   } else {
     phone.hidden = false;
     stage.hidden = true;
+    content.style.removeProperty("--slice-ink");
+    content.style.removeProperty("--slice-ink-dim");
+    content.style.removeProperty("--slice-ink-accent");
     screen.appendChild(content);
     syncLayoutDrag();
   }
