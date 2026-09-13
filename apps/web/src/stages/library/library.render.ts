@@ -153,7 +153,11 @@ export async function handleLibraryAction(id: string, action: string) {
   }
 
   if (action === "use") {
+    const tpl = getTemplates().find((t) => t.id === id);
     useLibraryRecipe(id);
+    if (tpl && isDraftTemplate(tpl)) {
+      toast(`“${tpl.name}” is a draft — device placement isn't fully refined yet`);
+    }
   } else if (action === "preview") {
     void openLibraryPreview(id);
   } else if (action === "new-layout") {

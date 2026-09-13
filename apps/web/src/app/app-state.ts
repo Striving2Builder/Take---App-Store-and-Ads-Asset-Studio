@@ -60,7 +60,7 @@ export const state: AppState = {
   selectedSet: 0,
   activeFrame: 0,
   filter: "all",
-  hideDrafts: false,
+  hideDrafts: true,
   deviceId: "apple.iphone-16-pro-max",
   fitMode: "cover",
   orientation: "portrait",

@@ -78,6 +78,9 @@ export type ExtraSlot = {
   shotIndex?: number;
   /** Extra copy face only — not kicker/headline. */
   face?: ExtraFace;
+  /** Authored placeholder ("Your photo spans this cut") — dim + mark it so
+   *  it never ships as if it were real copy. */
+  sample?: boolean;
 };
 
 export type LayoutProvenance = {

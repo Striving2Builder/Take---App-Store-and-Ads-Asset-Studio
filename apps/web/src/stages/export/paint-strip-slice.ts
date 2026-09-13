@@ -10,7 +10,7 @@ import type { StoryFrame } from "@take/core";
 import { currentSet, state } from "../../app/app-state";
 import { goalCta } from "../../modes/wizard/copy-builder";
 import { loadImg, wrapText } from "./canvas-text";
-import { inkForBackground } from "../../shared/contrast-ink";
+import { inkForBackground, type Ink } from "../../shared/contrast-ink";
 import { scanIconUrl } from "./selected-shots";
 import { paintBackground } from "./paint-background";
 import { paintDevice } from "./paint-devices";
@@ -48,7 +48,8 @@ function paintType(
   sliceW: number,
   sliceH: number,
   frame: StoryFrame,
-  accent: string
+  accent: string,
+  ink: Ink
 ) {
   const family = typeBandForSlice(recipe, sliceIndex);
   if (family === "none") return;
@@ -57,7 +58,6 @@ function paintType(
   const padX = Math.round(sliceW * 0.07);
   const maxTextW = sliceW - padX * 2;
   const scale = sliceW / 1290;
-  const ink = inkForBackground(recipe.background.colorA, recipe.background.colorB);
   ctx.fillStyle = ink.text;
   ctx.font = `600 ${Math.round(28 * scale)}px ui-monospace, monospace`;
   ctx.fillText(frame.kicker.slice(0, 48), padX, band.y + Math.round(band.h * 0.28));
@@ -116,7 +116,8 @@ export async function paintStripSlice(
   for (const inst of ordered) {
     await paintDevice(ctx, sliceW, sliceH, inst, deviceId, recipe.defaultOrientation);
   }
-  await paintExtras(ctx, recipe.extras, sliceW, sliceH);
+  const ink = inkForBackground(recipe.background.colorA, recipe.background.colorB);
+  await paintExtras(ctx, recipe.extras, sliceW, sliceH, ink);
   ctx.restore();
 
   if (!opts?.skipType && typeBandForSlice(recipe, sliceIndex) !== "none") {
@@ -131,7 +132,7 @@ export async function paintStripSlice(
     const frame = frames[sliceIndex];
     if (frame) {
       const accent = (opts?.palette || set?.palette)?.[0] || "#ff4d1a";
-      paintType(ctx, recipe, sliceIndex, sliceW, sliceH, frame, accent);
+      paintType(ctx, recipe, sliceIndex, sliceW, sliceH, frame, accent, ink);
     }
   }
   return true;
