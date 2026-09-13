@@ -2,8 +2,7 @@
   "tags": [
     "mobile",
     "layout",
-    "screenshots",
-    "needs-polish"
+    "screenshots"
   ],
   "version": 1,
   "deviceId": "apple.iphone-16-pro-max",
@@ -47,11 +46,11 @@
     },
     {
       "id": "p1-front",
-      "x": 1.42,
+      "x": 1.6,
       "y": 0.56,
       "w": 0.52,
       "h": 1.1253333333333333,
-      "rotationDeg": 10,
+      "rotationDeg": 9,
       "z": 2,
       "shotIndex": 1,
       "placement": "center",
@@ -59,11 +58,11 @@
     },
     {
       "id": "p1-back",
-      "x": 1.62,
-      "y": 0.58,
-      "w": 0.48,
-      "h": 1.0387692307692307,
-      "rotationDeg": -8,
+      "x": 1.34,
+      "y": 0.62,
+      "w": 0.44,
+      "h": 0.9522051282051281,
+      "rotationDeg": 5,
       "z": 1,
       "shotIndex": 1,
       "placement": "center",

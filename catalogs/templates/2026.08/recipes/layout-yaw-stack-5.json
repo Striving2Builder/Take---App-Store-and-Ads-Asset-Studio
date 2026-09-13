@@ -2,8 +2,7 @@
   "tags": [
     "mobile",
     "layout",
-    "screenshots",
-    "needs-polish"
+    "screenshots"
   ],
   "version": 1,
   "deviceId": "apple.iphone-16-pro-max",
@@ -47,7 +46,7 @@
     },
     {
       "id": "ys-back",
-      "x": 1.92,
+      "x": 1.42,
       "y": 0.52,
       "w": 0.4,
       "h": 0.8656410256410256,
@@ -56,12 +55,12 @@
       "depth": 0.05,
       "z": 1,
       "shotIndex": 1,
-      "placement": "bleed-next",
+      "placement": "center",
       "authored": true
     },
     {
       "id": "ys-mid",
-      "x": 2,
+      "x": 1.5,
       "y": 0.58,
       "w": 0.44,
       "h": 0.9522051282051281,
@@ -70,12 +69,12 @@
       "depth": 0.05,
       "z": 2,
       "shotIndex": 1,
-      "placement": "bleed-next",
+      "placement": "center",
       "authored": true
     },
     {
       "id": "ys-front",
-      "x": 2.08,
+      "x": 1.58,
       "y": 0.64,
       "w": 0.4,
       "h": 0.8656410256410256,
@@ -84,7 +83,21 @@
       "depth": 0.05,
       "z": 3,
       "shotIndex": 1,
-      "placement": "bleed-next",
+      "placement": "center",
+      "authored": true
+    },
+    {
+      "id": "ys2",
+      "x": 2.5,
+      "y": 0.56,
+      "w": 0.56,
+      "h": 1.211897435897436,
+      "rotationDeg": 0,
+      "rotateYDeg": -14,
+      "depth": 0.05,
+      "z": 1,
+      "shotIndex": 2,
+      "placement": "center",
       "authored": true
     },
     {
