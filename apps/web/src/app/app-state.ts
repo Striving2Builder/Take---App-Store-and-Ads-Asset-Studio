@@ -27,6 +27,8 @@ export type AppState = {
   selectedSet: number;
   activeFrame: number;
   filter: string;
+  /** Library: hide recipes tagged "needs-polish" (unfinished seed examples) */
+  hideDrafts: boolean;
   deviceId: string;
   fitMode: DeviceFitMode;
   orientation: DeviceOrientation;
@@ -58,6 +60,7 @@ export const state: AppState = {
   selectedSet: 0,
   activeFrame: 0,
   filter: "all",
+  hideDrafts: false,
   deviceId: "apple.iphone-16-pro-max",
   fitMode: "cover",
   orientation: "portrait",

@@ -1,5 +1,5 @@
 /** OWNER: stages/library — filter match tests */
-import { libraryFilterMatch } from "./library-filter";
+import { libraryFilterMatch, isDraftTemplate } from "./library-filter";
 import type { SavedTemplate } from "@take/storage";
 
 function assert(cond: boolean, msg: string) {
@@ -51,5 +51,14 @@ assert(!libraryFilterMatch(playStore, "mobile"), "play store not mobile pack");
 
 assert(libraryFilterMatch(iosStore, "ios"), "ios store in ios");
 assert(!libraryFilterMatch(iosStore, "android"), "ios store not android");
+
+const draft: SavedTemplate = {
+  ...iosStore,
+  id: "seed-strip-bleed-hook",
+  tags: ["strip", "bleed", "ios", "needs-polish"],
+};
+assert(isDraftTemplate(draft), "needs-polish tag marks a template as draft");
+assert(!isDraftTemplate(iosStore), "no needs-polish tag is not a draft");
+assert(!isDraftTemplate(mobile), "unrelated tags are not a draft");
 
 console.log("library-filter.test ok");

@@ -55,6 +55,21 @@
 }
 .filter.on { border-color: var(--signal); color: var(--signal); }
 
+.filter-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.5rem 0.65rem;
+  margin-top: 0.15rem;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.04em;
+  color: var(--paper-dim);
+  cursor: pointer;
+}
+.filter-toggle:hover { color: var(--paper); }
+.filter-toggle input { accent-color: var(--signal); cursor: pointer; }
+
 .library-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));

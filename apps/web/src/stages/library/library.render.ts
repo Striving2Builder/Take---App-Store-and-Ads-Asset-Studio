@@ -23,13 +23,15 @@ import { mountModePlugins } from "../../modes/mode-plugins";
 import { persistExportPresetIds } from "../export/persist-presets";
 import { syncExportPresetChecks } from "../export/mount-presets";
 import { paintLibraryThumbs } from "./library-thumb";
-import { libraryFilterMatch } from "./library-filter";
+import { libraryFilterMatch, isDraftTemplate } from "./library-filter";
 import { newLayoutFromLibrary, useLibraryRecipe } from "./library-use";
 import { openLibraryPreview } from "./library-preview";
 
 export async function renderLibrary() {
   const all = listLayoutTemplates();
-  const filtered = all.filter((t) => libraryFilterMatch(t, state.filter));
+  const filtered = all.filter(
+    (t) => libraryFilterMatch(t, state.filter) && (!state.hideDrafts || !isDraftTemplate(t))
+  );
 
   const projects = await listProjects();
   const grid = $("#library-grid");
@@ -67,6 +69,11 @@ export async function renderLibrary() {
         (t) => `
       <article class="tpl-card" data-tpl="${escapeHtml(t.id)}">
         <div class="tpl-preview">
+          ${
+            isDraftTemplate(t)
+              ? `<span class="truth-badge truth-partial truth-corner" title="Needs polish — device placement in this example recipe hasn't been fully refined yet">DRAFT</span>`
+              : ""
+          }
           <button type="button" class="tpl-preview-hit" data-action="preview" aria-label="Preview ${escapeHtml(t.name)}">
             <div class="tpl-shot-grid">
               ${[0, 1, 2]

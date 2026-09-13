@@ -243,6 +243,14 @@ function bindLibraryUploads() {
   });
 }
 
+function bindLibraryDraftToggle() {
+  const toggle = $("#filter-hide-drafts") as HTMLInputElement | null;
+  toggle?.addEventListener("change", () => {
+    state.hideDrafts = toggle.checked;
+    renderLibrary();
+  });
+}
+
 export function startApp() {
   registerModes();
   bindNavJumps();
@@ -250,6 +258,7 @@ export function startApp() {
   bindMissingWatchers();
   bindUploads();
   bindLibraryUploads();
+  bindLibraryDraftToggle();
   bindUserProvenance();
   bindIntakeActions();
   bindEditorActions();
