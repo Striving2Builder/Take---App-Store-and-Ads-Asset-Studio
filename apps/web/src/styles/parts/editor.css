@@ -339,7 +339,11 @@ body.is-ads-edit [data-panel="layers"] {
 }
 
 .shot-content.has-scan-shot .shot-ui-block {
-  opacity: 0.35;
+  /* Decorative stand-in for an *empty* phone mock only — once a real
+     screenshot is showing, this must be fully hidden, not just faded
+     (a translucent fake UI block over real content reads as glitchy
+     leftover shapes, not a design element). */
+  display: none;
 }
 
 .scan-icon-badge {
