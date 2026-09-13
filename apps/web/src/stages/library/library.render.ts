@@ -132,10 +132,14 @@ export async function handleLibraryAction(id: string, action: string) {
       persistExportPresetIds(p.exportPresetIds);
       syncExportPresetChecks();
     }
+    // Show the stage before painting into it — renderReview()/renderEditor()
+    // measure each canvas's on-screen size to raster it sharply; while the
+    // target stage is still `hidden`, that measurement reads 0 and the first
+    // tile locks onto a too-small fallback that never self-corrects.
+    showStage("edit");
     renderReview();
     renderEditor();
     mountModePlugins();
-    showStage("edit");
     toast(`Opened project “${proj.name}”`);
     pushHistory("project.open", id);
     return;

@@ -139,9 +139,11 @@ function bindGlobalClicks() {
 
 function bindEditorActions() {
   $("#btn-to-edit")?.addEventListener("click", () => {
+    // Show before painting — renderEditor() measures on-screen canvas sizes
+    // to raster sharply; while the stage is still hidden, that reads 0.
+    showStage("edit");
     renderEditor();
     mountModePlugins();
-    showStage("edit");
   });
   $("#btn-regen-all")?.addEventListener("click", async () => {
     if (!state.inference) return;

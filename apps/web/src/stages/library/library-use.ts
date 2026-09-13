@@ -77,9 +77,11 @@ function goEditApplied(name: string, msg?: string): void {
   syncDevicePickerValue();
   syncStoreTargetUi();
   syncOrientationUi();
+  // Show before painting — renderEditor() measures on-screen canvas sizes to
+  // raster sharply; while the stage is still hidden, that reads 0.
+  showStage("edit");
   renderEditor();
   mountModePlugins();
-  showStage("edit");
   toast(msg || `Applied “${name}”`);
 }
 

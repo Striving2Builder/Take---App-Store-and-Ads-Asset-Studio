@@ -89,13 +89,21 @@ export function renderReview() {
           </div>`
         )
         .join("");
+      // A "strip" recipe is one joined world clipped into N PNGs — a device
+      // can deliberately straddle the seam so it looks continuous across
+      // adjacent App Store screenshots. The default gap+border between tiles
+      // (correct for "isolated", where each PNG is meant to stand alone)
+      // visually chops that device in half here, making the intended bleed
+      // effect look like a rendering bug. #strip-preview already renders
+      // "strip" recipes with no gap for exactly this reason — match it here.
+      const isStrip = recipe?.composition === "strip";
       return `
         <button type="button" class="set-card ${i === state.selectedSet ? "is-selected" : ""}" data-set="${i}">
           <div class="set-card-head">
             <span class="set-name">${escapeHtml(set.name)}</span>
             <span class="set-style">${escapeHtml(set.styleLabel)}</span>
           </div>
-          <div class="storyboard">${frames}</div>
+          <div class="storyboard${isStrip ? " is-strip" : ""}">${frames}</div>
           <p class="set-blurb">${escapeHtml(set.blurb)} · ${set.frames.length} frames</p>
         </button>`;
     })

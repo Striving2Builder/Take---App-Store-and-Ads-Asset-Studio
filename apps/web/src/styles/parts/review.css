@@ -106,6 +106,26 @@
   min-width: 0;
 }
 
+/* "strip" recipes are one joined world clipped into N PNGs — a device can
+   deliberately straddle the seam. No gap/border between tiles here, or the
+   join looks chopped instead of continuous (matches #strip-preview). */
+.storyboard.is-strip {
+  gap: 0;
+}
+
+.storyboard.is-strip .story-frame {
+  border-left-width: 0;
+  border-right-width: 0;
+}
+
+.storyboard.is-strip .story-frame:first-child {
+  border-left-width: 1px;
+}
+
+.storyboard.is-strip .story-frame:last-child {
+  border-right-width: 1px;
+}
+
 .story-frame .sf-label {
   position: absolute;
   left: 4px;

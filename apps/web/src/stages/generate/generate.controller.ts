@@ -89,7 +89,13 @@ export async function runScanTheater(inf: InferenceBrief) {
   }
   state.selectedSet = 0;
   state.activeFrame = 0;
-  renderReview();
+  // Show the stage before painting into it: renderReview() kicks off an
+  // async canvas-sizing pass (paintReviewThumbs) that measures each tile's
+  // clientWidth/clientHeight — if the review stage is still `hidden` when
+  // the FIRST tile is measured (i.e. showStage ran after), that measurement
+  // reads 0 and the tile rasters at a small fallback size that never gets
+  // corrected, leaving frame 1 visibly smaller/softer than every other tile.
   showStage("review");
+  renderReview();
   pushHistory("generate", state.sets.map((s) => s.id).join(","));
 }

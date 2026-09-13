@@ -86,7 +86,9 @@ export function openDevicePreview() {
   syncFitControlUi();
   syncOrientationUi();
   syncShellViewUi();
-  renderEditor();
+  // Show before painting — renderEditor() measures on-screen canvas sizes to
+  // raster sharply; while the stage is still hidden, that reads 0.
   showStage("edit");
+  renderEditor();
   toast("Device preview — shells & sizes (no Generate)");
 }
