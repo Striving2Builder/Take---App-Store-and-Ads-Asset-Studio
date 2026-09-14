@@ -80,11 +80,37 @@
 
 .canvas-toolbar {
   display: flex;
-  justify-content: space-between;
+  flex-wrap: wrap;
   align-items: center;
+  gap: 0.7rem;
 }
 
-.tool-group { display: flex; gap: 0.35rem; }
+.toolbar-cluster {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.toolbar-cluster-identity { flex-shrink: 0; }
+
+.toolbar-cluster-view { flex-wrap: wrap; }
+
+.toolbar-cluster-actions { margin-left: auto; }
+
+.toolbar-divider {
+  width: 1px;
+  align-self: stretch;
+  min-height: 1.5rem;
+  background: var(--line);
+  flex-shrink: 0;
+}
+
+#canvas-label {
+  white-space: nowrap;
+}
+
+.tool-group { display: flex; gap: 0.35rem; flex-shrink: 0; }
 
 .edit-canvas {
   position: relative;
@@ -92,10 +118,7 @@
   min-height: 560px;
   display: grid;
   place-items: center;
-  background:
-    linear-gradient(var(--line) 1px, transparent 1px) 0 0 / 24px 24px,
-    linear-gradient(90deg, var(--line) 1px, transparent 1px) 0 0 / 24px 24px,
-    var(--ink);
+  background: var(--ink-3);
   border: 1px solid var(--line);
   padding: 2rem;
 }
@@ -121,7 +144,6 @@
    ad-unit picker + thumbnail grid replace device picker / fit / orientation / sequence rail. */
 body.is-ads-edit .device-picker-wrap,
 body.is-ads-edit #store-target-control,
-body.is-ads-edit #shell-view-control,
 body.is-ads-edit #orientation-control,
 body.is-ads-edit #fit-mode-control,
 body.is-ads-edit #edit-view-control,

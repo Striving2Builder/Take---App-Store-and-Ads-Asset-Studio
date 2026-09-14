@@ -194,11 +194,21 @@
 .ctx-btn-text { font-family: var(--font-display); font-weight: 700; font-size: 0.72rem; }
 
 .layout-stage-hint {
-  margin: 0.45rem 0 0;
+  position: absolute;
+  top: 0.85rem;
+  left: 50%;
+  transform: translateX(-50%);
+  margin: 0;
+  background: var(--ink-2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: 0.3rem 0.7rem;
   font-size: 0.62rem;
   letter-spacing: 0.06em;
   color: var(--paper-dim);
   text-align: center;
+  white-space: nowrap;
+  z-index: 2;
 }
 
 .layout-stage .shot-content {

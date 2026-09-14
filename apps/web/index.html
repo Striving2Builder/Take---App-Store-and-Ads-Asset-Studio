@@ -54,8 +54,6 @@
                 <div class="fake-row short"></div>
               </div>
             </div>
-            <div class="crop tl"></div><div class="crop tr"></div>
-            <div class="crop bl"></div><div class="crop br"></div>
           </div>
           <div class="frame-shell frame-b">
             <div class="frame-chrome mono">02 · PROOF</div>
@@ -380,24 +378,32 @@
 
       <div class="edit-canvas-wrap">
         <div class="canvas-toolbar">
-          <span class="mono" id="canvas-label">FRAME 01 · HOOK</span>
-          <label class="device-picker-wrap mono" for="device-picker">
-            Device
-            <select id="device-picker" aria-label="Device shell"></select>
-          </label>
-          <div class="fit-mode-control" id="store-target-control" role="group" aria-label="Store target"></div>
-          <div class="fit-mode-control" id="orientation-control" role="group" aria-label="Orientation"></div>
-          <div class="fit-mode-control" id="edit-view-control" role="group" aria-label="Edit view">
-            <button type="button" class="fit-mode-btn is-active" data-edit-view="slice">Slice</button>
-            <button type="button" class="fit-mode-btn" data-edit-view="set">Set</button>
+          <div class="toolbar-cluster toolbar-cluster-identity">
+            <span class="mono" id="canvas-label">FRAME 01 · HOOK</span>
+            <label class="device-picker-wrap mono" for="device-picker">
+              Device
+              <select id="device-picker" aria-label="Device shell"></select>
+            </label>
           </div>
-          <div class="tool-group">
-            <button type="button" class="icon-btn" id="btn-undo" title="Undo" disabled><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10h9a5 5 0 0 1 0 10H9"/><polyline points="7 6 3 10 7 14"/></svg></button>
-            <button type="button" class="icon-btn" id="btn-redo" title="Redo" disabled><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10h-9a5 5 0 0 0 0 10h3"/><polyline points="17 6 21 10 17 14"/></svg></button>
+          <span class="toolbar-divider" aria-hidden="true"></span>
+          <div class="toolbar-cluster toolbar-cluster-view">
+            <div class="fit-mode-control" id="store-target-control" role="group" aria-label="Store target"></div>
+            <div class="fit-mode-control" id="orientation-control" role="group" aria-label="Orientation"></div>
+            <div class="fit-mode-control" id="edit-view-control" role="group" aria-label="Edit view">
+              <button type="button" class="fit-mode-btn is-active" data-edit-view="slice">Slice</button>
+              <button type="button" class="fit-mode-btn" data-edit-view="set">Set</button>
+            </div>
           </div>
-          <div class="tool-group">
-            <button type="button" class="icon-btn" id="btn-regen-frame" title="Regenerate frame"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3-6.7"/><polyline points="21 3 21 9 15 9"/></svg></button>
-            <button type="button" class="icon-btn" id="btn-remove-frame" title="Remove frame"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="5" y1="5" x2="19" y2="19"/><line x1="19" y1="5" x2="5" y2="19"/></svg></button>
+          <span class="toolbar-divider" aria-hidden="true"></span>
+          <div class="toolbar-cluster toolbar-cluster-actions">
+            <div class="tool-group">
+              <button type="button" class="icon-btn" id="btn-undo" title="Undo" disabled><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10h9a5 5 0 0 1 0 10H9"/><polyline points="7 6 3 10 7 14"/></svg></button>
+              <button type="button" class="icon-btn" id="btn-redo" title="Redo" disabled><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10h-9a5 5 0 0 0 0 10h3"/><polyline points="17 6 21 10 17 14"/></svg></button>
+            </div>
+            <div class="tool-group">
+              <button type="button" class="icon-btn" id="btn-regen-frame" title="Regenerate frame"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3-6.7"/><polyline points="21 3 21 9 15 9"/></svg></button>
+              <button type="button" class="icon-btn" id="btn-remove-frame" title="Remove frame"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="5" y1="5" x2="19" y2="19"/><line x1="19" y1="5" x2="5" y2="19"/></svg></button>
+            </div>
           </div>
         </div>
         <p class="device-fit-hint mono" id="device-fit-hint" hidden></p>
@@ -420,8 +426,6 @@
           </div>
           <div id="ads-edit-stage" class="ads-edit-stage" hidden></div>
           <p class="mono layout-stage-hint" id="layout-stage-hint" hidden>Drag devices & elements · corners resize · Alt-drag rotate · arrows nudge</p>
-          <div class="crop tl"></div><div class="crop tr"></div>
-          <div class="crop bl"></div><div class="crop br"></div>
         </div>
         <div id="set-stage" class="set-stage" hidden>
           <p class="mono set-stage-label">SET · store carousel · same paint as export — click a frame to edit that slice</p>

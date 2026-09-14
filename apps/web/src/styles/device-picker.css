@@ -1,47 +1,59 @@
-/* OWNER: styles — device picker in editor toolbar */
+/* OWNER: styles — device picker + segmented toggle controls in editor toolbar */
 .device-picker-wrap {
   display: inline-flex;
   align-items: center;
   gap: 0.45rem;
   color: var(--paper-dim);
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.78rem;
 }
 
 .device-picker-wrap select {
   font-family: var(--font-display);
-  font-size: 0.75rem;
+  font-weight: 600;
+  font-size: 0.78rem;
   letter-spacing: normal;
   text-transform: none;
   color: var(--paper);
   background: var(--ink-2);
   border: 1px solid var(--line-strong);
-  padding: 0.35rem 0.5rem;
+  border-radius: var(--radius-sm);
+  padding: 0.4rem 0.6rem;
   max-width: 200px;
 }
 
+/* Soft segmented pill — replaces the old sharp-cornered mono-caps toggle
+   chips (store target, orientation, slice/set) with one consistent
+   control matching the approved Studio Light mockups. */
 .fit-mode-control {
   display: inline-flex;
-  gap: 0.2rem;
+  gap: 2px;
+  background: var(--ink-3);
+  border-radius: var(--radius-sm);
+  padding: 3px;
   margin-left: 0.35rem;
 }
 
 .fit-mode-btn {
-  font-family: var(--font-mono);
-  font-size: 0.58rem;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.74rem;
+  letter-spacing: 0;
+  text-transform: none;
   color: var(--paper-dim);
-  background: var(--ink-2);
-  border: 1px solid var(--line);
-  padding: 0.3rem 0.45rem;
+  background: none;
+  border: none;
+  border-radius: 7px;
+  padding: 0.4rem 0.7rem;
   cursor: pointer;
+  transition: color 0.15s, background 0.15s;
 }
 
 .fit-mode-btn.is-active {
   color: var(--paper);
-  border-color: var(--line-strong);
-  background: var(--ink-3);
+  background: var(--ink-2);
+  box-shadow: var(--shadow);
 }
 
-.fit-mode-btn:hover {
-  color: var(--paper);
-}
+.fit-mode-btn:hover { color: var(--paper); }
