@@ -511,7 +511,13 @@
               <span id="device-pitch-val">0°</span>
             </label>
           </div>
-          <p class="hint tight">Sliders on the selected phone. Past ~25° the cheap warp can look thin — that is C1, not WebGL.</p>
+          <p class="hint tight">Sliders on the selected device. Past ~25° the cheap warp can look thin — that is C1, not WebGL.</p>
+          <p class="mono pos-preset-legend">SCREENSHOT FIT</p>
+          <div class="chrome-row" id="device-fit-row" hidden>
+            <button type="button" class="btn ghost small" data-device-fit="cover">Cover</button>
+            <button type="button" class="btn ghost small" data-device-fit="contain">Contain</button>
+          </div>
+          <p class="hint tight">Cover crops the screenshot to fill the device screen. Contain shows the whole screenshot, letterboxed if its aspect doesn't match.</p>
         </div>
         <div class="panel" data-panel-view="style" hidden>
           <h3 class="inspector-title">Style & palette</h3>

@@ -47,6 +47,8 @@ export type DeviceInstance = {
   authored?: boolean;
   /** Shell orientation; default = recipe defaultOrientation. Export PNG size stays the set's. */
   orientation?: "portrait" | "landscape";
+  /** Screenshot fill inside this device's screen inset. Default "cover". */
+  fit?: "cover" | "contain";
 };
 
 /** Extra copy/visual on the export slice — not kicker/headline/caption, not world bg. */

@@ -32,6 +32,7 @@ import { addCopyOrVisual, applyPanoramaFromPicker, bindChromeExtras } from "../e
 import { bindCopyMarks, renderCopyMarksRow } from "../editor/inspectors/copy-marks";
 import { bindWidgetFields, renderWidgetFields } from "../editor/inspectors/widget-fields";
 import { bindTiltSliders, renderTiltSliders } from "../editor/inspectors/tilt-sliders";
+import { bindFitRow, renderFitRow } from "../editor/inspectors/fit-toggle";
 import { bindPositionPresets } from "../editor/inspectors/position-presets";
 import { mountDevicePicker, syncDevicePickerValue } from "../editor/device/device-picker";
 import { mountOrientationControl, syncOrientationUi } from "../editor/device/orientation-control";
@@ -283,10 +284,12 @@ export function startApp() {
     renderCopyMarksRow();
     renderWidgetFields();
     renderTiltSliders();
+    renderFitRow();
   });
   bindCopyMarks();
   bindWidgetFields();
   bindTiltSliders();
+  bindFitRow();
   bindPositionPresets();
   bindChromeExtras(() => {
     state.editView = "slice";

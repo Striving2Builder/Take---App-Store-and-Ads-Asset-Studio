@@ -272,6 +272,12 @@ export const TRUTH_MARKS: TruthMark[] = [
     place: "after",
   },
   {
+    sel: "#device-fit-row",
+    status: "real",
+    why: "Sets DeviceInstance.fit, read by paint-devices.ts's screenBitmap() — the same value affects the live preview and the exported PNG. Cover crops to fill; Contain letterboxes.",
+    place: "after",
+  },
+  {
     sel: "#btn-save-template",
     status: "real",
     why: "Save as new, or Update armed user recipe; lockBrand stamps the palette on Generate",

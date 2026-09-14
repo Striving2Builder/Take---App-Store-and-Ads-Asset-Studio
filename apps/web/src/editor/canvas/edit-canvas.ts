@@ -22,6 +22,7 @@ import { renderPanoramaPicker, renderTypeBandRow } from "../inspectors/layers-in
 import { renderCopyMarksRow } from "../inspectors/copy-marks";
 import { renderWidgetFields } from "../inspectors/widget-fields";
 import { renderTiltSliders } from "../inspectors/tilt-sliders";
+import { renderFitRow } from "../inspectors/fit-toggle";
 import { resolveExportSize } from "@take/device-catalog";
 import { renderAdsThumbGrid } from "../../modes/ads/ads.plugin";
 import { rasterSizeFor } from "../../shared/hidpi-raster";
@@ -101,6 +102,7 @@ export function renderEditor() {
   renderCopyMarksRow();
   renderWidgetFields();
   renderTiltSliders();
+  renderFitRow();
   commitHistory();
   syncHistoryButtons();
 }
