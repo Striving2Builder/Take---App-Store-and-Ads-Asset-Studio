@@ -461,6 +461,64 @@ body.is-ads-edit [data-panel="layers"] {
   font-size: 0.95rem;
 }
 
+.elements-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  margin: 0.6rem 0 1.1rem;
+}
+
+.element-row {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.5rem 0.6rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--ink-2);
+  text-align: left;
+  width: 100%;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.element-row:hover {
+  border-color: var(--line-strong);
+}
+
+.element-row.is-selected {
+  border-color: var(--signal);
+  background: color-mix(in srgb, var(--signal) 12%, var(--ink-2));
+}
+
+.element-icon {
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  width: 26px;
+  height: 26px;
+  border-radius: var(--radius-sm);
+  color: #fff;
+}
+
+.element-name {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.88rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.element-type {
+  flex: 0 0 auto;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.72rem;
+  color: var(--paper-dim);
+}
+
 .palette {
   display: flex;
   gap: 0.4rem;

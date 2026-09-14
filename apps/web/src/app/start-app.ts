@@ -28,7 +28,7 @@ import { bindMetaFields } from "../editor/inspectors/copy-inspector";
 import { bindStyleInspector } from "../editor/inspectors/style-inspector";
 import { bindLayoutDrag, onLayoutSelection } from "../editor/layout/layout-drag";
 import { ensureSetRecipe } from "../editor/layout/attach-recipe";
-import { addCopyOrVisual, applyPanoramaFromPicker, bindChromeExtras } from "../editor/inspectors/layers-inspector";
+import { addCopyOrVisual, applyPanoramaFromPicker, bindChromeExtras, bindElementsList, renderElementsList } from "../editor/inspectors/layers-inspector";
 import { bindCopyMarks, renderCopyMarksRow } from "../editor/inspectors/copy-marks";
 import { bindWidgetFields, renderWidgetFields } from "../editor/inspectors/widget-fields";
 import { bindTiltSliders, renderTiltSliders } from "../editor/inspectors/tilt-sliders";
@@ -285,12 +285,14 @@ export function startApp() {
     renderWidgetFields();
     renderTiltSliders();
     renderFitRow();
+    renderElementsList();
   });
   bindCopyMarks();
   bindWidgetFields();
   bindTiltSliders();
   bindFitRow();
   bindPositionPresets();
+  bindElementsList();
   bindChromeExtras(() => {
     state.editView = "slice";
     renderEditor();

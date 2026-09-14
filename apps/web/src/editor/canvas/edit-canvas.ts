@@ -25,7 +25,7 @@ import { refreshStripPreview } from "../strip/strip-preview";
 import { refreshSetView } from "../strip/set-view";
 import { syncLayoutDrag } from "../layout/layout-drag";
 import { ensureSetRecipe } from "../layout/attach-recipe";
-import { renderPanoramaPicker, renderTypeBandRow } from "../inspectors/layers-inspector";
+import { renderElementsList, renderPanoramaPicker, renderTypeBandRow } from "../inspectors/layers-inspector";
 import { renderCopyMarksRow } from "../inspectors/copy-marks";
 import { renderWidgetFields } from "../inspectors/widget-fields";
 import { renderTiltSliders } from "../inspectors/tilt-sliders";
@@ -107,6 +107,7 @@ export function renderEditor() {
   void refreshSetView();
   renderPanoramaPicker();
   renderTypeBandRow();
+  renderElementsList();
   renderCopyMarksRow();
   renderWidgetFields();
   renderTiltSliders();
