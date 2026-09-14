@@ -3,10 +3,10 @@
  *  ever touched #phone-mock's CSS object-fit; this one sets a real field
  *  on the DeviceInstance that paint-devices.ts's screenBitmap() reads, so
  *  it affects the live preview and the exported PNG identically. */
-import { $ } from "../../shared/dom";
+import { $, $$ } from "../../shared/dom";
 import { stripRecipeOfSet } from "../../stages/export/paint-strip-slice";
 import { attachRecipeToSet, ensureSetRecipe } from "../layout/attach-recipe";
-import { selectedLayoutDeviceId } from "../layout/layout-drag";
+import { rebuildHandles, selectedLayoutDeviceId } from "../layout/layout-drag";
 import { scheduleLayoutPaint } from "../layout/layout-live-paint";
 
 function selectedDevice() {
@@ -23,13 +23,19 @@ export function renderFitRow() {
   row.hidden = !inst;
   if (!inst) return;
   const fit = inst.fit || "cover";
-  row.querySelectorAll<HTMLElement>("[data-device-fit]").forEach((btn) => {
+  // Syncs the sidebar row AND the canvas floating toolbar's matching
+  // buttons (layout-drag.ts's contextToolbarHtml) — one active state,
+  // two places it's shown.
+  $$<HTMLElement>("[data-device-fit]").forEach((btn) => {
     btn.classList.toggle("is-active", btn.dataset.deviceFit === fit);
   });
 }
 
 export function bindFitRow() {
-  $("#device-fit-row")?.addEventListener("click", (e) => {
+  // Delegated from document, not just #device-fit-row, so the floating
+  // toolbar's identical buttons (rendered inside #layout-handles) trigger
+  // the same real patch instead of needing a second implementation.
+  document.addEventListener("click", (e) => {
     const btn = (e.target as Element).closest("[data-device-fit]") as HTMLElement | null;
     const fit = btn?.dataset.deviceFit;
     if (fit !== "cover" && fit !== "contain") return;
@@ -41,6 +47,7 @@ export function bindFitRow() {
     recipe.devices[i] = { ...recipe.devices[i], fit, authored: true };
     attachRecipeToSet(recipe);
     renderFitRow();
+    rebuildHandles();
     scheduleLayoutPaint();
   });
 }

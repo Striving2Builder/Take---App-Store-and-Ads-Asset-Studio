@@ -110,7 +110,38 @@ const HANDLE_HTML = `
   <span class="layout-handle layout-handle-rotate" data-layout-handle="rotate"></span>
 `;
 
-function rebuildHandles() {
+const COVER_ICON =
+  '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="1.5"/></svg>';
+const CONTAIN_ICON =
+  '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="1.5" opacity="0.45"/><rect x="6.5" y="8" width="11" height="8" rx="1"/></svg>';
+
+/** Quick actions near the selection, surfacing controls that already exist
+ *  in the right panel (Fit, text face) — not new capability, just closer
+ *  to where the user is looking. Only built for kinds that actually have
+ *  a real per-instance action; other extra kinds (shape/widget/image) get
+ *  resize/rotate handles only, same as before. */
+function contextToolbarHtml(target: "device", inst: TemplateRecord["devices"][number]): string;
+function contextToolbarHtml(target: "extra", inst: ExtraSlot): string;
+function contextToolbarHtml(target: DragTarget, inst: TemplateRecord["devices"][number] | ExtraSlot): string {
+  if (target === "device") {
+    const fit = (inst as TemplateRecord["devices"][number]).fit || "cover";
+    return `<div class="layout-context-toolbar">
+      <button type="button" class="ctx-btn${fit === "cover" ? " is-active" : ""}" data-device-fit="cover" title="Cover">${COVER_ICON}</button>
+      <button type="button" class="ctx-btn${fit === "contain" ? " is-active" : ""}" data-device-fit="contain" title="Contain">${CONTAIN_ICON}</button>
+    </div>`;
+  }
+  const slot = inst as ExtraSlot;
+  if (slot.kind === "copy" && !slot.widget) {
+    const face = slot.face === "script" ? "script" : "display";
+    return `<div class="layout-context-toolbar">
+      <button type="button" class="ctx-btn ctx-btn-text${face === "display" ? " is-active" : ""}" data-extra-face="display" title="Display face">Aa</button>
+      <button type="button" class="ctx-btn ctx-btn-text${face === "script" ? " is-active" : ""}" data-extra-face="script" title="Script face">Aa</button>
+    </div>`;
+  }
+  return "";
+}
+
+export function rebuildHandles() {
   const host = $("#layout-handles") as HTMLElement | null;
   const stage = $("#layout-stage") as HTMLElement | null;
   const recipe = stripRecipeOfSet();
@@ -131,12 +162,12 @@ function rebuildHandles() {
     .filter((d) => slicesTouched(d, recipe.frameCount, w, h).includes(slice))
     .map((d) => {
       const sel = selectedTarget === "device" && d.id === selectedId ? " is-selected" : "";
-      const handles = sel ? HANDLE_HTML : "";
+      const handles = sel ? HANDLE_HTML + contextToolbarHtml("device", d) : "";
       return `<div class="layout-device-box${sel}" data-device-id="${d.id}" style="${deviceBoxStyle(d, slice, w, h)}">${handles}</div>`;
     });
   const extras = extrasInSlice(recipe, slice).map((e) => {
     const sel = selectedTarget === "extra" && e.id === selectedId ? " is-selected" : "";
-    const handles = sel ? HANDLE_HTML : "";
+    const handles = sel ? HANDLE_HTML + contextToolbarHtml("extra", e) : "";
     return `<div class="layout-device-box layout-extra-box${sel}" data-extra-id="${e.id}" style="${boxStyle(e, slice, w, h)}">${handles}</div>`;
   });
   host.innerHTML = devices.join("") + extras.join("");
@@ -220,6 +251,9 @@ function onPointerDown(e: PointerEvent) {
   if (!stage || stage.hidden) return;
   const target = e.target as HTMLElement;
   if (target.isContentEditable) return;
+  // The context toolbar sits inside the draggable box for CSS positioning
+  // convenience — its own buttons must not also start a device/extra drag.
+  if (target.closest(".layout-context-toolbar")) return;
   const recipe = stripRecipeOfSet();
   if (!recipe) return;
 

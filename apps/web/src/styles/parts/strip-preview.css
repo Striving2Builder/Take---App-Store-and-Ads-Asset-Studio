@@ -153,6 +153,46 @@
   cursor: grab;
 }
 
+/* Deliberately theme-independent (literal dark, not --ink/--paper): this
+   floats over arbitrary canvas content — device screens are usually dark
+   UI or photos — the same reason OS-level canvas tool chrome (Figma,
+   Sketch) stays dark regardless of the app's own light/dark theme. */
+.layout-context-toolbar {
+  position: absolute;
+  left: 50%;
+  top: -54px;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  background: #1c1d22;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 10px;
+  padding: 4px;
+  pointer-events: auto;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.35);
+  z-index: 3;
+  white-space: nowrap;
+  cursor: default;
+}
+
+.ctx-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.6);
+  cursor: pointer;
+}
+
+.ctx-btn:hover { background: rgba(255, 255, 255, 0.08); color: #fff; }
+.ctx-btn.is-active { background: rgba(62, 90, 196, 0.35); color: #fff; }
+.ctx-btn-text { font-family: var(--font-display); font-weight: 700; font-size: 0.72rem; }
+
 .layout-stage-hint {
   margin: 0.45rem 0 0;
   font-size: 0.62rem;

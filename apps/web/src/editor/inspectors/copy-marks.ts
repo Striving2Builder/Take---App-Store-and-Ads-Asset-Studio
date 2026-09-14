@@ -1,9 +1,9 @@
 /** OWNER: editor/inspectors — ExtraSlot copy marks + face (not store headline) */
 import { EXTRA_FACES, type ExtraFace, type ExtraSlot } from "@take/template-engine";
-import { $ } from "../../shared/dom";
+import { $, $$ } from "../../shared/dom";
 import { stripRecipeOfSet } from "../../stages/export/paint-strip-slice";
 import { attachRecipeToSet, ensureSetRecipe } from "../layout/attach-recipe";
-import { selectedLayoutExtraId, selectLayoutExtra } from "../layout/layout-drag";
+import { rebuildHandles, selectedLayoutExtraId, selectLayoutExtra } from "../layout/layout-drag";
 import { paintLayoutSliceNow, scheduleLayoutPaint } from "../layout/layout-live-paint";
 
 function selectedCopy(): ExtraSlot | null {
@@ -34,7 +34,9 @@ export function renderCopyMarksRow() {
   if (!slot) return;
   if (document.activeElement !== area) area.value = slot.text || "";
   const face = slot.face === "script" ? "script" : "display";
-  row.querySelectorAll<HTMLElement>("[data-extra-face]").forEach((btn) => {
+  // Syncs the sidebar row AND the canvas floating toolbar's matching
+  // buttons (layout-drag.ts's contextToolbarHtml).
+  $$<HTMLElement>("[data-extra-face]").forEach((btn) => {
     const on = btn.dataset.extraFace === face;
     btn.classList.toggle("is-active", on);
     btn.setAttribute("aria-pressed", on ? "true" : "false");
@@ -48,13 +50,16 @@ export function bindCopyMarks() {
     patchSelected({ text: area.value });
     scheduleLayoutPaint();
   });
-  $("#extra-face-row")?.addEventListener("click", (e) => {
+  // Delegated from document so the floating toolbar's identical buttons
+  // (rendered inside #layout-handles) trigger the same real patch.
+  document.addEventListener("click", (e) => {
     const btn = (e.target as Element).closest("[data-extra-face]") as HTMLElement | null;
     const raw = btn?.dataset.extraFace;
     if (!EXTRA_FACES.includes(raw as ExtraFace)) return;
     if (!selectedCopy()) return;
     patchSelected({ face: raw as ExtraFace });
     renderCopyMarksRow();
+    rebuildHandles();
     void paintLayoutSliceNow();
   });
 }
