@@ -12,6 +12,8 @@
   gap: 0.35rem;
   margin: 1.5rem 0;
   border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  overflow: hidden;
 }
 
 .preset {
@@ -38,7 +40,8 @@
   margin-top: 1.25rem;
   padding: 1rem;
   border: 1px solid var(--good);
-  background: rgba(109, 255, 176, 0.05);
+  border-radius: var(--radius-sm);
+  background: color-mix(in srgb, var(--good) 8%, var(--ink-2));
   color: var(--good);
   white-space: pre-wrap;
   line-height: 1.7;
@@ -47,13 +50,22 @@
 .compliance-card,
 .validation-card {
   border: 1px solid var(--line);
+  border-radius: var(--radius-md);
   background: var(--ink-2);
   padding: 1.15rem;
   margin-bottom: 1rem;
 }
 
 .compliance-card p,
-.validation-card p { color: var(--cyan); margin: 0 0 0.75rem; }
+.validation-card p {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--paper-dim);
+  margin: 0 0 0.75rem;
+}
 
 .compliance-card ul,
 .validation-card ul {
