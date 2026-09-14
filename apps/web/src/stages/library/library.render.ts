@@ -23,14 +23,23 @@ import { mountModePlugins } from "../../modes/mode-plugins";
 import { persistExportPresetIds } from "../export/persist-presets";
 import { syncExportPresetChecks } from "../export/mount-presets";
 import { paintLibraryThumbs } from "./library-thumb";
-import { libraryFilterMatch, isDraftTemplate } from "./library-filter";
+import {
+  libraryFilterMatch,
+  libraryCompositionMatch,
+  libraryFrameCountMatch,
+  isDraftTemplate,
+} from "./library-filter";
 import { newLayoutFromLibrary, useLibraryRecipe } from "./library-use";
 import { openLibraryPreview } from "./library-preview";
 
 export async function renderLibrary() {
   const all = listLayoutTemplates();
   const filtered = all.filter(
-    (t) => libraryFilterMatch(t, state.filter) && (!state.hideDrafts || !isDraftTemplate(t))
+    (t) =>
+      libraryFilterMatch(t, state.filter) &&
+      libraryCompositionMatch(t, state.compositionFilter) &&
+      libraryFrameCountMatch(t, state.frameCountFilter) &&
+      (!state.hideDrafts || !isDraftTemplate(t))
   );
 
   const projects = await listProjects();

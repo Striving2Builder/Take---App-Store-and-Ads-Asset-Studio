@@ -20,3 +20,15 @@ export function libraryFilterMatch(t: SavedTemplate, filter: string): boolean {
   }
   return t.platform === filter || tags.includes(filter);
 }
+
+/** recipe.composition — real per-recipe field, not a tag guess. */
+export function libraryCompositionMatch(t: SavedTemplate, composition: string): boolean {
+  if (composition === "all") return true;
+  return t.composition === composition;
+}
+
+/** recipe.frameCount, matched as a string so "all" is a valid state too. */
+export function libraryFrameCountMatch(t: SavedTemplate, frameCount: string): boolean {
+  if (frameCount === "all") return true;
+  return String(t.frames) === frameCount;
+}

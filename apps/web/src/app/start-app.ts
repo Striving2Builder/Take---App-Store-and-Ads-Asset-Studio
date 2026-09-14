@@ -115,7 +115,23 @@ function bindGlobalClicks() {
     const filter = t.closest("[data-filter]") as HTMLElement | null;
     if (filter) {
       state.filter = filter.dataset.filter || "all";
-      $$(".filter").forEach((el) => el.classList.toggle("on", el === filter));
+      $$("[data-filter]").forEach((el) => el.classList.toggle("on", el === filter));
+      renderLibrary();
+      return;
+    }
+
+    const compositionFilter = t.closest("[data-composition]") as HTMLElement | null;
+    if (compositionFilter) {
+      state.compositionFilter = compositionFilter.dataset.composition || "all";
+      $$("[data-composition]").forEach((el) => el.classList.toggle("on", el === compositionFilter));
+      renderLibrary();
+      return;
+    }
+
+    const frameCountFilter = t.closest("[data-frame-count]") as HTMLElement | null;
+    if (frameCountFilter) {
+      state.frameCountFilter = frameCountFilter.dataset.frameCount || "all";
+      $$("[data-frame-count]").forEach((el) => el.classList.toggle("on", el === frameCountFilter));
       renderLibrary();
       return;
     }

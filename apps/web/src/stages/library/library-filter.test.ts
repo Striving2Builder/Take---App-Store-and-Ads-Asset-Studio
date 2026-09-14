@@ -1,5 +1,10 @@
 /** OWNER: stages/library — filter match tests */
-import { libraryFilterMatch, isDraftTemplate } from "./library-filter";
+import {
+  libraryFilterMatch,
+  libraryCompositionMatch,
+  libraryFrameCountMatch,
+  isDraftTemplate,
+} from "./library-filter";
 import type { SavedTemplate } from "@take/storage";
 
 function assert(cond: boolean, msg: string) {
@@ -36,6 +41,19 @@ const iosStore: SavedTemplate = {
   kind: "system",
   style: "premium",
   frames: 5,
+  composition: "isolated",
+  updated: "2026-08-15",
+};
+
+const stripStore: SavedTemplate = {
+  id: "sys-ios-strip-8",
+  name: "Strip · eight-up",
+  tags: ["strip", "ios", "screenshots"],
+  platform: "ios",
+  kind: "system",
+  style: "premium",
+  frames: 8,
+  composition: "strip",
   updated: "2026-08-15",
 };
 
@@ -60,5 +78,16 @@ const draft: SavedTemplate = {
 assert(isDraftTemplate(draft), "needs-polish tag marks a template as draft");
 assert(!isDraftTemplate(iosStore), "no needs-polish tag is not a draft");
 assert(!isDraftTemplate(mobile), "unrelated tags are not a draft");
+
+assert(libraryCompositionMatch(iosStore, "all"), "all composition matches everything");
+assert(libraryCompositionMatch(iosStore, "isolated"), "isolated matches isolated card");
+assert(!libraryCompositionMatch(iosStore, "strip"), "isolated card doesn't match strip filter");
+assert(libraryCompositionMatch(stripStore, "strip"), "strip matches strip card");
+assert(!libraryCompositionMatch(stripStore, "isolated"), "strip card doesn't match isolated filter");
+
+assert(libraryFrameCountMatch(iosStore, "all"), "all frame count matches everything");
+assert(libraryFrameCountMatch(iosStore, "5"), "5-frame card matches 5 filter");
+assert(!libraryFrameCountMatch(iosStore, "8"), "5-frame card doesn't match 8 filter");
+assert(libraryFrameCountMatch(stripStore, "8"), "8-frame card matches 8 filter");
 
 console.log("library-filter.test ok");
