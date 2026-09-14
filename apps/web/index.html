@@ -192,7 +192,7 @@
       <div class="intake-primary">
         <label class="field-label" for="app-url">App marketing URL</label>
         <div class="scan-locale-row">
-          <label class="mono scan-locale-label" for="scan-locale">Locale</label>
+          <label class="label-caps scan-locale-label" for="scan-locale">Locale</label>
           <select id="scan-locale" aria-label="Store country and language for scan"></select>
           <span class="hint tight scan-locale-hint">Storefront text &amp; screenshots</span>
         </div>
@@ -209,22 +209,22 @@
         <div class="upload-strip" id="upload-strip">
           <label class="upload-tile">
             <input type="file" accept="image/*" multiple hidden id="upload-shots" />
-            <span class="upload-icon">▣</span>
+            <span class="upload-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></span>
             <span>Screenshots</span>
           </label>
           <label class="upload-tile">
             <input type="file" accept="image/*" hidden id="upload-icon" />
-            <span class="upload-icon">◉</span>
+            <span class="upload-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="5"/></svg></span>
             <span>App icon</span>
           </label>
           <label class="upload-tile">
             <input type="file" accept="image/*" multiple hidden id="upload-brand" />
-            <span class="upload-icon">◈</span>
+            <span class="upload-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="13.5" cy="6.5" r="2.5"/><circle cx="19" cy="17" r="2.5"/><circle cx="6" cy="17" r="2.5"/></svg></span>
             <span>Brand kit</span>
           </label>
           <label class="upload-tile">
             <input type="file" accept="image/*" multiple hidden id="upload-comp" />
-            <span class="upload-icon">◇</span>
+            <span class="upload-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg></span>
             <span>Competitor refs</span>
           </label>
           <label class="upload-tile" id="upload-video-tile" hidden>
@@ -255,7 +255,7 @@
 
       <aside class="intake-side">
         <fieldset class="control-block">
-          <legend class="mono">PLATFORM</legend>
+          <legend class="label-caps">Platform</legend>
           <div class="seg" role="radiogroup" aria-label="Platform">
             <label class="seg-opt"><input type="radio" name="platform" value="ios" checked /><span>iOS</span></label>
             <label class="seg-opt"><input type="radio" name="platform" value="android" /><span>Android</span></label>
@@ -264,7 +264,7 @@
         </fieldset>
 
         <fieldset class="control-block">
-          <legend class="mono">OUTPUT SETS</legend>
+          <legend class="label-caps">Output sets</legend>
           <div class="qty" id="qty-control">
             <button type="button" data-qty="-1" aria-label="Fewer sets">−</button>
             <output id="qty-value">3</output>
@@ -274,7 +274,7 @@
         </fieldset>
 
         <fieldset class="control-block">
-          <legend class="mono">MODE</legend>
+          <legend class="label-caps">Mode</legend>
           <div class="seg wrap" role="radiogroup" aria-label="Creation mode">
             <label class="seg-opt"><input type="radio" name="mode" value="wizard" checked /><span>Wizard</span></label>
             <label class="seg-opt" hidden><input type="radio" name="mode" value="template" /><span>Template</span></label>
@@ -285,18 +285,18 @@
         </fieldset>
 
         <fieldset class="control-block" id="template-arm" hidden>
-          <legend class="mono">ARMED LOOK</legend>
+          <legend class="label-caps">Armed look</legend>
           <p class="hint tight" id="template-arm-hint"></p>
         </fieldset>
 
         <fieldset class="control-block" id="ads-unit-picker" hidden>
-          <legend class="mono">AD UNITS</legend>
+          <legend class="label-caps">Ad units</legend>
           <p class="hint tight">Pick sizes now — Generate builds one ad per unit. Change anytime, then Regenerate.</p>
           <div id="ads-unit-picker-body"></div>
         </fieldset>
 
         <fieldset class="control-block optional-fields">
-          <legend class="mono">OPTIONAL</legend>
+          <legend class="label-caps">Optional</legend>
           <label>App name<input id="f-name" type="text" placeholder="Displayed brand name" /></label>
           <label>Category<input id="f-category" type="text" placeholder="Health & Fitness" /></label>
           <label>Audience<input id="f-audience" type="text" placeholder="Busy professionals 25–40" /></label>
