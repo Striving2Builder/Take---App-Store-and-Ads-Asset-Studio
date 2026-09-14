@@ -64,7 +64,7 @@ export function applyPositionPreset(preset: PlacementPresetId): void {
   renderTiltSliders();
   toast(
     CUT.includes(preset)
-      ? "Bleed across the cut — one phone, two PNGs"
+      ? "Bleed across the cut — one device, two PNGs"
       : "Device position applied"
   );
 }

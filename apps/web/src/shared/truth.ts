@@ -214,7 +214,7 @@ export const TRUTH_MARKS: TruthMark[] = [
   {
     sel: "#copy-marks-row",
     status: "real",
-    why: "**word** paints a pill, ++word++ an underline. Script face is this extra only — store headline stays system-ui.",
+    why: "**word** paints a pill, ++word++ an underline. Script face is this element only — store headline stays system-ui.",
     place: "after",
   },
   {
@@ -226,7 +226,7 @@ export const TRUTH_MARKS: TruthMark[] = [
   {
     sel: "#shape-row",
     status: "real",
-    why: "Procedural blob/wave/star/dots/scribble extras — not competitor art",
+    why: "Procedural blob/wave/star/dots/scribble shapes — not competitor art",
     place: "after",
   },
   {
@@ -238,7 +238,7 @@ export const TRUTH_MARKS: TruthMark[] = [
   {
     sel: "#widget-fields-row",
     status: "real",
-    why: "Edit selected widget score, label, quote, name, pills. Empty score paints an em dash.",
+    why: "Edit selected proof element's score, label, quote, name, pills. Empty score paints an em dash.",
     place: "after",
   },
   {
@@ -250,7 +250,7 @@ export const TRUTH_MARKS: TruthMark[] = [
   {
     sel: "#slice-rule-row",
     status: "real",
-    why: "Add/remove/fan-3 phones on this PNG; landscape is this device in a portrait store file; mini screen is an extra, not a DeviceInstance.",
+    why: "Add/remove/fan-3 devices on this PNG; landscape is this device in a portrait store file; mini screen is an element, not a DeviceInstance.",
     place: "after",
   },
   {
@@ -262,13 +262,13 @@ export const TRUTH_MARKS: TruthMark[] = [
   {
     sel: "#pos-preset-grid",
     status: "real",
-    why: "Stamps selected device from PLACEMENT_PRESETS. Yaw/Pitch project a 2.5D shell (not OEM photos). Bleed next/prev is one phone clipped across two store PNGs.",
+    why: "Stamps selected device from PLACEMENT_PRESETS. Yaw/Pitch project a 2.5D shell (not OEM photos). Bleed next/prev is one device clipped across two store PNGs.",
     place: "after",
   },
   {
     sel: "#tilt-sliders-row",
     status: "real",
-    why: "Yaw −35…35 and pitch −20…20 on the selected phone. Same rotateXDeg/rotateYDeg as presets. Cheap warp, not WebGL.",
+    why: "Yaw −35…35 and pitch −20…20 on the selected device. Same rotateXDeg/rotateYDeg as presets. Cheap warp, not WebGL.",
     place: "after",
   },
   {

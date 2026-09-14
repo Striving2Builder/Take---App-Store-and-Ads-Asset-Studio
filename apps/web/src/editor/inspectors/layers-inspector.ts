@@ -147,7 +147,7 @@ export function bindChromeExtras(onApplied: () => void) {
     const widget = parseExtraWidget(widgetBtn?.dataset.extraWidget);
     if (widget) {
       const err = addWidgetOnSlice(widget);
-      toast(err || `${widget} widget on this slice — drag on the canvas`);
+      toast(err || `${widget} element on this slice — drag on the canvas`);
       if (!err) onApplied();
       return;
     }
@@ -163,7 +163,7 @@ export function bindChromeExtras(onApplied: () => void) {
     const rule = sliceBtn?.dataset.sliceRule;
     if (rule) {
       const err = applySliceRule(rule);
-      toast(err || (rule === "mini" ? "Mini screen extra — not a full phone" : "Slice phones updated"));
+      toast(err || (rule === "mini" ? "Mini screen element added — not a full device" : "Slice devices updated"));
       if (!err) onApplied();
     }
   });

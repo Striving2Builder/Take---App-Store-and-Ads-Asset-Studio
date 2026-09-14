@@ -373,7 +373,7 @@
         <hr class="divider" />
         <p class="mono nav-head">METADATA</p>
         <button type="button" class="meta-link is-active" data-panel="copy">Store copy</button>
-        <button type="button" class="meta-link" data-panel="layers">Layers</button>
+        <button type="button" class="meta-link" data-panel="layers">Layout</button>
         <button type="button" class="meta-link" data-panel="style">Style & palette</button>
         <button type="button" class="meta-link" data-panel="mode" id="mode-panel-link" hidden>Mode</button>
       </aside>
@@ -415,7 +415,7 @@
             <div id="layout-handles" class="layout-handles" hidden></div>
           </div>
           <div id="ads-edit-stage" class="ads-edit-stage" hidden></div>
-          <p class="mono layout-stage-hint" id="layout-stage-hint" hidden>Drag devices & extras · corners resize · Alt-drag rotate · arrows nudge</p>
+          <p class="mono layout-stage-hint" id="layout-stage-hint" hidden>Drag devices & elements · corners resize · Alt-drag rotate · arrows nudge</p>
           <div class="crop tl"></div><div class="crop tr"></div>
           <div class="crop bl"></div><div class="crop br"></div>
         </div>
@@ -436,19 +436,19 @@
           <div class="meta-fields" id="meta-fields"></div>
         </div>
         <div class="panel" data-panel-view="layers" hidden>
-          <h3 class="inspector-title">Layers</h3>
-          <button type="button" class="btn ghost small block" id="btn-add-copy">+ Add copy block</button>
-          <button type="button" class="btn ghost small block" id="btn-add-visual">+ Add visual element</button>
-          <p class="mono pos-preset-legend">COPY MARKS</p>
+          <h3 class="inspector-title">Layout</h3>
+          <button type="button" class="btn ghost small block" id="btn-add-copy">+ Add text element</button>
+          <button type="button" class="btn ghost small block" id="btn-add-visual">+ Add image element</button>
+          <p class="mono pos-preset-legend">TEXT ELEMENT MARKS</p>
           <div id="copy-marks-row" hidden>
-            <textarea id="extra-copy-text" rows="3" placeholder="**pill**  ++underline++" aria-label="Copy block text"></textarea>
+            <textarea id="extra-copy-text" rows="3" placeholder="**pill**  ++underline++" aria-label="Text element content"></textarea>
             <div class="chrome-row" id="extra-face-row">
               <button type="button" class="btn ghost small" data-extra-face="display" aria-pressed="true">Display</button>
               <button type="button" class="btn ghost small" data-extra-face="script" aria-pressed="false">Script</button>
             </div>
           </div>
-          <p class="hint tight">Select a copy block. **word** is a pill. ++word++ is an underline. Script is one bundled face on this extra — not the store headline.</p>
-          <p class="mono pos-preset-legend">SHAPE ON THIS PNG</p>
+          <p class="hint tight">Select a text element. **word** is a pill. ++word++ is an underline. Script is this element only — not the store headline.</p>
+          <p class="mono pos-preset-legend">SHAPE ELEMENT ON THIS PNG</p>
           <div class="chrome-row" id="shape-row">
             <button type="button" class="btn ghost small" data-extra-shape="blob">Blob</button>
             <button type="button" class="btn ghost small" data-extra-shape="wave">Wave</button>
@@ -456,7 +456,7 @@
             <button type="button" class="btn ghost small" data-extra-shape="dots">Dots</button>
             <button type="button" class="btn ghost small" data-extra-shape="scribble">Scribble</button>
           </div>
-          <p class="mono pos-preset-legend">PROOF WIDGET</p>
+          <p class="mono pos-preset-legend">PROOF ELEMENT</p>
           <div class="chrome-row" id="widget-row">
             <button type="button" class="btn ghost small" data-extra-widget="rating">Rating</button>
             <button type="button" class="btn ghost small" data-extra-widget="review">Review</button>
@@ -469,7 +469,7 @@
             <input id="widget-attribution" placeholder="Sample" aria-label="Review name" />
             <input id="widget-pills" placeholder="Tag one, Tag two" aria-label="Pill labels" />
           </div>
-          <p class="hint tight">Select a widget to type real numbers and quotes. Empty score paints an em dash — not a made-up App Store rating.</p>
+          <p class="hint tight">Select a proof element to type real numbers and quotes. Empty score paints an em dash — not a made-up App Store rating.</p>
           <p class="mono pos-preset-legend">TYPE ON THIS PNG</p>
           <div class="chrome-row" id="type-band-row">
             <button type="button" class="btn ghost small" data-type-band="top">Top</button>
@@ -477,17 +477,17 @@
             <button type="button" class="btn ghost small" data-type-band="split">Split</button>
             <button type="button" class="btn ghost small" data-type-band="none">None</button>
           </div>
-          <p class="hint tight">Type is per store file. None hides kicker/headline on this PNG. Shapes and widgets are extras (cap 6 per slice), not the strip background.</p>
-          <p class="mono pos-preset-legend">PHONES ON THIS PNG</p>
+          <p class="hint tight">Type is per store file. None hides kicker/headline on this PNG. Shape and proof elements count against the 6-per-slice element cap, not the strip background.</p>
+          <p class="mono pos-preset-legend">DEVICES ON THIS PNG</p>
           <div class="chrome-row" id="slice-rule-row">
-            <button type="button" class="btn ghost small" data-slice-rule="add">Add phone</button>
-            <button type="button" class="btn ghost small" data-slice-rule="remove">Remove phone</button>
+            <button type="button" class="btn ghost small" data-slice-rule="add">Add device</button>
+            <button type="button" class="btn ghost small" data-slice-rule="remove">Remove device</button>
             <button type="button" class="btn ghost small" data-slice-rule="fan-3">Fan 3</button>
             <button type="button" class="btn ghost small" data-slice-rule="landscape">Landscape</button>
             <button type="button" class="btn ghost small" data-slice-rule="portrait">Upright</button>
             <button type="button" class="btn ghost small" data-slice-rule="mini">Mini screen</button>
           </div>
-          <p class="hint tight">Remove phone is legal only if this PNG still has an extra (proof-only). Landscape is this device inside the portrait store file — it does not rotate the ZIP size. Mini screen is a shot thumb, not a seventh DeviceInstance.</p>
+          <p class="hint tight">Remove device is allowed only if this PNG still has another element (proof-only). Landscape is this device inside the portrait store file — it does not rotate the ZIP size. Mini screen is a shot thumbnail, not another device.</p>
           <label class="block-label">Strip panorama
             <select id="panorama-asset" aria-label="Panorama image"></select>
           </label>
