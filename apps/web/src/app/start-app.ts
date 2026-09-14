@@ -331,6 +331,12 @@ export function startApp() {
     }
   });
 
-  document.documentElement.style.setProperty("--signal", "#ff4d1a");
-  document.documentElement.style.setProperty("--project-accent", "#ff4d1a");
+  // Seed --project-accent (read by CSS before any real project/palette is
+  // loaded) from the actual current --signal token, not a hardcoded hex —
+  // a literal here silently wins over tokens.css forever via inline-style
+  // specificity, which is exactly how this line kept forcing the old
+  // orange onto every boot even after tokens.css moved on. --signal itself
+  // is never touched from JS; it's tokens.css's value alone.
+  const bootAccent = getComputedStyle(document.documentElement).getPropertyValue("--signal").trim();
+  if (bootAccent) document.documentElement.style.setProperty("--project-accent", bootAccent);
 }

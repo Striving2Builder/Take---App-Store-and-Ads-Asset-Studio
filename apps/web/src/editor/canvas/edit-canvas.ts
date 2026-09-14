@@ -13,8 +13,6 @@ import { goalCta } from "../../modes/wizard/copy-builder";
 import { pickHeadline } from "../../modes/wizard/frames-builder";
 import { toast } from "../../shell/toast";
 import { applyDeviceFrame } from "../device/apply-device-frame";
-import { cssObjectFitForMode } from "../device/shell-composite";
-import { scanIconUrl, shotUrlAt } from "../../stages/export/selected-shots";
 import { paintStripSlice, stripRecipeOfSet } from "../../stages/export/paint-strip-slice";
 import { refreshStripPreview } from "../strip/strip-preview";
 import { refreshSetView } from "../strip/set-view";
@@ -37,60 +35,13 @@ export function syncFrameFromDom() {
   frame.caption = ($("#shot-caption")?.textContent || "").trim();
 }
 
-function applyCanvasAssets(frameIndex: number) {
-  const screen = $("#phone-screen") as HTMLElement | null;
-  const content = $("#shot-content") as HTMLElement | null;
-  if (!screen || !content) return;
-
-  const layoutOn = !!stripRecipeOfSet();
-  const shot = layoutOn ? null : shotUrlAt(frameIndex);
-  const icon = layoutOn ? null : scanIconUrl();
-  const fit = cssObjectFitForMode(state.fitMode);
-
-  let shotEl = screen.querySelector(".scan-shot-fill") as HTMLImageElement | null;
-  if (shot) {
-    if (!shotEl) {
-      shotEl = document.createElement("img");
-      shotEl.className = "scan-shot-fill";
-      shotEl.alt = "";
-      shotEl.referrerPolicy = "no-referrer";
-      screen.insertBefore(shotEl, content);
-    }
-    shotEl.src = shot;
-    shotEl.style.objectFit = fit;
-    shotEl.hidden = false;
-    screen.dataset.hasScanShot = "1";
-    content.classList.add("has-scan-shot");
-  } else {
-    if (shotEl) shotEl.hidden = true;
-    delete screen.dataset.hasScanShot;
-    content.classList.remove("has-scan-shot");
-  }
-
-  // Clear legacy background-image approach
-  screen.style.backgroundImage = "";
-  screen.style.backgroundSize = "";
-  screen.style.backgroundPosition = "";
-
-  let badge = content.querySelector(".scan-icon-badge") as HTMLImageElement | null;
-  if (icon) {
-    if (!badge) {
-      badge = document.createElement("img");
-      badge.className = "scan-icon-badge";
-      badge.alt = "App icon";
-      badge.referrerPolicy = "no-referrer";
-      content.prepend(badge);
-    }
-    badge.src = icon;
-    badge.hidden = false;
-  } else if (badge) {
-    badge.hidden = true;
-  }
-}
-
 export function renderEditor() {
   const set = currentSet();
   if (!set) return;
+  // Guarantee a recipe before anything renders: the canvas-painted path
+  // (paintStripSlice via #layout-stage) is now the only rendering model —
+  // #phone-mock's raw-screenshot DOM path is retired, not just unused.
+  if (state.mode !== "ads") ensureSetRecipe();
 
   applyDeviceFrame();
 
@@ -125,7 +76,6 @@ export function renderEditor() {
   if (h) h.textContent = frame.headline;
   if (c) c.textContent = frame.caption;
 
-  applyCanvasAssets(state.activeFrame);
   applyProjectAccent(set.palette[0]);
   renderMetaFields(set.copy);
   renderPalette(set.palette);
@@ -144,20 +94,22 @@ export function renderEditor() {
   renderTiltSliders();
 }
 
+/** #layout-stage (canvas-painted, export-accurate) is the only rendering
+ *  model now. #phone-mock stays in the DOM only until the shell rebuild
+ *  physically removes it; this function never shows it. */
 async function syncLayoutStage() {
   const phone = $("#phone-mock") as HTMLElement | null;
   const stage = $("#layout-stage") as HTMLElement | null;
   const adsStage = $("#ads-edit-stage") as HTMLElement | null;
   const canvas = $("#layout-slice-canvas") as HTMLCanvasElement | null;
-  const screen = $("#phone-screen") as HTMLElement | null;
   const content = $("#shot-content") as HTMLElement | null;
   const recipe = stripRecipeOfSet();
-  if (!phone || !stage || !canvas || !screen || !content) return;
+  if (!phone || !stage || !canvas || !content) return;
+  phone.hidden = true;
 
   document.body.classList.toggle("is-ads-edit", state.mode === "ads");
 
   if (state.mode === "ads") {
-    phone.hidden = true;
     stage.hidden = true;
     if (adsStage) {
       adsStage.hidden = false;
@@ -177,40 +129,31 @@ async function syncLayoutStage() {
   if (adsStage) adsStage.hidden = true;
 
   if (state.editView === "set") {
-    phone.hidden = true;
     stage.hidden = true;
     syncLayoutDrag();
     return;
   }
 
-  if (recipe) {
-    phone.hidden = true;
-    stage.hidden = false;
-    stage.appendChild(content);
-    const ink = inkForBackground(recipe.background.colorA, recipe.background.colorB);
-    content.style.setProperty("--slice-ink", ink.text);
-    content.style.setProperty("--slice-ink-dim", ink.dim);
-    content.style.setProperty("--slice-ink-accent", ink.accent);
-    const { w, h } = resolveExportSize(state.deviceId, state.platform, state.orientation).size;
-    const cw = rasterSizeFor(stage.clientWidth, window.devicePixelRatio || 1, 264);
-    await paintStripSlice(canvas, state.activeFrame, {
-      w: cw,
-      h: Math.round(cw * (h / w)),
-      skipType: true,
-      recipe,
-      frames: currentSet()?.frames,
-      palette: currentSet()?.palette,
-    });
-    syncLayoutDrag();
-  } else {
-    phone.hidden = false;
-    stage.hidden = true;
-    content.style.removeProperty("--slice-ink");
-    content.style.removeProperty("--slice-ink-dim");
-    content.style.removeProperty("--slice-ink-accent");
-    screen.appendChild(content);
-    syncLayoutDrag();
-  }
+  // renderEditor() calls ensureSetRecipe() before this runs, so a non-ads
+  // set always has one here — no fallback branch needed.
+  if (!recipe) return;
+  stage.hidden = false;
+  stage.appendChild(content);
+  const ink = inkForBackground(recipe.background.colorA, recipe.background.colorB);
+  content.style.setProperty("--slice-ink", ink.text);
+  content.style.setProperty("--slice-ink-dim", ink.dim);
+  content.style.setProperty("--slice-ink-accent", ink.accent);
+  const { w, h } = resolveExportSize(state.deviceId, state.platform, state.orientation).size;
+  const cw = rasterSizeFor(stage.clientWidth, window.devicePixelRatio || 1, 264);
+  await paintStripSlice(canvas, state.activeFrame, {
+    w: cw,
+    h: Math.round(cw * (h / w)),
+    skipType: true,
+    recipe,
+    frames: currentSet()?.frames,
+    palette: currentSet()?.palette,
+  });
+  syncLayoutDrag();
 }
 
 export function addFrame() {
@@ -233,7 +176,6 @@ export function addFrame() {
     dwellMs: state.mode === "slideshow" ? 2000 : undefined,
   });
   state.activeFrame = i;
-  if (stripRecipeOfSet()) ensureSetRecipe();
   renderEditor();
   toast("Frame added");
 }
@@ -250,7 +192,6 @@ export function removeFrame() {
     f.kicker = `${String(i + 1).padStart(2, "0")} · ${f.role}`;
   });
   state.activeFrame = Math.min(state.activeFrame, set.frames.length - 1);
-  if (stripRecipeOfSet()) ensureSetRecipe();
   renderEditor();
   toast("Frame removed");
 }
