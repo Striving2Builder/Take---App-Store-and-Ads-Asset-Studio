@@ -20,16 +20,91 @@
 
 .frame-filmstrip {
   display: flex;
-  align-items: center;
-  gap: 0.75rem;
+  flex-direction: column;
+  gap: 0.6rem;
   border: 1px solid var(--line);
   background: var(--ink-2);
   padding: 0.75rem 0.85rem;
 }
 
+.filmstrip-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
 .filmstrip-label {
   flex-shrink: 0;
   margin: 0;
+}
+
+#frame-filmstrip-plugin:empty { display: none; }
+
+/* ── SLIDESHOW — storyboard row (filmstrip slot) ── */
+.story-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.story-total {
+  font-size: 0.72rem;
+  color: var(--paper-dim);
+}
+
+.story-dwell-row {
+  display: flex;
+  gap: 0.4rem;
+  overflow-x: auto;
+}
+
+.story-dwell {
+  flex-shrink: 0;
+  min-width: 88px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  padding: 0.4rem 0.3rem;
+  border: 1px solid var(--line);
+  cursor: pointer;
+}
+
+.story-dwell.is-active { border-color: var(--signal); }
+
+.story-dwell input {
+  width: 3.4rem;
+  text-align: right;
+  font-size: 0.78rem;
+}
+
+.story-dwell .mono {
+  font-size: 0.68rem;
+  color: var(--paper-dim);
+}
+
+/* ── SLIDESHOW / REPLICATOR — fixed beat-role reference chips ── */
+.role-chain {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin: 0.5rem 0 0.75rem;
+}
+
+.role-chip {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--paper-dim);
+  background: var(--ink);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: 0.3rem 0.55rem;
+}
+
+.role-chip.is-active {
+  background: var(--signal);
+  border-color: var(--signal);
+  color: #fff;
 }
 
 .frame-list {

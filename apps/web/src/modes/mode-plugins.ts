@@ -48,6 +48,10 @@ export function mountModePlugins(): void {
     "#mode-inspector-slot",
     plugins.filter((p) => p.slot === "inspector")
   );
+  fillSlot(
+    "#frame-filmstrip-plugin",
+    plugins.filter((p) => p.slot === "filmstrip")
+  );
   updateModeChrome();
   applyExportHints();
 }

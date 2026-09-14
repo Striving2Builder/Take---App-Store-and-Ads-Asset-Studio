@@ -4,7 +4,7 @@ import { FRAME_ROLES } from "@take/core";
 // Display-only: FRAME_ROLES stays SCREAMING_CASE for internal matching, but
 // the mockup's UI chrome never renders labels in all caps (that mono/uppercase
 // skin was the "engineering tool" look flagged for removal).
-function roleLabel(role: string) {
+export function roleLabel(role: string) {
   return role.charAt(0) + role.slice(1).toLowerCase();
 }
 import { currentFrame, currentSet, state } from "../../app/app-state";

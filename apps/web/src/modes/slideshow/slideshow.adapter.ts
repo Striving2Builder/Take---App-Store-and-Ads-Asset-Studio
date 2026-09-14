@@ -2,7 +2,7 @@
 import type { CreationMode } from "@take/modes-sdk";
 import { scanApp } from "@take/scan-client";
 import { buildSlideshowSets } from "./slideshow-builder";
-import { slideshowInspectorPlugin, slideshowReviewPlugin } from "./slideshow.plugin";
+import { slideshowFilmstripPlugin, slideshowInspectorPlugin, slideshowReviewPlugin } from "./slideshow.plugin";
 
 export const slideshowMode: CreationMode = {
   id: "slideshow",
@@ -29,6 +29,6 @@ export const slideshowMode: CreationMode = {
     });
     return { inference: { ...brief, mode: "slideshow" }, sets };
   },
-  getEditorPlugins: () => [slideshowReviewPlugin, slideshowInspectorPlugin],
+  getEditorPlugins: () => [slideshowReviewPlugin, slideshowInspectorPlugin, slideshowFilmstripPlugin],
   getExportHints: () => ({ preferMotion: true, defaultPresets: ["slideshow"] }),
 };
