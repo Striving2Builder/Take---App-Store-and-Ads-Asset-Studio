@@ -10,6 +10,7 @@ import {
   refreshScanPaletteSlot,
 } from "../inspectors/style-inspector";
 import { goalCta } from "../../modes/wizard/copy-builder";
+import { pickHeadline } from "../../modes/wizard/frames-builder";
 import { toast } from "../../shell/toast";
 import { applyDeviceFrame } from "../device/apply-device-frame";
 import { cssObjectFitForMode } from "../device/shell-composite";
@@ -256,16 +257,15 @@ export function removeFrame() {
 
 export function regenFrame() {
   const frame = currentFrame();
+  const inf = state.inference;
   if (!frame) return;
-  const alts = [
-    "A sharper cut",
-    "One honest beat",
-    "Less chrome. More signal.",
-    "Proof over polish",
-    "Open. Act. Leave.",
-  ];
-  frame.headline = alts[Math.floor(Math.random() * alts.length)];
-  frame.caption = state.inference?.value || frame.caption;
+  if (!inf) {
+    toast("Scan or fill Advanced first — regenerate needs a brief to draw from");
+    return;
+  }
+  const [headline, caption] = pickHeadline(inf, frame.headline);
+  frame.headline = headline;
+  frame.caption = caption;
   renderEditor();
   toast("Frame regenerated");
 }

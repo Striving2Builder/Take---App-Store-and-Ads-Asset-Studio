@@ -6,7 +6,6 @@ import { showStage } from "../../app/stage-machine";
 import { renderEditor } from "../canvas/edit-canvas";
 import { toast } from "../../shell/toast";
 import { syncDevicePickerValue } from "./device-picker";
-import { syncFitControlUi } from "./fit-control";
 import { syncOrientationUi } from "./orientation-control";
 
 function stubInference(): InferenceBrief {
@@ -82,7 +81,6 @@ export function ensurePreviewProject() {
 export function openDevicePreview() {
   ensurePreviewProject();
   syncDevicePickerValue();
-  syncFitControlUi();
   syncOrientationUi();
   // Show before painting — renderEditor() measures on-screen canvas sizes to
   // raster sharply; while the stage is still hidden, that reads 0.

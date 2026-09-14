@@ -23,7 +23,6 @@ import {
 } from "../editor/canvas/edit-canvas";
 import { bindMetaFields } from "../editor/inspectors/copy-inspector";
 import { bindStyleInspector } from "../editor/inspectors/style-inspector";
-import { bindLayerToggles } from "../editor/layers/layer-toggles";
 import { bindLayoutDrag, onLayoutSelection } from "../editor/layout/layout-drag";
 import { ensureSetRecipe } from "../editor/layout/attach-recipe";
 import { addCopyOrVisual, applyPanoramaFromPicker, bindChromeExtras } from "../editor/inspectors/layers-inspector";
@@ -32,7 +31,6 @@ import { bindWidgetFields, renderWidgetFields } from "../editor/inspectors/widge
 import { bindTiltSliders, renderTiltSliders } from "../editor/inspectors/tilt-sliders";
 import { bindPositionPresets } from "../editor/inspectors/position-presets";
 import { mountDevicePicker, syncDevicePickerValue } from "../editor/device/device-picker";
-import { mountFitControl, syncFitControlUi } from "../editor/device/fit-control";
 import { mountOrientationControl, syncOrientationUi } from "../editor/device/orientation-control";
 import {
   mountStoreTargetControl,
@@ -265,7 +263,6 @@ export function startApp() {
   bindMetaFields();
   bindStyleInspector();
   bindScanReceiptTabs();
-  bindLayerToggles();
   bindLayoutDrag();
   onLayoutSelection(() => {
     renderCopyMarksRow();
@@ -294,7 +291,6 @@ export function startApp() {
     void renderValidation();
   };
   mountStoreTargetControl({ onChange: onDeviceUi });
-  mountFitControl({ onChange: onDeviceUi });
   mountOrientationControl({ onChange: onDeviceUi });
   mountCatalogWizard();
   mountExportPresets({ onChange: () => void renderValidation() });
@@ -320,7 +316,6 @@ export function startApp() {
     }
     if (name === "edit") {
       syncDevicePickerValue();
-      syncFitControlUi();
       syncOrientationUi();
       syncStoreTargetUi();
       mountModePlugins();
