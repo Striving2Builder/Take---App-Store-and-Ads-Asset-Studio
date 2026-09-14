@@ -8,7 +8,6 @@ import { toast } from "../../shell/toast";
 import { syncDevicePickerValue } from "./device-picker";
 import { syncFitControlUi } from "./fit-control";
 import { syncOrientationUi } from "./orientation-control";
-import { syncShellViewUi } from "./shell-view-control";
 
 function stubInference(): InferenceBrief {
   return {
@@ -85,7 +84,6 @@ export function openDevicePreview() {
   syncDevicePickerValue();
   syncFitControlUi();
   syncOrientationUi();
-  syncShellViewUi();
   // Show before painting — renderEditor() measures on-screen canvas sizes to
   // raster sharply; while the stage is still hidden, that reads 0.
   showStage("edit");

@@ -32,7 +32,6 @@ export type PlannedExportFile = {
 
 export type ExportPlan = {
   files: PlannedExportFile[];
-  skippedFake: string[];
   motion: boolean;
 };
 
@@ -50,13 +49,12 @@ function framePath(folder: string, slug: string, frameIndex: number): string {
 
 /**
  * Store screens stay catalog size. Extra presets are additional files.
- * Unchecked presets emit nothing. Layered/bundle are listed in skippedFake.
+ * Unchecked presets emit nothing.
  */
 export function planExportFiles(input: PlanExportInput): ExportPlan {
   const selected = new Set(input.selectedIds);
   const presets = allPresets().filter((p) => selected.has(p.id));
   const files: PlannedExportFile[] = [];
-  const skippedFake = presets.filter((p) => p.kind === "fake").map((p) => p.id);
   const motion = presets.some((p) => p.kind === "motion");
   const n = Math.max(0, input.frameCount);
   const slug = input.slug || "app";
@@ -123,7 +121,7 @@ export function planExportFiles(input: PlanExportInput): ExportPlan {
     }
   }
 
-  return { files, skippedFake, motion };
+  return { files, motion };
 }
 
 export function sizedPresetsHaveTargets(): { id: string; kind: PresetKind; ok: boolean }[] {

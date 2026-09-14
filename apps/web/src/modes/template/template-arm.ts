@@ -4,12 +4,6 @@ import { state } from "../../app/app-state";
 import { $ } from "../../shared/dom";
 import { getDevice } from "@take/device-catalog";
 
-export function fillTemplatePick(): void {
-  const sel = $("#template-pick") as HTMLSelectElement | null;
-  if (!sel) return;
-  sel.innerHTML = "";
-}
-
 export function syncTemplateArm(): void {
   const arm = $("#template-arm") as HTMLElement | null;
   const armed = !!state.templateId;

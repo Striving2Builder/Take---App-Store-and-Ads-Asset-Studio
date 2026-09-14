@@ -188,7 +188,7 @@ async function ingestSnapshots() {
     await gate.clear();
     appliedCount = 0;
     await updateChrome();
-    toast("You’re up to date");
+    toast("Nothing new in the bundled research pack");
     return;
   }
   await gate.clear();
@@ -197,7 +197,9 @@ async function ingestSnapshots() {
   heroState = "updates";
   await updateChrome();
   toast(
-    proposals.length === 1 ? "1 new device is ready to add" : `${proposals.length} new devices are ready to add`
+    proposals.length === 1
+      ? "1 device from the research pack is ready to add"
+      : `${proposals.length} devices from the research pack are ready to add`
   );
 }
 

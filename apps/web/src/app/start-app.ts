@@ -34,7 +34,6 @@ import { bindPositionPresets } from "../editor/inspectors/position-presets";
 import { mountDevicePicker, syncDevicePickerValue } from "../editor/device/device-picker";
 import { mountFitControl, syncFitControlUi } from "../editor/device/fit-control";
 import { mountOrientationControl, syncOrientationUi } from "../editor/device/orientation-control";
-import { mountShellViewControl, syncShellViewUi } from "../editor/device/shell-view-control";
 import {
   mountStoreTargetControl,
   syncStoreTargetUi,
@@ -297,7 +296,6 @@ export function startApp() {
   mountStoreTargetControl({ onChange: onDeviceUi });
   mountFitControl({ onChange: onDeviceUi });
   mountOrientationControl({ onChange: onDeviceUi });
-  mountShellViewControl({ onChange: onDeviceUi });
   mountCatalogWizard();
   mountExportPresets({ onChange: () => void renderValidation() });
   $("#btn-device-preview")?.addEventListener("click", () => openDevicePreview());
@@ -324,7 +322,6 @@ export function startApp() {
       syncDevicePickerValue();
       syncFitControlUi();
       syncOrientationUi();
-      syncShellViewUi();
       syncStoreTargetUi();
       mountModePlugins();
       const modeLink = $("#mode-panel-link") as HTMLElement | null;

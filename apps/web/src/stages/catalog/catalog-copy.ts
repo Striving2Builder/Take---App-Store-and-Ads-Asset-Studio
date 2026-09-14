@@ -44,19 +44,19 @@ export function heroCopy(
 ): { kicker: string; title: string; body: string; action: string } {
   if (state === "current") {
     return {
-      kicker: "Up to date",
-      title: "You’re all set",
-      body: "Your catalog already has the latest phones we track — including iPhone 17, Pixel 10, and Galaxy S25. Check again anytime.",
-      action: "Check again",
+      kicker: "Bundled research",
+      title: "You have everything from this research pass",
+      body: "Your catalog already has every phone in TAKE's current research pack — including iPhone 17, Pixel 10, and Galaxy S25. New research ships in app updates, not live checks.",
+      action: "Browse again",
     };
   }
   if (state === "updates") {
     const n = opts.updateCount || 0;
     return {
-      kicker: "Updates",
+      kicker: "From the research pack",
       title: n === 1 ? "1 device you can add" : `${n} devices you can add`,
-      body: "These are researched store sizes with an existing TAKE frame. Add the ones you want — they show up in the device picker.",
-      action: "Check again",
+      body: "These are researched store sizes with an existing TAKE frame, bundled with this version of the app. Add the ones you want — they show up in the device picker.",
+      action: "Browse again",
     };
   }
   if (state === "added") {
@@ -65,14 +65,14 @@ export function heroCopy(
       kicker: "Added",
       title: n === 1 ? "Device added" : `${n} devices added`,
       body: "They’re in this project now. Open Preview or Edit and pick them from the device list.",
-      action: "Check again",
+      action: "Browse again",
     };
   }
   return {
     kicker: "Your devices",
     title: "Phones for store screenshots",
-    body: "TAKE frames your art on App Store and Play sizes. Check for new iPhones, Pixels, and Galaxies we’ve already researched.",
-    action: "Check for new devices",
+    body: "TAKE frames your art on App Store and Play sizes. Browse iPhones, Pixels, and Galaxies bundled with this version of the app — this reads the research pack shipped with TAKE, not a live check.",
+    action: "Browse researched devices",
   };
 }
 

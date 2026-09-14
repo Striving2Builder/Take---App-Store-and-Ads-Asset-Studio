@@ -281,14 +281,14 @@ export const TRUTH_MARKS: TruthMark[] = [
   // Export
   {
     sel: "#export-presets",
-    status: "partial",
-    why: "Checked presets emit PNG at listed WxH; TikTok+motion adds 1080×1920 video; layered/bundle stay FAKE",
+    status: "real",
+    why: "Every listed preset emits real files at its listed WxH; TikTok+motion adds 1080×1920 video",
     place: "corner",
   },
   {
     sel: "#btn-export",
-    status: "partial",
-    why: "ZIP: store at catalog exportPx plus extra sizes from checked presets; layered/bundle skipped",
+    status: "real",
+    why: "ZIP: store at catalog exportPx plus extra sizes from checked presets",
     place: "after",
   },
   {
@@ -299,8 +299,8 @@ export const TRUTH_MARKS: TruthMark[] = [
   },
   {
     sel: "#catalog-wizard",
-    status: "partial",
-    why: "Check for new devices uses a bundled research list (not a live scrape). Add updates this browser’s catalog. Disk publish is Advanced / CLI.",
+    status: "real",
+    why: "Browses a bundled, cited research pack shipped with the app (not a live scrape — copy says so). Add updates this browser’s catalog. Disk publish is Advanced / CLI.",
     place: "corner",
   },
   {
@@ -311,16 +311,16 @@ export const TRUTH_MARKS: TruthMark[] = [
   },
   {
     sel: "#validation-card",
-    status: "partial",
-    why: "Char/count checks; notes ZIP PNG count, catalog store WxH, skipped FAKE presets",
+    status: "real",
+    why: "Char/count checks; notes ZIP PNG count, catalog store WxH",
     place: "corner",
   },
 
   // Ads mode
   {
     sel: ".ads-thumb-grid",
-    status: "real",
-    why: "Each thumbnail is paintAdFrame — a real composition at that unit's native WxH from the chosen wireframe, headline/CTA/logo positioned for that shape. ZIP export uses the same painter.",
+    status: "partial",
+    why: "Each thumbnail is paintAdFrame — a real composition at that unit's native WxH from the chosen wireframe, headline/CTA positioned for that shape. No logo upload exists yet: every unit falls back to an advertiser-initial mark. ZIP export uses the same painter.",
     place: "corner",
   },
   {

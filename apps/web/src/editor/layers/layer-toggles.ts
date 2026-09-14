@@ -7,7 +7,6 @@ export function bindLayerToggles() {
     if (!input) return;
     const layer = input.dataset.layer;
     const phone = $("#phone-mock") as HTMLElement | null;
-    const content = $("#shot-content") as HTMLElement | null;
     // Shell off = hide bezel chrome only; screen content stays full
     if (layer === "shell" && phone) {
       phone.classList.toggle("shell-chrome-off", !input.checked);
@@ -27,9 +26,6 @@ export function bindLayerToggles() {
       const shot = screen?.querySelector(".scan-shot-fill") as HTMLElement | null;
       if (screen) screen.style.filter = input.checked ? "none" : "grayscale(0.8) brightness(0.7)";
       if (shot) shot.style.filter = input.checked ? "none" : "grayscale(0.8) brightness(0.7)";
-    }
-    if (layer === "badge" && content) {
-      content.style.outline = input.checked ? "none" : "1px dashed transparent";
     }
   });
 }

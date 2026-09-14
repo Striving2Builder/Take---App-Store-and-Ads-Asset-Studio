@@ -50,14 +50,13 @@ function assert(cond: boolean, msg: string) {
 
 {
   const plan = planExportFiles({
-    selectedIds: ["ios-screens", "play-screens", "ig", "iab", "ios-feature", "layered"],
+    selectedIds: ["ios-screens", "play-screens", "ig", "iab", "ios-feature"],
     frameCount: 2,
     slug: "demo",
     store: { w: 1320, h: 2868, platform: "ios" },
     iosStore: { w: 1320, h: 2868 },
     playStore: { w: 1080, h: 2424 },
   });
-  assert(plan.skippedFake.includes("layered"), "layered skipped");
   assert(!plan.motion, "slideshow not selected");
   assert(plan.files.some((f) => f.path === "screens/demo-01.png" && f.fit === "native" && f.w === 1320), "store SSOT");
   assert(plan.files.some((f) => f.path.startsWith("screens-play/") && f.w === 1080 && f.fit === "contain"), "F29 dual play folder");

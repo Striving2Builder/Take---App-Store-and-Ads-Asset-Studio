@@ -3,6 +3,7 @@ import type { CapturedPalette } from "@take/scan-client";
 import { currentSet, state } from "../../app/app-state";
 import { $ } from "../../shared/dom";
 import { toast } from "../../shell/toast";
+import { scheduleLayoutPaint } from "../layout/layout-live-paint";
 
 /** Brand accent for the phone canvas only — never overwrite global --signal. */
 export function applyProjectAccent(hex: string) {
@@ -62,6 +63,7 @@ function applyScanPaletteToSet(pal: CapturedPalette) {
   applyProjectAccent(colors[0]);
   renderPalette(set.palette);
   refreshScanPaletteSlot();
+  scheduleLayoutPaint();
   toast(`Scan palette applied · ${colors[0]}`);
 }
 
@@ -78,6 +80,7 @@ export function bindStyleInspector() {
       if (set) {
         set.palette = [sw.hex, ...set.palette.filter((c) => c !== sw.hex)];
         renderPalette(set.palette);
+        scheduleLayoutPaint();
       }
       applyProjectAccent(sw.hex);
       toast(`Canvas accent · ${sw.hex}`);
@@ -105,6 +108,7 @@ export function bindStyleInspector() {
     set.palette = [color, ...set.palette.filter((_, idx) => idx !== i)];
     applyProjectAccent(color);
     renderPalette(set.palette);
+    scheduleLayoutPaint();
     toast(`Brand color locked · ${color}`);
   });
 }

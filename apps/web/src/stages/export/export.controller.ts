@@ -156,9 +156,6 @@ export async function renderValidation() {
     state.mode === "slideshow" ||
     selected.includes("slideshow");
   const extra = plan.files.filter((f) => f.fit !== "native").length;
-  const fakeNote = plan.skippedFake.length
-    ? ` · skipped FAKE ${plan.skippedFake.join(", ")}`
-    : "";
   const dwellNote = wantsMotion
     ? `${
         currentSet()?.frames.some((f) => f.dwellMs)
@@ -179,8 +176,8 @@ export async function renderValidation() {
     {
       ok: true,
       text: hasShots
-        ? `Scan assets · ZIP ${plan.files.length} PNG (${extra} extra sizes) · store ${EXPORT_W}×${EXPORT_H}${fakeNote}`
-        : `ZIP ${plan.files.length} PNG (${extra} extra sizes) · store ${EXPORT_W}×${EXPORT_H}${fakeNote}`,
+        ? `Scan assets · ZIP ${plan.files.length} PNG (${extra} extra sizes) · store ${EXPORT_W}×${EXPORT_H}`
+        : `ZIP ${plan.files.length} PNG (${extra} extra sizes) · store ${EXPORT_W}×${EXPORT_H}`,
     },
     {
       ok: true,
@@ -249,7 +246,6 @@ export async function runExport() {
             preset: f.presetId,
             fit: f.fit,
           })),
-          skippedFake: plan.skippedFake,
           stamped: stamp,
           motion: wantMotion,
           motionStretch: wantMotion && selected.includes("tiktok") ? "tiktok-9x16" : null,

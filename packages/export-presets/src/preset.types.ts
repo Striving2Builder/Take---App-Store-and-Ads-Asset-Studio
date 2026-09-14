@@ -1,6 +1,6 @@
 /** OWNER: packages/export-presets — preset types */
 export type ExportFit = "cover" | "contain";
-export type PresetKind = "store" | "sized" | "motion" | "fake";
+export type PresetKind = "store" | "sized" | "motion";
 /** sized: every frame vs frame 0 only. Store frames are always per-frame. */
 export type EmitPolicy = "per-frame" | "hero";
 

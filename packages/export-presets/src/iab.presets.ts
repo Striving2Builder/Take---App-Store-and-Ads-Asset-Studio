@@ -24,20 +24,4 @@ export const iabPresets: ExportPreset[] = [
     kind: "motion",
     targets: [],
   },
-  {
-    id: "layered",
-    label: "Layered editable pack",
-    sizes: "JSON + PNG layers",
-    destination: "Local",
-    kind: "fake",
-    targets: [],
-  },
-  {
-    id: "bundle",
-    label: "Full project bundle",
-    sizes: "Local ZIP manifest",
-    destination: "Local",
-    kind: "fake",
-    targets: [],
-  },
 ];
