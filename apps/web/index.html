@@ -27,64 +27,105 @@
       </nav>
     </header>
 
-    <div class="landing-grid">
-      <div class="landing-copy">
-        <p class="eyebrow mono">APP STORE · PLAY · SOCIAL · ADS</p>
-        <h1 class="hero-brand">APPPAL</h1>
-        <p class="hero-line">Paste a link. Get a store story.</p>
-        <p class="hero-sub">Paste a store or site link. Scan captures what it can — badges still mark what isn’t real yet.</p>
-        <div class="hero-cta">
-          <button type="button" class="btn primary" data-jump="intake">
-            <span>Start a take</span>
-            <span class="btn-arrow" aria-hidden="true">→</span>
-          </button>
-          <button type="button" class="btn ghost" data-jump="modes">See modes</button>
-        </div>
+    <div class="hero">
+      <p class="eyebrow mono">APP STORE · PLAY · SOCIAL · ADS</p>
+      <h1 class="hero-brand">Paste a link.<br>Get a store story.</h1>
+      <p class="hero-sub">APPPAL turns a store listing or marketing site into a finished screenshot set and ad assets — real copy, real device frames, ready to upload.</p>
+      <div class="hero-cta">
+        <button type="button" class="btn primary lg" data-jump="intake">
+          <span>Start a take</span>
+          <span class="btn-arrow" aria-hidden="true">→</span>
+        </button>
+        <button type="button" class="btn ghost lg" data-jump="modes">See modes</button>
       </div>
 
-      <div class="landing-stage" aria-hidden="true">
-        <div class="device-stack">
-          <div class="frame-shell frame-a">
-            <div class="frame-chrome mono">01 · HOOK</div>
-            <div class="frame-screen">
-              <div class="fake-ui">
-                <div class="fake-bar"></div>
-                <div class="fake-card pulse"></div>
-                <div class="fake-row"></div>
-                <div class="fake-row short"></div>
-              </div>
-            </div>
-          </div>
-          <div class="frame-shell frame-b">
-            <div class="frame-chrome mono">02 · PROOF</div>
-            <div class="frame-screen alt">
-              <div class="fake-ui">
-                <div class="fake-circle"></div>
-                <div class="fake-row"></div>
-                <div class="fake-row short"></div>
-              </div>
-            </div>
-          </div>
-          <div class="frame-shell frame-c">
-            <div class="frame-chrome mono">03 · CLOSE</div>
-            <div class="frame-screen warm">
-              <div class="fake-ui">
-                <div class="fake-cta"></div>
-                <div class="fake-row short"></div>
-              </div>
-            </div>
-          </div>
+      <div class="demo" aria-hidden="true">
+        <div class="demo-input">
+          <span class="demo-label mono">YOUR LINK</span>
+          <div class="urlbar"><span>example.com</span></div>
+          <p class="demo-note">APPPAL reads the listing, extracts your palette, and drafts a five-frame narrative — hook, problem, proof, feature, close.</p>
         </div>
-        <div class="perforation" aria-hidden="true"></div>
+        <span class="demo-arrow" aria-hidden="true">→</span>
+        <div class="demo-output">
+          <div class="fan">
+            <div class="phone p1"><span class="kicker mono">01 · HOOK</span><h4>Never lose a word again.</h4></div>
+            <div class="phone p2"><span class="kicker mono">02 · PROBLEM</span><h4>Words on the tip of your tongue.</h4></div>
+            <div class="phone p3"><span class="kicker mono">03 · PROOF</span><h4>"Finally an app that gets it."</h4></div>
+          </div>
+          <span class="demo-label mono">STORE-READY SCREENSHOTS</span>
+        </div>
       </div>
     </div>
 
-    <footer class="landing-foot mono">
-      <span>LOCAL-FIRST</span>
-      <span class="dot">·</span>
-      <span>NO CLOUD SYNC</span>
-      <span class="dot">·</span>
-      <span>PLATFORM-COMPLIANT EXPORTS</span>
+    <div class="landing-section">
+      <div class="section-head">
+        <p class="eyebrow mono">HOW IT WORKS</p>
+        <h2>Three steps, one browser tab</h2>
+        <p>No design tool, no manual resizing — APPPAL handles the parts that usually take a weekend.</p>
+      </div>
+      <div class="steps">
+        <div class="step">
+          <div class="step-n">1</div>
+          <h3>Paste your link</h3>
+          <p>An App Store page, a Play Store page, or your own marketing site — APPPAL reads whatever you give it.</p>
+        </div>
+        <div class="step">
+          <div class="step-n">2</div>
+          <h3>APPPAL drafts your story</h3>
+          <p>A hook, a problem, proof, a feature, and a close — five frames, written from what's actually on the page.</p>
+        </div>
+        <div class="step">
+          <div class="step-n">3</div>
+          <h3>Review, tweak, export</h3>
+          <p>Walk the sequence at a glance, adjust any frame in the editor, then export assets sized for each store.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="landing-section proof-section">
+      <div class="proof">
+        <blockquote class="quote">
+          <p>"Finally an app that gets it."</p>
+          <span>— Sample App, after switching off manual screenshots</span>
+        </blockquote>
+        <div class="platforms">
+          <div class="plat-row">Sized for the App Store</div>
+          <div class="plat-row">Sized for Google Play</div>
+          <div class="plat-row">Built to each store's current requirements</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="landing-section">
+      <div class="section-head">
+        <p class="eyebrow mono">FIVE WAYS TO START</p>
+        <h2>Pick the mode that fits</h2>
+        <p>Scan a link, start from a saved template, or clone a structure you already like.</p>
+      </div>
+      <div class="mode-mini-row">
+        <button type="button" class="mode-mini" data-jump="modes">
+          <h4>Wizard</h4>
+          <p>Scan a link, get a full screenshot set drafted automatically.</p>
+        </button>
+        <button type="button" class="mode-mini" data-jump="modes">
+          <h4>Template</h4>
+          <p>Start from a saved composition, keep your own copy and brand.</p>
+        </button>
+        <button type="button" class="mode-mini" data-jump="modes">
+          <h4>Replicator</h4>
+          <p>Show APPPAL a competitor's structure, fill it with your own content.</p>
+        </button>
+      </div>
+      <button type="button" class="see-all" data-jump="modes">See all five modes →</button>
+    </div>
+
+    <footer class="landing-foot">
+      <div class="brand-mark small" aria-label="APPPAL">
+        <span class="brand-glyph">A</span>
+        <span class="brand-word">APPPAL</span>
+      </div>
+      <div class="foot-spacer"></div>
+      <span class="mono">LOCAL-FIRST · NO CLOUD SYNC · PLATFORM-COMPLIANT EXPORTS</span>
     </footer>
   </section>
 
