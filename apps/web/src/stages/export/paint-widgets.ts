@@ -4,14 +4,38 @@ import type { Ink } from "../../shared/contrast-ink";
 import { wrapText } from "./canvas-text";
 import { roundRect } from "./canvas-round-rect";
 
+/** A real 5-point star polygon (outer/inner vertices alternating), not a
+ *  font glyph — this gets baked straight into the exported PNG, so its
+ *  shape can't depend on whatever star character a viewer's system font
+ *  happens to render. */
+function starPath(ctx: CanvasRenderingContext2D, cx: number, cy: number, outerR: number, innerR: number) {
+  const spikes = 5;
+  const step = Math.PI / spikes;
+  let rot = -Math.PI / 2;
+  ctx.beginPath();
+  ctx.moveTo(cx + Math.cos(rot) * outerR, cy + Math.sin(rot) * outerR);
+  for (let i = 0; i < spikes; i++) {
+    rot += step;
+    ctx.lineTo(cx + Math.cos(rot) * innerR, cy + Math.sin(rot) * innerR);
+    rot += step;
+    ctx.lineTo(cx + Math.cos(rot) * outerR, cy + Math.sin(rot) * outerR);
+  }
+  ctx.closePath();
+}
+
 function paintStars(ctx: CanvasRenderingContext2D, cx: number, y: number, count: number, size: number) {
   const n = Math.max(1, Math.min(5, Math.round(count)));
+  const outerR = size * 0.5;
+  const innerR = outerR * 0.42;
+  const gap = size * 0.22;
+  const totalW = n * outerR * 2 + (n - 1) * gap;
+  let x = cx - totalW / 2 + outerR;
   ctx.fillStyle = "#e8c36a";
-  ctx.font = `700 ${Math.round(size)}px system-ui, sans-serif`;
-  ctx.textAlign = "center";
-  ctx.textBaseline = "middle";
-  ctx.fillText("★★★★★".slice(0, n), cx, y);
-  ctx.textAlign = "left";
+  for (let i = 0; i < n; i++) {
+    starPath(ctx, x, y, outerR, innerR);
+    ctx.fill();
+    x += outerR * 2 + gap;
+  }
 }
 
 function paintWreath(ctx: CanvasRenderingContext2D, cx: number, cy: number, r: number, fill: string) {

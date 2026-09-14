@@ -9,6 +9,7 @@ import {
   type TemplateRecord,
 } from "@take/template-engine";
 import { isDraftTemplate } from "../../stages/library/library-filter";
+import { DEFAULT_SEED, generatePalette, rotateHue } from "../../shared/palette-gen";
 import { buildCopy } from "./copy-builder";
 import { buildFrames } from "./frames-builder";
 
@@ -54,14 +55,6 @@ const CONCEPT_NAMES: [string, string][] = [
   ["Velocity", "Playful · Motion"],
 ];
 
-const PALETTES = [
-  ["#ff4d1a", "#0c0d10", "#f3f1ec", "#3de0ff", "#1e2129"],
-  ["#6dffb0", "#0a1210", "#e8fff4", "#ffc857", "#14201c"],
-  ["#3de0ff", "#0b1018", "#eef6ff", "#ff4d1a", "#151c28"],
-  ["#f3f1ec", "#111111", "#ff4d1a", "#888888", "#222222"],
-  ["#ffc857", "#14110c", "#fff8e8", "#ff4d1a", "#2a2418"],
-];
-
 export type GenerateSetsOptions = {
   /** Prefer captured scan colors for set 0 when present */
   seedPalette?: string[];
@@ -92,14 +85,16 @@ export function generateSets(
   const fallbackFrameCount = inf.platform === "android" ? 7 : 8;
   const shell: StoreShell = inf.platform === "android" ? "android" : "ios";
   const pool = shuffledRecipePool(shell);
-  const rawSeed = (options.seedPalette || []).filter(Boolean);
-  const seed =
-    rawSeed.length > 0
-      ? [...rawSeed, ...PALETTES[0].filter((c) => !rawSeed.includes(c))].slice(0, 5)
-      : null;
+  // Ground every concept's palette in the user's real captured brand color
+  // when one exists; each concept beyond the first explores a different,
+  // still-related hue (real rotation, not a hardcoded per-index color) so
+  // the concept cards stay visually distinct.
+  const baseSeed = (options.seedPalette || []).find(Boolean) || DEFAULT_SEED;
+  const hueStep = 360 / Math.max(1, qty);
   return Array.from({ length: qty }, (_, i) => {
     const [name, styleLabel] = CONCEPT_NAMES[i % CONCEPT_NAMES.length];
-    const palette = i === 0 && seed ? seed : PALETTES[i % PALETTES.length];
+    const seed = i === 0 ? baseSeed : rotateHue(baseSeed, hueStep * i);
+    const palette = generatePalette(seed);
     const toneLabel = inf.tone ? ` · ${clip(inf.tone, 24)}` : "";
     const recipe = pool.length ? buildRecipe(pool[i % pool.length], shell, deviceId) : null;
     const frameCount = recipe?.frameCount || fallbackFrameCount;

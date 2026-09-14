@@ -4,6 +4,7 @@ import { currentSet, state } from "../../app/app-state";
 import { $ } from "../../shared/dom";
 import { toast } from "../../shell/toast";
 import { scheduleLayoutPaint } from "../layout/layout-live-paint";
+import { generatePalette, rotateHue } from "../../shared/palette-gen";
 
 /** Brand accent for the phone canvas only — never overwrite global --signal. */
 export function applyProjectAccent(hex: string) {
@@ -89,6 +90,24 @@ export function bindStyleInspector() {
 
     if (t.closest?.("#btn-use-scan-palette") && state.scanPalette) {
       applyScanPaletteToSet(state.scanPalette);
+      return;
+    }
+
+    if (t.closest?.("#btn-generate-palette")) {
+      const set = currentSet();
+      if (!set) {
+        toast("Open a concept set in the editor first");
+        return;
+      }
+      const currentAccent = set.palette[0] || "#3e5ac4";
+      // A real, non-trivial rotation each click (40-140°) — a genuinely
+      // different generated direction, not a re-roll of the same hue.
+      const nextSeed = rotateHue(currentAccent, 40 + Math.random() * 100);
+      set.palette = generatePalette(nextSeed);
+      applyProjectAccent(set.palette[0]);
+      renderPalette(set.palette);
+      scheduleLayoutPaint();
+      toast(`New palette generated · ${set.palette[0]}`);
       return;
     }
 

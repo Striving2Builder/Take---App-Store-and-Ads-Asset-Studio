@@ -1,6 +1,8 @@
 /** OWNER: shared — background-aware text ink shared by canvas export + DOM edit overlay */
 
-function relativeLuminance(hex: string): number {
+/** WCAG relative luminance, 0 (black) – 1 (white). Shared with palette-gen.ts
+ *  so contrast checking has one implementation, not two. */
+export function relativeLuminance(hex: string): number {
   const clean = hex.replace("#", "");
   const full = clean.length === 3 ? clean.split("").map((c) => c + c).join("") : clean;
   const [r, g, b] = [0, 2, 4].map((i) => parseInt(full.slice(i, i + 2), 16) / 255);

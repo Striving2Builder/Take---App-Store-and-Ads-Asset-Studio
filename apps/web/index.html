@@ -7,11 +7,9 @@
   <meta name="description" content="Scan your app. Sequence the story. Ship store-ready visuals and copy for iOS and Android." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Fragment+Mono:wght@400;500&family=Syne:wght@500;600;700;800&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;1,6..72,400&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
 </head>
 <body>
-  <div class="noise" aria-hidden="true"></div>
-  <div class="scanline" aria-hidden="true"></div>
 
   <!-- ── LANDING ── -->
   <section id="stage-landing" class="stage stage-landing is-active" data-stage="landing">
@@ -515,7 +513,8 @@
           <h3 class="inspector-title">Style & palette</h3>
           <div id="scan-palette-slot" class="scan-palette-slot" hidden></div>
           <div class="palette" id="palette"></div>
-          <p class="hint tight">Lock applies <strong>project accent on the canvas only</strong> — shell signal orange stays. Use “From scan” when a live palette exists.</p>
+          <button type="button" class="btn ghost small block" id="btn-generate-palette">Generate new palette</button>
+          <p class="hint tight">Lock applies <strong>project accent on the canvas only</strong> — the app's own accent stays. Use “From scan” when a live palette exists, or Generate for a fresh real palette from the current accent's hue.</p>
           <label class="block-label">Style family
             <select id="edit-style">
               <option value="realistic">Realistic</option>

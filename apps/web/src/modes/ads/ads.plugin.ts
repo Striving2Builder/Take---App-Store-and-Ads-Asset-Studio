@@ -197,16 +197,27 @@ function categoryAndJurisdictionHtml(copy: AdCopy): string {
   </div>`;
 }
 
+// Inline SVG, not dingbat glyphs — a canvas-drawn icon renders identically
+// everywhere; a unicode symbol depends on whatever the viewer's system font
+// happens to ship. currentColor inherits each row's existing status color.
+const MARK_WARNING =
+  '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5 21 19H3z"/><line x1="12" y1="9" x2="12" y2="13.5"/><circle cx="12" cy="16.5" r="0.6" fill="currentColor" stroke="none"/></svg>';
+const MARK_CHECK =
+  '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
+const MARK_MISSING =
+  '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg>';
+const MARK_INFO = '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="4"/></svg>';
+
 function requirementRow(req: ComplianceRequirement, cls: string, mark: string): string {
   return `<li class="${cls}" title="${escapeHtml(req.description)} — ${escapeHtml(req.source)}"><span class="mark">${mark}</span> ${escapeHtml(req.label)}</li>`;
 }
 
 function checklistListItems(result: ReturnType<typeof checkLegalCompliance>): string {
   return [
-    ...result.prohibitions.map((r) => requirementRow(r, "prohibit", "⚠")),
-    ...result.satisfied.map((r) => requirementRow(r, "ok", "✓")),
-    ...result.missing.map((r) => requirementRow(r, "warn", "✕")),
-    ...result.advisories.map((r) => requirementRow(r, "info", "•")),
+    ...result.prohibitions.map((r) => requirementRow(r, "prohibit", MARK_WARNING)),
+    ...result.satisfied.map((r) => requirementRow(r, "ok", MARK_CHECK)),
+    ...result.missing.map((r) => requirementRow(r, "warn", MARK_MISSING)),
+    ...result.advisories.map((r) => requirementRow(r, "info", MARK_INFO)),
   ].join("");
 }
 
