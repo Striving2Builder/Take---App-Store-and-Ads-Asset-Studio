@@ -2,9 +2,7 @@
 .stage-generate {
   display: flex;
   flex-direction: column;
-  background:
-    radial-gradient(circle at 50% 45%, rgba(255, 77, 26, 0.1), transparent 45%),
-    var(--ink);
+  background: var(--ink);
 }
 
 .generate-theater {
@@ -21,14 +19,14 @@
 
 .radar {
   position: relative;
-  width: min(280px, 60vw);
+  width: min(120px, 40vw);
   aspect-ratio: 1;
 }
 
 .radar-ring {
   position: absolute;
   inset: 0;
-  border: 1px solid var(--cyan-dim);
+  border: 1px solid var(--line-strong);
   border-radius: 50%;
   animation: ringOut 2.4s var(--ease) infinite;
 }
@@ -51,18 +49,29 @@
 
 .infer-feed {
   width: min(520px, 92vw);
-  border: 1px solid var(--line-strong);
-  background: rgba(12, 13, 16, 0.85);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background: var(--ink-2);
+  box-shadow: var(--shadow);
+  color: var(--paper);
   padding: 1.25rem 1.5rem;
   min-height: 200px;
-  backdrop-filter: blur(8px);
 }
 
-.feed-title { color: var(--cyan); margin: 0 0 0.85rem; }
+.feed-title {
+  color: var(--paper-dim);
+  margin: 0 0 0.85rem;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
 
 .feed-line {
   margin: 0.4rem 0;
-  font-size: 1.05rem;
+  font-size: 0.95rem;
+  color: var(--paper);
   opacity: 0;
   animation: feedIn 0.45s var(--ease) forwards;
   border-left: 2px solid var(--signal);
@@ -72,8 +81,7 @@
 .feed-line .k {
   font-family: var(--font-mono);
   font-size: 0.65rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
+  letter-spacing: 0.06em;
   color: var(--signal);
   display: block;
   margin-bottom: 0.15rem;
@@ -85,10 +93,10 @@
 }
 
 .generate-status {
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.86rem;
+  letter-spacing: normal;
+  text-transform: none;
   color: var(--paper-dim);
 }
-
