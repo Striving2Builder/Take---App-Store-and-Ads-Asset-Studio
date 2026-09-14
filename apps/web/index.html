@@ -414,12 +414,6 @@
         <p class="label-caps nav-head">Sequence</p>
         <ol class="frame-list" id="frame-list"></ol>
         <button type="button" class="btn ghost small block" id="btn-add-frame">+ Add frame</button>
-        <hr class="divider" />
-        <p class="label-caps nav-head">Metadata</p>
-        <button type="button" class="meta-link is-active" data-panel="copy">Store copy</button>
-        <button type="button" class="meta-link" data-panel="layers">Layout</button>
-        <button type="button" class="meta-link" data-panel="style">Style & palette</button>
-        <button type="button" class="meta-link" data-panel="mode" id="mode-panel-link" hidden>Mode</button>
       </aside>
 
       <div class="edit-canvas-wrap">
@@ -484,6 +478,12 @@
       </div>
 
       <aside class="edit-inspector" id="edit-inspector">
+        <div class="inspector-tabs">
+          <button type="button" class="meta-link is-active" data-panel="copy">Content</button>
+          <button type="button" class="meta-link" data-panel="layers">Layout</button>
+          <button type="button" class="meta-link" data-panel="style">Style</button>
+          <button type="button" class="meta-link" data-panel="mode" id="mode-panel-link" hidden>Mode</button>
+        </div>
         <div class="panel is-active" data-panel-view="copy">
           <h3 class="inspector-title">Store metadata</h3>
           <p class="hint tight">Character-aware. Edit freely — validation updates live.</p>
