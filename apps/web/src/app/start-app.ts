@@ -16,11 +16,14 @@ import { hydrateScanSession } from "../stages/intake/scan-pipeline";
 import { renderReview } from "../stages/review/review.render";
 import {
   addFrame,
+  handleRedo,
+  handleUndo,
   regenFrame,
   removeFrame,
   renderEditor,
   syncFrameFromDom,
 } from "../editor/canvas/edit-canvas";
+import { isTypingTarget } from "../shared/typing-target";
 import { bindMetaFields } from "../editor/inspectors/copy-inspector";
 import { bindStyleInspector } from "../editor/inspectors/style-inspector";
 import { bindLayoutDrag, onLayoutSelection } from "../editor/layout/layout-drag";
@@ -159,6 +162,18 @@ function bindEditorActions() {
   $("#btn-regen-frame")?.addEventListener("click", regenFrame);
   $("#btn-remove-frame")?.addEventListener("click", removeFrame);
   $("#btn-add-frame")?.addEventListener("click", addFrame);
+  $("#btn-undo")?.addEventListener("click", handleUndo);
+  $("#btn-redo")?.addEventListener("click", handleRedo);
+  document.addEventListener("keydown", (e) => {
+    if (!(e.ctrlKey || e.metaKey) || isTypingTarget(e.target)) return;
+    if (e.key.toLowerCase() === "z" && !e.shiftKey) {
+      e.preventDefault();
+      handleUndo();
+    } else if (e.key.toLowerCase() === "y" || (e.key.toLowerCase() === "z" && e.shiftKey)) {
+      e.preventDefault();
+      handleRedo();
+    }
+  });
   $("#btn-add-copy")?.addEventListener("click", () => {
     const err = addCopyOrVisual("copy");
     toast(err || "Copy block on this slice — drag on the canvas");

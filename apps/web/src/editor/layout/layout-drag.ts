@@ -25,6 +25,7 @@ import { isTypingTarget } from "../../shared/typing-target";
 import { toast } from "../../shell/toast";
 import { paintStripSlice, stripRecipeOfSet } from "../../stages/export/paint-strip-slice";
 import { refreshStripPreview } from "../strip/strip-preview";
+import { commitHistory, syncHistoryButtons } from "../history/edit-history";
 
 type DragKind = "move" | "resize" | "rotate";
 type DragTarget = "device" | "extra";
@@ -196,6 +197,8 @@ function finishDrag() {
   const check = validateLayout(recipe, w, h, metrics);
   if (!check.ok) toast(`Layout note: ${check.errors[0]}`);
   void refreshStripPreview();
+  commitHistory();
+  syncHistoryButtons();
 }
 
 function selectAt(e: PointerEvent, recipe: TemplateRecord): { id: string; target: DragTarget } | null {
@@ -299,6 +302,8 @@ function onPointerUp(e: PointerEvent) {
   finishDrag();
 }
 
+let nudgeCommitTimer: ReturnType<typeof setTimeout> | undefined;
+
 function onKeyDown(e: KeyboardEvent) {
   if (!selectedId) return;
   const stage = $("#layout-stage") as HTMLElement | null;
@@ -316,6 +321,14 @@ function onKeyDown(e: KeyboardEvent) {
   if (selectedTarget === "extra") patchExtra(selectedId, (s) => moveExtra(s, dx, dy));
   else patchDevice(selectedId, (inst) => moveDevice(inst, dx, dy));
   void livePaint().then(() => refreshStripPreview());
+  // Debounced, not per-keypress: holding an arrow key repeats fast enough
+  // to flood the history stack with one entry per pixel-nudge otherwise —
+  // group a held-key nudge session into a single undo step instead.
+  clearTimeout(nudgeCommitTimer);
+  nudgeCommitTimer = setTimeout(() => {
+    commitHistory();
+    syncHistoryButtons();
+  }, 400);
 }
 
 export function bindLayoutDrag() {

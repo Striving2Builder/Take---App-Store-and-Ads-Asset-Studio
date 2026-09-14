@@ -185,7 +185,7 @@
           </label>
           <label class="upload-tile" id="upload-video-tile" hidden>
             <input type="file" accept="video/*" hidden id="upload-video" />
-            <span class="upload-icon">▶</span>
+            <span class="upload-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M6 4l14 8-14 8V4z"/></svg></span>
             <span>Video creative</span>
           </label>
         </div>
@@ -392,8 +392,12 @@
             <button type="button" class="fit-mode-btn" data-edit-view="set">Set</button>
           </div>
           <div class="tool-group">
-            <button type="button" class="icon-btn" id="btn-regen-frame" title="Regenerate frame">↻</button>
-            <button type="button" class="icon-btn" id="btn-remove-frame" title="Remove frame">✕</button>
+            <button type="button" class="icon-btn" id="btn-undo" title="Undo" disabled><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10h9a5 5 0 0 1 0 10H9"/><polyline points="7 6 3 10 7 14"/></svg></button>
+            <button type="button" class="icon-btn" id="btn-redo" title="Redo" disabled><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10h-9a5 5 0 0 0 0 10h3"/><polyline points="17 6 21 10 17 14"/></svg></button>
+          </div>
+          <div class="tool-group">
+            <button type="button" class="icon-btn" id="btn-regen-frame" title="Regenerate frame"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3-6.7"/><polyline points="21 3 21 9 15 9"/></svg></button>
+            <button type="button" class="icon-btn" id="btn-remove-frame" title="Remove frame"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="5" y1="5" x2="19" y2="19"/><line x1="19" y1="5" x2="5" y2="19"/></svg></button>
           </div>
         </div>
         <p class="device-fit-hint mono" id="device-fit-hint" hidden></p>

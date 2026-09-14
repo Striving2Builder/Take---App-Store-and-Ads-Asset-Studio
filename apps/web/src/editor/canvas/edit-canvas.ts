@@ -26,6 +26,15 @@ import { resolveExportSize } from "@take/device-catalog";
 import { renderAdsThumbGrid } from "../../modes/ads/ads.plugin";
 import { rasterSizeFor } from "../../shared/hidpi-raster";
 import { inkForBackground } from "../../shared/contrast-ink";
+import {
+  applyRestoredSet,
+  beginRestore,
+  commitHistory,
+  endRestore,
+  redo,
+  syncHistoryButtons,
+  undo,
+} from "../history/edit-history";
 
 export function syncFrameFromDom() {
   const frame = currentFrame();
@@ -92,6 +101,8 @@ export function renderEditor() {
   renderCopyMarksRow();
   renderWidgetFields();
   renderTiltSliders();
+  commitHistory();
+  syncHistoryButtons();
 }
 
 /** #layout-stage (canvas-painted, export-accurate) is the only rendering
@@ -209,4 +220,25 @@ export function regenFrame() {
   frame.caption = caption;
   renderEditor();
   toast("Frame regenerated");
+}
+
+function afterHistoryJump(restored: ReturnType<typeof undo>, label: string) {
+  if (!restored) {
+    toast(`Nothing to ${label.toLowerCase()}`);
+    return;
+  }
+  applyRestoredSet(restored);
+  state.activeFrame = Math.min(state.activeFrame, restored.frames.length - 1);
+  beginRestore();
+  renderEditor();
+  endRestore();
+  toast(label);
+}
+
+export function handleUndo() {
+  afterHistoryJump(undo(), "Undone");
+}
+
+export function handleRedo() {
+  afterHistoryJump(redo(), "Redone");
 }
