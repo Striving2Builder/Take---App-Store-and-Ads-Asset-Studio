@@ -160,7 +160,7 @@ export const TRUTH_MARKS: TruthMark[] = [
   {
     sel: "#device-picker",
     status: "partial",
-    why: "Catalog + TAKE SVG shell families (island/punch/fold/flip); not photoreal product photos",
+    why: "Catalog + APPPAL SVG shell families (island/punch/fold/flip); not photoreal product photos",
     place: "after",
   },
   {

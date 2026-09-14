@@ -46,7 +46,7 @@ export function heroCopy(
     return {
       kicker: "Bundled research",
       title: "You have everything from this research pass",
-      body: "Your catalog already has every phone in TAKE's current research pack — including iPhone 17, Pixel 10, and Galaxy S25. New research ships in app updates, not live checks.",
+      body: "Your catalog already has every phone in APPPAL's current research pack — including iPhone 17, Pixel 10, and Galaxy S25. New research ships in app updates, not live checks.",
       action: "Browse again",
     };
   }
@@ -55,7 +55,7 @@ export function heroCopy(
     return {
       kicker: "From the research pack",
       title: n === 1 ? "1 device you can add" : `${n} devices you can add`,
-      body: "These are researched store sizes with an existing TAKE frame, bundled with this version of the app. Add the ones you want — they show up in the device picker.",
+      body: "These are researched store sizes with an existing APPPAL frame, bundled with this version of the app. Add the ones you want — they show up in the device picker.",
       action: "Browse again",
     };
   }
@@ -71,7 +71,7 @@ export function heroCopy(
   return {
     kicker: "Your devices",
     title: "Phones for store screenshots",
-    body: "TAKE frames your art on App Store and Play sizes. Browse iPhones, Pixels, and Galaxies bundled with this version of the app — this reads the research pack shipped with TAKE, not a live check.",
+    body: "APPPAL frames your art on App Store and Play sizes. Browse iPhones, Pixels, and Galaxies bundled with this version of the app — this reads the research pack shipped with APPPAL, not a live check.",
     action: "Browse researched devices",
   };
 }
