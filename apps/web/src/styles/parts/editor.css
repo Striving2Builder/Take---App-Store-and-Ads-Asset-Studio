@@ -533,6 +533,23 @@ body.is-ads-edit [data-panel="layers"] {
   color: var(--paper-dim);
 }
 
+.panorama-section {
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-md);
+  background: var(--ink-3);
+  padding: 0.85rem 0.9rem;
+  margin: 0.6rem 0 1.15rem;
+}
+
+.panorama-heading {
+  margin: 0 0 0.35rem;
+  color: var(--signal);
+}
+
+.panorama-section .hint.tight { margin-bottom: 0.6rem; }
+.panorama-section .block-label { margin-bottom: 0.5rem; }
+.panorama-section .btn:last-child { margin-bottom: 0; }
+
 .palette {
   display: flex;
   gap: 0.4rem;

@@ -490,6 +490,14 @@
         </div>
         <div class="panel" data-panel-view="layers" hidden>
           <h3 class="inspector-title">Layout</h3>
+          <section class="panorama-section">
+            <p class="label-caps panorama-heading">Strip panorama</p>
+            <p class="hint tight">One world image, shared across the whole set — clipped per store PNG, not per frame.</p>
+            <label class="block-label">Source image
+              <select id="panorama-asset" aria-label="Panorama image"></select>
+            </label>
+            <button type="button" class="btn ghost small block" id="btn-strip-panorama">Use as strip panorama</button>
+          </section>
           <p class="label-caps pos-preset-legend">Elements on this frame</p>
           <div id="elements-list" class="elements-list"></div>
           <button type="button" class="btn ghost small block" id="btn-add-copy">+ Add text element</button>
@@ -543,11 +551,6 @@
             <button type="button" class="btn ghost small" data-slice-rule="mini">Mini screen</button>
           </div>
           <p class="hint tight">Remove device is allowed only if this PNG still has another element (proof-only). Landscape is this device inside the portrait store file — it does not rotate the ZIP size. Mini screen is a shot thumbnail, not another device.</p>
-          <label class="block-label">Strip panorama
-            <select id="panorama-asset" aria-label="Panorama image"></select>
-          </label>
-          <button type="button" class="btn ghost small block" id="btn-strip-panorama">Use as strip panorama</button>
-          <p class="hint tight">Panorama is one world image clipped per store PNG. Extra copy/visual sit on top of devices — not the background.</p>
           <p class="label-caps pos-preset-legend">Position presets</p>
           <div class="pos-preset-grid" id="pos-preset-grid"></div>
           <p class="hint tight">Bleed next/prev is one device across two store files (the cut at i·W). Crop top/bottom stay on this slice. Drag still works after a stamp.</p>
