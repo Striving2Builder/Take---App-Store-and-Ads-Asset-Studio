@@ -31,7 +31,7 @@ import { renderWidgetFields } from "../inspectors/widget-fields";
 import { renderTiltSliders } from "../inspectors/tilt-sliders";
 import { renderFitRow } from "../inspectors/fit-toggle";
 import { resolveExportSize } from "@take/device-catalog";
-import { renderAdsThumbGrid } from "../../modes/ads/ads.plugin";
+import { renderAdsFocusedPreview, renderAdsUnitRail } from "../../modes/ads/ads.plugin";
 import { rasterSizeFor } from "../../shared/hidpi-raster";
 import { inkForBackground } from "../../shared/contrast-ink";
 import {
@@ -135,8 +135,9 @@ async function syncLayoutStage() {
     stage.hidden = true;
     if (adsStage) {
       adsStage.hidden = false;
-      renderAdsThumbGrid(adsStage);
+      void renderAdsFocusedPreview(adsStage);
     }
+    renderAdsUnitRail();
     const activePanel = document.querySelector(".meta-link.is-active") as HTMLElement | null;
     if (activePanel?.dataset.panel === "copy" || activePanel?.dataset.panel === "layers") {
       $$(".meta-link").forEach((el) => el.classList.toggle("is-active", el.getAttribute("data-panel") === "mode"));
@@ -149,6 +150,8 @@ async function syncLayoutStage() {
     return;
   }
   if (adsStage) adsStage.hidden = true;
+  const railEl = $("#ads-unit-rail") as HTMLElement | null;
+  if (railEl) railEl.hidden = true;
 
   if (state.editView === "set") {
     stage.hidden = true;

@@ -175,6 +175,60 @@
   display: none;
 }
 
+.ads-focus-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.ads-focus-dims {
+  font-size: 0.72rem;
+  color: var(--paper-dim);
+}
+
+.ads-focus-canvas {
+  display: block;
+  width: min(560px, 100%);
+  height: auto;
+  background: var(--ink-3);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+}
+
+body.is-ads-edit .edit-layout {
+  grid-template-columns: 230px 1fr 280px;
+}
+
+.ads-unit-rail {
+  border: 1px solid var(--line);
+  background: var(--ink-2);
+  padding: 1rem;
+  height: fit-content;
+  max-height: calc(100dvh - 6rem);
+  overflow: auto;
+  position: sticky;
+  top: 4.5rem;
+}
+
+.ads-unit-rail[hidden] {
+  display: none;
+}
+
+.ads-unit-row.is-focused {
+  background: color-mix(in srgb, var(--signal) 12%, transparent);
+  border-radius: var(--radius-sm);
+}
+
+.ads-unit-focus-hit {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex: 1;
+  cursor: pointer;
+}
+.ads-unit-focus-hit em { margin-left: auto; }
+
 /* Ads mode: hide device/layout chrome that has no meaning for ad units — the
    ad-unit picker + thumbnail grid replace device picker / fit / orientation / sequence rail. */
 body.is-ads-edit .device-picker-wrap,
