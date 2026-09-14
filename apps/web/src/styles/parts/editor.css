@@ -1,13 +1,13 @@
 /* ── EDITOR ── */
 .edit-layout {
   display: grid;
-  grid-template-columns: 200px 1fr 280px;
+  grid-template-columns: 1fr 280px;
   gap: 1rem;
   min-height: calc(100dvh - 5rem);
   padding-bottom: 2rem;
 }
 
-.edit-nav, .edit-inspector {
+.edit-inspector {
   border: 1px solid var(--line);
   background: var(--ink-2);
   padding: 1rem;
@@ -18,26 +18,43 @@
   top: 4.5rem;
 }
 
-.nav-head { margin: 0 0 0.65rem; }
+.frame-filmstrip {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  border: 1px solid var(--line);
+  background: var(--ink-2);
+  padding: 0.75rem 0.85rem;
+}
+
+.filmstrip-label {
+  flex-shrink: 0;
+  margin: 0;
+}
 
 .frame-list {
   list-style: none;
-  margin: 0 0 0.75rem;
+  margin: 0;
   padding: 0;
   display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
+  flex-direction: row;
+  gap: 0.4rem;
+  overflow-x: auto;
+  flex: 1;
 }
 
+.frame-list li { flex-shrink: 0; }
+
 .frame-list button {
-  width: 100%;
+  min-width: 88px;
   text-align: left;
-  padding: 0.55rem 0.65rem;
-  border: 1px solid transparent;
+  padding: 0.5rem 0.65rem;
+  border: 1px solid var(--line);
   color: var(--paper-dim);
   display: flex;
-  align-items: baseline;
-  gap: 0.5rem;
+  flex-direction: column;
+  gap: 0.15rem;
+  white-space: nowrap;
 }
 
 .frame-list .frame-num {
@@ -165,10 +182,7 @@ body.is-ads-edit #store-target-control,
 body.is-ads-edit #orientation-control,
 body.is-ads-edit #fit-mode-control,
 body.is-ads-edit #edit-view-control,
-body.is-ads-edit .edit-nav p.nav-head:first-of-type,
-body.is-ads-edit .edit-nav .divider,
-body.is-ads-edit #frame-list,
-body.is-ads-edit #btn-add-frame,
+body.is-ads-edit #frame-filmstrip,
 body.is-ads-edit #btn-regen-frame,
 body.is-ads-edit #btn-remove-frame,
 body.is-ads-edit .device-fit-hint,

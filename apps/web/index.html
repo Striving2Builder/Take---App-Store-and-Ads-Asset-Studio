@@ -410,12 +410,6 @@
     </header>
 
     <div class="edit-layout">
-      <aside class="edit-nav">
-        <p class="label-caps nav-head">Sequence</p>
-        <ol class="frame-list" id="frame-list"></ol>
-        <button type="button" class="btn ghost small block" id="btn-add-frame">+ Add frame</button>
-      </aside>
-
       <div class="edit-canvas-wrap">
         <div class="canvas-toolbar">
           <div class="toolbar-cluster toolbar-cluster-identity">
@@ -466,6 +460,11 @@
           </div>
           <div id="ads-edit-stage" class="ads-edit-stage" hidden></div>
           <p class="mono layout-stage-hint" id="layout-stage-hint" hidden>Drag devices & elements · corners resize · Alt-drag rotate · arrows nudge</p>
+        </div>
+        <div class="frame-filmstrip" id="frame-filmstrip">
+          <p class="label-caps filmstrip-label">Sequence</p>
+          <ol class="frame-list" id="frame-list"></ol>
+          <button type="button" class="btn ghost small" id="btn-add-frame">+ Add frame</button>
         </div>
         <div id="set-stage" class="set-stage" hidden>
           <p class="mono set-stage-label">Set · store carousel · same paint as export — click a frame to edit that slice</p>
