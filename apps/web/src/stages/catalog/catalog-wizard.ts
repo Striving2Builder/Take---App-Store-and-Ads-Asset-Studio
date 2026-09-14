@@ -1,5 +1,11 @@
 /** OWNER: stages/catalog — customer catalog: check → add. Disk publish stays CLI. */
-import { getDevice, listDevices, replaceCatalog, type DeviceProfile } from "@take/device-catalog";
+import {
+  getDevice,
+  listDevices,
+  replaceCatalog,
+  sourceConfidenceOf,
+  type DeviceProfile,
+} from "@take/device-catalog";
 import {
   classifyChange,
   createMemoryReviewGate,
@@ -72,9 +78,11 @@ function renderCatalogNow() {
   if (!el) return;
   el.innerHTML = devices
     .map((d) => {
+      const confidence = sourceConfidenceOf(d.source);
       const inherit = inheritNote(d.source);
-      return `<li class="catalog-device-card">
+      return `<li class="catalog-device-card is-${confidence}">
         <span class="catalog-device-family mono">${escapeHtml(familyLabel(d))}</span>
+        ${confidence === "inherited" ? `<span class="catalog-confidence-badge" title="${escapeHtml(inherit || "Uses an existing device frame")}">INHERITED</span>` : ""}
         <strong>${escapeHtml(d.name)}</strong>
         <span class="catalog-device-size">${escapeHtml(sizeLine(d))}</span>
         ${inherit ? `<span class="catalog-device-note">${escapeHtml(inherit)}</span>` : ""}
@@ -111,10 +119,13 @@ async function renderList() {
       });
       const ok = ev && mat.ok;
       const added = p.reviewStatus === "approved";
-      const inherit = inheritNote(mat.ok ? mat.device.source : p.proposed.source);
+      const proposalSource = mat.ok ? mat.device.source : p.proposed.source;
+      const confidence = sourceConfidenceOf(proposalSource);
+      const inherit = inheritNote(proposalSource);
       const size = mat.ok ? sizeLine(mat.device) : "";
-      return `<li data-prop="${escapeHtml(p.id)}" class="catalog-update-card">
+      return `<li data-prop="${escapeHtml(p.id)}" class="catalog-update-card is-${confidence}">
         <span class="catalog-device-family mono">${escapeHtml(changeLine(kind, summary))}</span>
+        ${confidence === "inherited" ? `<span class="catalog-confidence-badge" title="${escapeHtml(inherit || "Uses an existing device frame")}">INHERITED</span>` : ""}
         <strong>${escapeHtml(p.proposed.name)}</strong>
         <span class="catalog-device-size">${escapeHtml(size)}</span>
         ${inherit ? `<span class="catalog-device-note">${escapeHtml(inherit)}</span>` : ""}

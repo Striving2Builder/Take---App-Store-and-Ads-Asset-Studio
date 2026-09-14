@@ -76,6 +76,23 @@
   border-color: var(--line-strong);
 }
 
+.catalog-device-card.is-inherited,
+.catalog-update-card.is-inherited {
+  border-style: dashed;
+}
+
+.catalog-confidence-badge {
+  align-self: flex-start;
+  padding: 0.1rem 0.4rem;
+  border: 1px solid var(--warn);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.6rem;
+  letter-spacing: 0.04em;
+  color: var(--warn);
+}
+
 .catalog-device-family {
   font-family: var(--font-display);
   font-weight: 700;
