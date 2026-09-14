@@ -1,5 +1,12 @@
 /** OWNER: editor/canvas — contenteditable sync + frame render + scan assets */
 import { FRAME_ROLES } from "@take/core";
+
+// Display-only: FRAME_ROLES stays SCREAMING_CASE for internal matching, but
+// the mockup's UI chrome never renders labels in all caps (that mono/uppercase
+// skin was the "engineering tool" look flagged for removal).
+function roleLabel(role: string) {
+  return role.charAt(0) + role.slice(1).toLowerCase();
+}
 import { currentFrame, currentSet, state } from "../../app/app-state";
 import { $, $$ } from "../../shared/dom";
 import { escapeHtml } from "../../shared/escape";
@@ -61,7 +68,8 @@ export function renderEditor() {
       .map(
         (f, i) => `<li>
         <button type="button" class="${i === state.activeFrame ? "is-active" : ""}" data-frame="${i}">
-          <span>${String(i + 1).padStart(2, "0")} ${escapeHtml(f.role)}</span>
+          <span class="frame-num mono">${String(i + 1).padStart(2, "0")}</span>
+          <span class="frame-role">${escapeHtml(roleLabel(f.role))}</span>
         </button>
       </li>`
       )
@@ -74,10 +82,10 @@ export function renderEditor() {
   if (label) {
     label.textContent =
       state.mode === "ads"
-        ? `AD SET · ${set.frames.filter((f) => f.adUnitId).length} unit${set.frames.length === 1 ? "" : "s"}`
+        ? `Ad set · ${set.frames.filter((f) => f.adUnitId).length} unit${set.frames.length === 1 ? "" : "s"}`
         : state.editView === "set"
-          ? `SET · ${set.frames.length} frames · store carousel`
-          : `FRAME ${String(frame.index + 1).padStart(2, "0")} · ${frame.role}`;
+          ? `Set · ${set.frames.length} frames · store carousel`
+          : `Frame ${String(frame.index + 1).padStart(2, "0")} · ${roleLabel(frame.role)}`;
   }
   const k = $("#shot-kicker");
   const h = $("#shot-headline");

@@ -25,3 +25,31 @@ img { max-width: 100%; display: block; }
 
 .mono { font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; }
 .subtle { opacity: 0.5; }
+
+/* Section/panel labels (SEQUENCE, panel legends, etc.) — Manrope small-caps,
+   matching the approved EditorA mockup's .field-group h5 rule exactly
+   (font-size .68rem, letter-spacing .08em, weight 700, ink-faint color).
+   NOT var(--font-mono): the mockup keeps mono reserved for genuinely
+   technical/data text (device dimensions, on-canvas kicker), not for
+   structural chrome labels — that conflation was the "engineering tool"
+   skin covering every screen regardless of the color tokens underneath. */
+.label-caps {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--paper-dim);
+}
+
+/* Plain small identity label (frame/project name) — Manrope, sentence
+   case, no letter-spacing: matches the mockup's .proj / .proj span,
+   which is never run through text-transform: uppercase. */
+.label-plain {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.78rem;
+  letter-spacing: normal;
+  text-transform: none;
+  color: var(--paper-dim);
+}

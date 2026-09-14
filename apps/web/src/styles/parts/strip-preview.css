@@ -8,8 +8,9 @@
 .strip-preview-label {
   margin: 0 0 0.5rem;
   font-size: 0.62rem;
-  letter-spacing: 0.08em;
-  color: var(--cyan);
+  letter-spacing: normal;
+  text-transform: none;
+  color: var(--paper-dim);
 }
 
 .strip-preview-rail {
@@ -55,8 +56,9 @@
 .set-stage-label {
   margin: 0 0 0.55rem;
   font-size: 0.62rem;
-  letter-spacing: 0.08em;
-  color: var(--cyan);
+  letter-spacing: normal;
+  text-transform: none;
+  color: var(--paper-dim);
 }
 
 .set-stage-rail {
@@ -204,7 +206,8 @@
   border-radius: var(--radius-sm);
   padding: 0.3rem 0.7rem;
   font-size: 0.62rem;
-  letter-spacing: 0.06em;
+  letter-spacing: normal;
+  text-transform: none;
   color: var(--paper-dim);
   text-align: center;
   white-space: nowrap;

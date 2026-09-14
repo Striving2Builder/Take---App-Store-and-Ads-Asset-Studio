@@ -365,11 +365,11 @@
 
     <div class="edit-layout">
       <aside class="edit-nav">
-        <p class="mono nav-head">SEQUENCE</p>
+        <p class="label-caps nav-head">Sequence</p>
         <ol class="frame-list" id="frame-list"></ol>
         <button type="button" class="btn ghost small block" id="btn-add-frame">+ Add frame</button>
         <hr class="divider" />
-        <p class="mono nav-head">METADATA</p>
+        <p class="label-caps nav-head">Metadata</p>
         <button type="button" class="meta-link is-active" data-panel="copy">Store copy</button>
         <button type="button" class="meta-link" data-panel="layers">Layout</button>
         <button type="button" class="meta-link" data-panel="style">Style & palette</button>
@@ -379,8 +379,8 @@
       <div class="edit-canvas-wrap">
         <div class="canvas-toolbar">
           <div class="toolbar-cluster toolbar-cluster-identity">
-            <span class="mono" id="canvas-label">FRAME 01 · HOOK</span>
-            <label class="device-picker-wrap mono" for="device-picker">
+            <span class="label-plain" id="canvas-label">Frame 01 · Hook</span>
+            <label class="device-picker-wrap label-plain" for="device-picker">
               Device
               <select id="device-picker" aria-label="Device shell"></select>
             </label>
@@ -428,11 +428,11 @@
           <p class="mono layout-stage-hint" id="layout-stage-hint" hidden>Drag devices & elements · corners resize · Alt-drag rotate · arrows nudge</p>
         </div>
         <div id="set-stage" class="set-stage" hidden>
-          <p class="mono set-stage-label">SET · store carousel · same paint as export — click a frame to edit that slice</p>
+          <p class="mono set-stage-label">Set · store carousel · same paint as export — click a frame to edit that slice</p>
           <div id="set-stage-rail" class="set-stage-rail"></div>
         </div>
         <div id="strip-preview" class="strip-preview" hidden>
-          <p class="mono strip-preview-label">STRIP PREVIEW · joined world · no gap — this is the export</p>
+          <p class="mono strip-preview-label">Strip preview · joined world · no gap — this is the export</p>
           <div id="strip-preview-rail" class="strip-preview-rail"></div>
         </div>
       </div>
@@ -447,7 +447,7 @@
           <h3 class="inspector-title">Layout</h3>
           <button type="button" class="btn ghost small block" id="btn-add-copy">+ Add text element</button>
           <button type="button" class="btn ghost small block" id="btn-add-visual">+ Add image element</button>
-          <p class="mono pos-preset-legend">TEXT ELEMENT MARKS</p>
+          <p class="label-caps pos-preset-legend">Text element marks</p>
           <div id="copy-marks-row" hidden>
             <textarea id="extra-copy-text" rows="3" placeholder="**pill**  ++underline++" aria-label="Text element content"></textarea>
             <div class="chrome-row" id="extra-face-row">
@@ -456,7 +456,7 @@
             </div>
           </div>
           <p class="hint tight">Select a text element. **word** is a pill. ++word++ is an underline. Script is this element only — not the store headline.</p>
-          <p class="mono pos-preset-legend">SHAPE ELEMENT ON THIS PNG</p>
+          <p class="label-caps pos-preset-legend">Shape element on this PNG</p>
           <div class="chrome-row" id="shape-row">
             <button type="button" class="btn ghost small" data-extra-shape="blob">Blob</button>
             <button type="button" class="btn ghost small" data-extra-shape="wave">Wave</button>
@@ -464,7 +464,7 @@
             <button type="button" class="btn ghost small" data-extra-shape="dots">Dots</button>
             <button type="button" class="btn ghost small" data-extra-shape="scribble">Scribble</button>
           </div>
-          <p class="mono pos-preset-legend">PROOF ELEMENT</p>
+          <p class="label-caps pos-preset-legend">Proof element</p>
           <div class="chrome-row" id="widget-row">
             <button type="button" class="btn ghost small" data-extra-widget="rating">Rating</button>
             <button type="button" class="btn ghost small" data-extra-widget="review">Review</button>
@@ -478,7 +478,7 @@
             <input id="widget-pills" placeholder="Tag one, Tag two" aria-label="Pill labels" />
           </div>
           <p class="hint tight">Select a proof element to type real numbers and quotes. Empty score paints an em dash — not a made-up App Store rating.</p>
-          <p class="mono pos-preset-legend">TYPE ON THIS PNG</p>
+          <p class="label-caps pos-preset-legend">Type on this PNG</p>
           <div class="chrome-row" id="type-band-row">
             <button type="button" class="btn ghost small" data-type-band="top">Top</button>
             <button type="button" class="btn ghost small" data-type-band="bottom">Bottom</button>
@@ -486,7 +486,7 @@
             <button type="button" class="btn ghost small" data-type-band="none">None</button>
           </div>
           <p class="hint tight">Type is per store file. None hides kicker/headline on this PNG. Shape and proof elements count against the 6-per-slice element cap, not the strip background.</p>
-          <p class="mono pos-preset-legend">DEVICES ON THIS PNG</p>
+          <p class="label-caps pos-preset-legend">Devices on this PNG</p>
           <div class="chrome-row" id="slice-rule-row">
             <button type="button" class="btn ghost small" data-slice-rule="add">Add device</button>
             <button type="button" class="btn ghost small" data-slice-rule="remove">Remove device</button>
@@ -501,10 +501,10 @@
           </label>
           <button type="button" class="btn ghost small block" id="btn-strip-panorama">Use as strip panorama</button>
           <p class="hint tight">Panorama is one world image clipped per store PNG. Extra copy/visual sit on top of devices — not the background.</p>
-          <p class="mono pos-preset-legend">POSITION PRESETS</p>
+          <p class="label-caps pos-preset-legend">Position presets</p>
           <div class="pos-preset-grid" id="pos-preset-grid"></div>
           <p class="hint tight">Bleed next/prev is one device across two store files (the cut at i·W). Crop top/bottom stay on this slice. Drag still works after a stamp.</p>
-          <p class="mono pos-preset-legend">PITCH / YAW</p>
+          <p class="label-caps pos-preset-legend">Pitch / yaw</p>
           <div id="tilt-sliders-row" hidden>
             <label class="tilt-slider">Yaw
               <input id="device-yaw" type="range" min="-35" max="35" step="1" value="0" aria-label="Yaw degrees" />
@@ -516,7 +516,7 @@
             </label>
           </div>
           <p class="hint tight">Sliders on the selected device. Past ~25° the cheap warp can look thin — that is C1, not WebGL.</p>
-          <p class="mono pos-preset-legend">SCREENSHOT FIT</p>
+          <p class="label-caps pos-preset-legend">Screenshot fit</p>
           <div class="chrome-row" id="device-fit-row" hidden>
             <button type="button" class="btn ghost small" data-device-fit="cover">Cover</button>
             <button type="button" class="btn ghost small" data-device-fit="contain">Contain</button>
