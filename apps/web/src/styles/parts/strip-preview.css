@@ -234,8 +234,3 @@
 .layout-stage .shot-caption {
   margin-top: auto;
 }
-
-.layout-stage .shot-ui-block,
-.layout-stage .scan-icon-badge {
-  display: none;
-}

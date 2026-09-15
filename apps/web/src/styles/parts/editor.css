@@ -611,23 +611,6 @@ body.is-ads-edit [data-panel="layers"] {
   clip-path: polygon(0 0, 100% 0, 100% 70%, 88% 100%, 0 100%);
 }
 
-.shot-content.has-scan-shot .shot-ui-block {
-  /* Decorative stand-in for an *empty* phone mock only — once a real
-     screenshot is showing, this must be fully hidden, not just faded
-     (a translucent fake UI block over real content reads as glitchy
-     leftover shapes, not a design element). */
-  display: none;
-}
-
-.scan-icon-badge {
-  width: 44px;
-  height: 44px;
-  border-radius: 10px;
-  object-fit: cover;
-  border: 1px solid var(--line-strong);
-  margin-bottom: 0.35rem;
-}
-
 .shot-caption {
   margin: 0;
   font-size: 0.85rem;
@@ -675,18 +658,6 @@ body.is-ads-edit [data-panel="layers"] {
   color: var(--cyan);
 }
 .meta-field .count.over { color: var(--signal); }
-
-.layer-list {
-  list-style: none;
-  margin: 0.75rem 0 1rem;
-  padding: 0;
-}
-
-.layer-list li {
-  padding: 0.45rem 0;
-  border-bottom: 1px solid var(--line);
-  font-size: 0.95rem;
-}
 
 .elements-list {
   display: flex;
