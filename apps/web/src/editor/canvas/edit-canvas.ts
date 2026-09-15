@@ -16,6 +16,7 @@ import {
   renderPalette,
   refreshScanPaletteSlot,
 } from "../inspectors/style-inspector";
+import { syncPaletteWheel } from "../inspectors/palette-wheel";
 import { goalCta } from "../../modes/wizard/copy-builder";
 import { pickHeadline } from "../../modes/wizard/frames-builder";
 import { toast } from "../../shell/toast";
@@ -97,6 +98,7 @@ export function renderEditor() {
   applyProjectAccent(set.palette[0]);
   renderMetaFields(set.copy);
   renderPalette(set.palette);
+  syncPaletteWheel();
   refreshScanPaletteSlot();
   const styleSel = $("#edit-style") as HTMLSelectElement | null;
   if (styleSel) styleSel.value = set.style;

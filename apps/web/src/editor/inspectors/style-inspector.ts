@@ -5,6 +5,9 @@ import { $ } from "../../shared/dom";
 import { toast } from "../../shell/toast";
 import { scheduleLayoutPaint } from "../layout/layout-live-paint";
 import { generatePalette, rotateHue } from "../../shared/palette-gen";
+import { relativeLuminance, contrastGrade } from "../../shared/contrast-ink";
+
+const GRADE_LABEL = { AAA: "AAA", AA: "AA", "AA-LARGE": "AA·L", LOW: "LOW" } as const;
 
 /** Brand accent for the phone canvas only — never overwrite global --signal. */
 export function applyProjectAccent(hex: string) {
@@ -21,10 +24,11 @@ export function renderPalette(colors: string[]) {
   const host = $("#palette");
   if (!host) return;
   host.innerHTML = colors
-    .map(
-      (c, i) =>
-        `<button type="button" class="swatch ${i === 0 ? "is-locked" : ""}" data-swatch="${i}" style="background:${c}" title="${c}" aria-label="Color ${c}"></button>`
-    )
+    .map((c, i) => {
+      const ink = relativeLuminance(c) > 0.5 ? "#14151b" : "#ffffff";
+      const badge = contrastGrade(c, ink);
+      return `<button type="button" class="swatch ${i === 0 ? "is-locked" : ""}" data-swatch="${i}" style="background:${c}" title="${c} · contrast ${badge.ratio.toFixed(1)}:1" aria-label="Color ${c}"><span class="swatch-badge" style="color:${ink}">${GRADE_LABEL[badge.grade]}</span></button>`;
+    })
     .join("");
 }
 

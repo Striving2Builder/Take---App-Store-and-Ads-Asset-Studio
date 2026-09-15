@@ -19,6 +19,19 @@ export function contrastRatio(a: string, b: string): number {
   return (lighter + 0.05) / (darker + 0.05);
 }
 
+/** WCAG grade for a foreground/background pair — same thresholds
+ *  Library's palette showcase and the Style tab's palette wheel both grade
+ *  swatches by, kept in one place so the two never drift apart. */
+export type ContrastGrade = "AAA" | "AA" | "AA-LARGE" | "LOW";
+
+export function contrastGrade(a: string, b: string): { grade: ContrastGrade; ratio: number } {
+  const ratio = contrastRatio(a, b);
+  if (ratio >= 7) return { grade: "AAA", ratio };
+  if (ratio >= 4.5) return { grade: "AA", ratio };
+  if (ratio >= 3) return { grade: "AA-LARGE", ratio };
+  return { grade: "LOW", ratio };
+}
+
 export type Ink = { text: string; dim: string; accent: string };
 
 const ON_DARK_BG: Ink = { text: "#f3f1ec", dim: "#c8c4bb", accent: "#3de0ff" };

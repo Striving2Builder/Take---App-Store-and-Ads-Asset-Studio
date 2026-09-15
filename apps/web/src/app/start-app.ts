@@ -26,6 +26,7 @@ import {
 import { isTypingTarget } from "../shared/typing-target";
 import { bindMetaFields } from "../editor/inspectors/copy-inspector";
 import { bindStyleInspector } from "../editor/inspectors/style-inspector";
+import { bindPaletteWheel } from "../editor/inspectors/palette-wheel";
 import { bindLayoutDrag, onLayoutSelection } from "../editor/layout/layout-drag";
 import { ensureSetRecipe } from "../editor/layout/attach-recipe";
 import { addCopyOrVisual, applyPanoramaFromPicker, bindChromeExtras, bindElementsList, renderElementsList } from "../editor/inspectors/layers-inspector";
@@ -295,6 +296,7 @@ export function startApp() {
   bindExportActions();
   bindMetaFields();
   bindStyleInspector();
+  bindPaletteWheel();
   bindScanReceiptTabs();
   bindLayoutDrag();
   onLayoutSelection(() => {

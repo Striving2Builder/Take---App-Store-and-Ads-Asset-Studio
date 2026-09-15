@@ -589,6 +589,12 @@
         <div class="panel" data-panel-view="style" hidden>
           <h3 class="inspector-title">Style & palette</h3>
           <div id="scan-palette-slot" class="scan-palette-slot" hidden></div>
+          <div class="palette-wheel-row">
+            <div class="palette-wheel" id="palette-wheel"><div class="palette-wheel-pin" id="palette-wheel-pin"></div></div>
+            <label class="wheel-lightness-label">Lightness <span id="palette-lightness-val">50%</span>
+              <input type="range" id="palette-lightness" min="0" max="100" value="50" />
+            </label>
+          </div>
           <div class="palette" id="palette"></div>
           <button type="button" class="btn ghost small block" id="btn-generate-palette">Generate new palette</button>
           <p class="hint tight">Lock applies <strong>project accent on the canvas only</strong> — the app's own accent stays. Use “From scan” when a live palette exists, or Generate for a fresh real palette from the current accent's hue.</p>

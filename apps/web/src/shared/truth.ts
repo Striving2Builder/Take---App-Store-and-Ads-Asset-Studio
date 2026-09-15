@@ -90,7 +90,7 @@ export const TRUTH_MARKS: TruthMark[] = [
   {
     sel: '[data-panel-view="style"] .inspector-title',
     status: "partial",
-    why: "Lock uses --project-accent on canvas; From scan when palette extracted",
+    why: "Palette wheel is real pointer input (hue/saturation from click position + a lightness slider) feeding the real generatePalette() harmony math and real per-swatch WCAG contrast badges. Marked partial only for the pre-existing nuance: Lock uses --project-accent on canvas, not the app's own --signal; From scan swaps in when a live palette exists.",
     place: "after",
   },
   {

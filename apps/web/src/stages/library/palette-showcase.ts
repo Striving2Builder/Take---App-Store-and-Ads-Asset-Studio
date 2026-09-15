@@ -6,7 +6,7 @@
  *  which one it is rather than implying "from your icon" when nothing
  *  has been scanned yet. */
 import { generatePalette, DEFAULT_SEED, type GeneratedPalette } from "../../shared/palette-gen";
-import { relativeLuminance, contrastRatio } from "../../shared/contrast-ink";
+import { relativeLuminance, contrastGrade, type ContrastGrade } from "../../shared/contrast-ink";
 import { state } from "../../app/app-state";
 import { $ } from "../../shared/dom";
 import { escapeHtml } from "../../shared/escape";
@@ -37,20 +37,19 @@ function seedAndSource(): { seed: string; heading: string; sub: string } {
   };
 }
 
-function badgeFor(bg: string, ink: string): { label: string; ratio: number } {
-  const ratio = contrastRatio(bg, ink);
-  if (ratio >= 7) return { label: "AAA", ratio };
-  if (ratio >= 4.5) return { label: "AA", ratio };
-  if (ratio >= 3) return { label: "AA·L", ratio };
-  return { label: "LOW", ratio };
-}
+const GRADE_LABEL: Record<ContrastGrade, string> = {
+  AAA: "AAA",
+  AA: "AA",
+  "AA-LARGE": "AA·L",
+  LOW: "LOW",
+};
 
 function swatchHtml(hex: string, role: string): string {
   const ink = relativeLuminance(hex) > 0.5 ? "#14151b" : "#ffffff";
-  const badge = badgeFor(hex, ink);
+  const badge = contrastGrade(hex, ink);
   return `
     <div class="palette-swatch" style="background:${hex};color:${ink}" title="${role} · ${escapeHtml(hex)} · contrast ${badge.ratio.toFixed(1)}:1">
-      <span class="palette-swatch-badge">${badge.label}</span>
+      <span class="palette-swatch-badge">${GRADE_LABEL[badge.grade]}</span>
       <span class="palette-swatch-hex mono">${escapeHtml(hex)}</span>
     </div>`;
 }

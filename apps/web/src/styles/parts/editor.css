@@ -822,6 +822,55 @@ body.is-ads-edit [data-panel="layers"] {
 .panorama-section .block-label { margin-bottom: 0.5rem; }
 .panorama-section .btn:last-child { margin-bottom: 0; }
 
+.palette-wheel-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 0.75rem 0;
+}
+
+.palette-wheel {
+  width: 120px;
+  height: 120px;
+  flex: none;
+  border-radius: 50%;
+  position: relative;
+  cursor: crosshair;
+  touch-action: none;
+  background:
+    radial-gradient(circle at center, #fff 0%, rgba(255, 255, 255, 0) 100%),
+    conic-gradient(from 90deg, red, yellow, lime, cyan, blue, magenta, red);
+  box-shadow: inset 0 0 0 1px var(--line-strong);
+}
+
+.palette-wheel-pin {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--signal);
+  border: 3px solid #fff;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.35);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.wheel-lightness-label {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.76rem;
+  color: var(--paper-dim);
+}
+
+.wheel-lightness-label input[type="range"] {
+  accent-color: var(--signal);
+  cursor: pointer;
+}
+
 .palette {
   display: flex;
   gap: 0.4rem;
@@ -835,6 +884,19 @@ body.is-ads-edit [data-panel="layers"] {
   border: 1px solid var(--line-strong);
   cursor: pointer;
   position: relative;
+}
+
+.swatch-badge {
+  position: absolute;
+  bottom: 2px;
+  left: 0;
+  right: 0;
+  font-family: var(--font-mono);
+  font-size: 0.42rem;
+  font-weight: 700;
+  text-align: center;
+  letter-spacing: 0.02em;
+  opacity: 0.85;
 }
 
 .swatch.is-locked::after {

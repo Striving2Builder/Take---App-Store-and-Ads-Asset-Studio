@@ -7,7 +7,7 @@
 import { relativeLuminance, contrastRatio } from "./contrast-ink";
 
 type RGB = { r: number; g: number; b: number };
-type HSL = { h: number; s: number; l: number };
+export type HSL = { h: number; s: number; l: number };
 
 function hexToRgb(hex: string): RGB {
   const clean = hex.replace("#", "");
@@ -61,6 +61,14 @@ function hslToRgb({ h, s, l }: HSL): RGB {
 function fromHsl(hsl: HSL): string {
   return rgbToHex(hslToRgb(hsl));
 }
+
+/** Exported HSL round-trip — the palette wheel reads a swatch's real HSL
+ *  position and writes one back, using the exact same math this module's
+ *  own harmony generation runs on (no second conversion implementation). */
+export function hexToHsl(hex: string): HSL {
+  return rgbToHsl(hexToRgb(hex));
+}
+export const hslToHex = fromHsl;
 
 function withHsl(hex: string, patch: Partial<HSL>): string {
   const hsl = rgbToHsl(hexToRgb(hex));
