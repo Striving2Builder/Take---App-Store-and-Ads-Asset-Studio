@@ -104,7 +104,8 @@ function paintFlat(
   inset: { x: number; y: number; w: number; h: number },
   shot: HTMLCanvasElement | null,
   deviceId: string,
-  orientation: "portrait" | "landscape"
+  orientation: "portrait" | "landscape",
+  shellView: "front" | "back" = "front"
 ) {
   const device = getDevice(deviceId);
   const shell =
@@ -127,14 +128,20 @@ function paintFlat(
   ctx.save();
   roundRect(ctx, sx, sy, sw, sh, world.w * 0.08);
   ctx.clip();
-  if (shot) ctx.drawImage(shot, sx, sy, sw, sh);
-  else {
+  if (shellView === "back") {
+    // Real back panel is never the screenshot — a plain body-material fill,
+    // not a fabricated texture no catalog entry actually specifies.
+    ctx.fillStyle = "#1c1e24";
+    ctx.fillRect(sx, sy, sw, sh);
+  } else if (shot) {
+    ctx.drawImage(shot, sx, sy, sw, sh);
+  } else {
     ctx.fillStyle = "#0c0d10";
     ctx.fillRect(sx, sy, sw, sh);
   }
   ctx.restore();
   if (device && shell) {
-    paintShellChromeLocal(ctx, device, shell, world.w, world.h, x, y, inset);
+    paintShellChromeLocal(ctx, device, shell, world.w, world.h, x, y, inset, shellView);
   }
   ctx.restore();
 }
@@ -206,16 +213,18 @@ export async function paintDevice(
 ) {
   const id = deviceId || state.deviceId;
   const world = toWorldInstance(inst, sliceW, sliceH);
-  const imgUrl = shotUrlAt(inst.shotIndex);
-  const img = imgUrl ? await loadImg(imgUrl) : null;
   const instOrient = inst.orientation || recipeDefault || state.orientation;
   const inset = resolveMetrics(id, state.platform, instOrient).inset;
   const sw = world.w * inset.w;
   const sh = world.h * inset.h;
+  // Back view never shows the screenshot — skip the fetch/decode entirely.
+  const showBack = state.shellView === "back" && !hasPerspective(inst);
+  const imgUrl = showBack ? null : shotUrlAt(inst.shotIndex);
+  const img = imgUrl ? await loadImg(imgUrl) : null;
   const shot = await screenBitmap(img, sw, sh, inst.fit || "cover");
   if (hasPerspective(inst)) {
     paintProjected(ctx, inst, sliceW, sliceH, inset, shot, id, instOrient);
     return;
   }
-  paintFlat(ctx, world, inset, shot, id, instOrient);
+  paintFlat(ctx, world, inset, shot, id, instOrient, showBack ? "back" : "front");
 }
