@@ -316,9 +316,9 @@ export const TRUTH_MARKS: TruthMark[] = [
     place: "after",
   },
   {
-    sel: "#validation-card",
+    sel: "#export-checks",
     status: "real",
-    why: "Char/count checks; notes ZIP PNG count, catalog store WxH",
+    why: "Per-store (App Store/Google Play) char-limit + screenshot sizing checks, plus a Production card for ZIP/motion/panorama notes",
     place: "corner",
   },
 
