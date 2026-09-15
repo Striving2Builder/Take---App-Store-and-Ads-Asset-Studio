@@ -4,7 +4,7 @@
  *  lightness math, not picked from a lookup table — and every text-bearing
  *  pairing is checked against contrast-ink.ts's real WCAG luminance math
  *  and corrected if it fails, not just asserted to be fine. */
-import { relativeLuminance } from "./contrast-ink";
+import { relativeLuminance, contrastRatio } from "./contrast-ink";
 
 type RGB = { r: number; g: number; b: number };
 type HSL = { h: number; s: number; l: number };
@@ -69,14 +69,6 @@ function withHsl(hex: string, patch: Partial<HSL>): string {
 
 function clamp(v: number, min: number, max: number): number {
   return Math.min(max, Math.max(min, v));
-}
-
-function contrastRatio(a: string, b: string): number {
-  const l1 = relativeLuminance(a);
-  const l2 = relativeLuminance(b);
-  const lighter = Math.max(l1, l2);
-  const darker = Math.min(l1, l2);
-  return (lighter + 0.05) / (darker + 0.05);
 }
 
 /** Walk a color's lightness (keeping hue/saturation) toward the pole away

@@ -349,6 +349,12 @@ export const TRUTH_MARKS: TruthMark[] = [
     why: "Click the thumb to browse every slice. System cards are store-count canvases plus dual-store mobile geometry for the 20 refs (one card each; visible under Mobile / iOS / Android filters; Edit iOS|Android swaps the shell; photo plates empty until you drop an image). Use applies the look (or arms Wizard if you have not scanned).",
     place: "after",
   },
+  {
+    sel: "#palette-showcase",
+    status: "real",
+    why: "Real generatePalette() output + real WCAG contrast math per swatch (AAA/AA/AA·L/LOW). Seed is whichever brand color actually exists this session — scanned icon swatch, else the active project's accent, else the studio default — and the heading says which, rather than always claiming a scanned icon.",
+    place: "corner",
+  },
 ];
 
 export const TRUTH_LABEL: Record<TruthStatus, string> = {

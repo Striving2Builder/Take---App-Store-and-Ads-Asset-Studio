@@ -10,6 +10,15 @@ export function relativeLuminance(hex: string): number {
   return 0.2126 * lin(r) + 0.7152 * lin(g) + 0.0722 * lin(b);
 }
 
+/** WCAG contrast ratio between two hex colors, 1 (identical) – 21 (black/white). */
+export function contrastRatio(a: string, b: string): number {
+  const l1 = relativeLuminance(a);
+  const l2 = relativeLuminance(b);
+  const lighter = Math.max(l1, l2);
+  const darker = Math.min(l1, l2);
+  return (lighter + 0.05) / (darker + 0.05);
+}
+
 export type Ink = { text: string; dim: string; accent: string };
 
 const ON_DARK_BG: Ink = { text: "#f3f1ec", dim: "#c8c4bb", accent: "#3de0ff" };

@@ -34,8 +34,10 @@ import {
 } from "./library-filter";
 import { newLayoutFromLibrary, useLibraryRecipe } from "./library-use";
 import { openLibraryPreview } from "./library-preview";
+import { renderPaletteShowcase } from "./palette-showcase";
 
 export async function renderLibrary() {
+  renderPaletteShowcase();
   const all = listLayoutTemplates();
   const filtered = all.filter(
     (t) =>
