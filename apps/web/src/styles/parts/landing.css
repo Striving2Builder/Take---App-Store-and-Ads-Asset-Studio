@@ -47,11 +47,15 @@
 /* demo strip — illustrative only; the urlbar is a <span>, not a control */
 .demo {
   max-width: 1040px;
-  margin: 0 auto;
+  margin: 0 auto 4rem;
   display: flex;
   align-items: center;
   gap: 1.5rem;
-  padding-bottom: 4rem;
+  padding: 2.5rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background: var(--ink-2);
+  box-shadow: var(--shadow);
 }
 
 .demo-input {
@@ -171,8 +175,8 @@
   grid-template-columns: repeat(3, 1fr);
   gap: 2rem;
 }
-.step { text-align: center; }
-.step-n {
+.step { text-align: left; }
+.step-icn {
   width: 40px;
   height: 40px;
   border-radius: var(--radius-md);
@@ -181,8 +185,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-weight: 800;
-  margin: 0 auto 1rem;
+  margin: 0 0 1rem;
 }
 .step h3 { margin: 0 0 0.4rem; font-size: 1rem; font-weight: 800; color: var(--paper); }
 .step p { margin: 0; font-size: 0.86rem; color: var(--paper-dim); line-height: 1.55; }
