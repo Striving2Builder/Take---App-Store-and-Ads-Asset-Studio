@@ -21,10 +21,12 @@ function totalMs(): number {
   return frames.reduce((n, f) => n + frameDwellMs(f.dwellMs, frames.length), 0);
 }
 
-/** Filmstrip storyboard row — one dwell input per real frame, aligned under
- *  the generic #frame-list buttons above it (same order, same min-width).
- *  data-plugin-frame matches those buttons' convention so the shared
- *  syncModePluginHighlights() keeps both rows' active state in sync. */
+/** Filmstrip storyboard row — matches the mockup's single beat-thumbnail
+ *  row (role label baked into the thumb, dwell input below it) instead of
+ *  a generic frame-num row plus a separate dwell-only row. Each beat is a
+ *  real <button> (keyboard-reachable), matching data-plugin-frame so the
+ *  shared syncModePluginHighlights() keeps it in sync with any other
+ *  frame-jump control. */
 function storyboardRowHtml(): string {
   const set = currentSet();
   const frames = set?.frames || [];
@@ -32,9 +34,15 @@ function storyboardRowHtml(): string {
   const items = frames
     .map((f, i) => {
       const ms = frameDwellMs(f.dwellMs, frames.length);
-      return `<div class="story-dwell${i === state.activeFrame ? " is-active" : ""}" data-plugin-frame="${i}" title="${escapeHtml(f.kicker || f.role)}">
-        <input type="number" min="400" step="100" value="${ms}" data-dwell="${i}" aria-label="Dwell ms for ${escapeHtml(f.kicker || f.role)}" />
-        <span class="mono">ms</span>
+      const label = f.kicker || roleLabel(f.role);
+      return `<div class="beat${i === state.activeFrame ? " is-active" : ""}">
+        <button type="button" class="beat-thumb" data-plugin-frame="${i}" aria-label="Jump to ${escapeHtml(label)}">
+          <span class="role">${escapeHtml(roleLabel(f.role))}</span>
+        </button>
+        <label class="dwell-input">
+          <input type="number" min="0.4" step="0.1" value="${(ms / 1000).toFixed(1)}" data-dwell="${i}" aria-label="Dwell seconds for ${escapeHtml(label)}" />
+          <span>s</span>
+        </label>
       </div>`;
     })
     .join("");
@@ -45,7 +53,7 @@ function storyboardRowHtml(): string {
       <button type="button" class="icon-btn" data-slide-stop title="Stop"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="6" width="12" height="12"/></svg></button>
       <span class="story-total mono">Total ~${sec}s · min 0.4s per beat</span>
     </div>
-    <div class="story-dwell-row">${items}</div>
+    <div class="story-beat-row">${items}</div>
   `;
 }
 
@@ -102,15 +110,15 @@ export const slideshowFilmstripPlugin: ModeEditorPlugin = {
         const i = Number(el.dataset.dwell);
         const set = currentSet();
         if (!set?.frames[i]) return;
-        const v = Math.max(400, Number(el.value) || 2000);
-        set.frames[i].dwellMs = v;
+        const seconds = Math.max(0.4, Number(el.value) || 2);
+        set.frames[i].dwellMs = Math.round(seconds * 1000);
+        el.value = seconds.toFixed(1);
         const total = host.querySelector(".story-total");
         if (total) total.textContent = `Total ~${(totalMs() / 1000).toFixed(1)}s · min 0.4s per beat`;
       });
     });
-    host.querySelectorAll<HTMLElement>(".story-dwell").forEach((el) => {
-      el.addEventListener("click", (e) => {
-        if ((e.target as HTMLElement).tagName === "INPUT") return;
+    host.querySelectorAll<HTMLButtonElement>(".beat-thumb").forEach((el) => {
+      el.addEventListener("click", () => {
         const i = Number(el.dataset.pluginFrame);
         if (!Number.isNaN(i)) jumpTo(i);
       });

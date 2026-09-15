@@ -182,14 +182,22 @@ export async function renderAdsFocusedPreview(host: HTMLElement): Promise<void> 
  *  single preview, when it already has one. Not a selection change. */
 export function bindAdsRailFocus(host: ParentNode, onFocus: () => void): void {
   host.querySelectorAll<HTMLElement>(".ads-unit-row").forEach((row) => {
-    const info = row.querySelector(".ads-unit-focus-hit");
-    info?.addEventListener("click", () => {
+    const info = row.querySelector<HTMLElement>(".ads-unit-focus-hit");
+    if (!info) return;
+    const focus = () => {
       const id = row.querySelector("input")?.value;
       const frames = currentSet()?.frames || [];
       const i = frames.findIndex((f) => f.adUnitId === id);
       if (i === -1) return;
       state.activeFrame = i;
       onFocus();
+    };
+    info.addEventListener("click", focus);
+    info.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        focus();
+      }
     });
   });
 }
@@ -210,7 +218,7 @@ export function unitCheckboxesHtml(): string {
             return `<label class="ads-unit-check">
               <span class="ads-unit-row${u.id === focusedUnitId ? " is-focused" : ""}">
                 <input type="checkbox" value="${u.id}"${selected.has(u.id) ? " checked" : ""} />
-                <span class="ads-unit-focus-hit">
+                <span class="ads-unit-focus-hit" role="button" tabindex="0" aria-label="Preview ${escapeHtml(u.label)}">
                   <span>${escapeHtml(u.label)}</span>
                   <em class="mono">${u.exportPx.w}×${u.exportPx.h}</em>
                 </span>

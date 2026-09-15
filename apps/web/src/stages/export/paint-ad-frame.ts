@@ -191,6 +191,10 @@ export type AdOverlayInput = {
   copy: AdCopy;
   logo: HTMLImageElement | HTMLCanvasElement | null;
   palette: string[];
+  /** True when a real photo/video frame fills the background — overlay text
+   *  then needs to sit on light (paper) instead of the mockup's plain white
+   *  IAB-card convention, which assumes dark text on no photo underneath. */
+  hasBackgroundImage?: boolean;
 };
 
 /** Paints every non-image zone (panel/logo/headline/body/cta/legal/badge) onto whatever's
@@ -198,16 +202,31 @@ export type AdOverlayInput = {
  *  Shared by paintAdFrame (static PNG) and the video overlay window (ad-video-export.ts) so
  *  the end-card chrome is pixel-identical between the two, not two divergent implementations. */
 export function paintAdOverlayZones(ctx: CanvasRenderingContext2D, input: AdOverlayInput): void {
-  const { size, wireframe, copy, logo, palette } = input;
+  const { size, wireframe, copy, logo, palette, hasBackgroundImage } = input;
   const ink = "#0c0d10";
   const paper = "#f3f1ec";
   const accent = palette[0] || "#ff4d1a";
   const warn = "#e8b34a";
   const dim = "rgba(12,13,16,0.62)";
 
+  const contains = (outer: AdZone, inner: AdZone) =>
+    inner.x >= outer.x - 0.01 &&
+    inner.y >= outer.y - 0.01 &&
+    inner.x + inner.w <= outer.x + outer.w + 0.01 &&
+    inner.y + inner.h <= outer.y + outer.h + 0.01;
+
   const panels = wireframe.zones.filter((z) => z.kind === "panel");
-  const onPanel = (z: AdZone) =>
-    panels.some((p) => z.x >= p.x - 0.01 && z.y >= p.y - 0.01 && z.x + z.w <= p.x + p.w + 0.01 && z.y + z.h <= p.y + p.h + 0.01);
+  const onPanel = (z: AdZone) => panels.some((p) => contains(p, z));
+  // A real photo only sits behind a text zone that's actually inside its
+  // own image zone — a small accent image elsewhere on the card (e.g. the
+  // "image + bottom-right CTA" pattern) doesn't make the headline area a
+  // photo background too, so this can't be a single card-wide flag.
+  const imageZones = hasBackgroundImage ? wireframe.zones.filter((z) => z.kind === "image") : [];
+  const onImage = (z: AdZone) => imageZones.some((iz) => contains(iz, z));
+  // A real IAB display card is white by default — dark text unless a real
+  // photo/video is actually behind this specific zone (or an explicit
+  // panel zone says so).
+  const onLight = (z: AdZone) => onPanel(z) || !onImage(z);
 
   for (const z of wireframe.zones) {
     switch (z.kind) {
@@ -222,14 +241,14 @@ export function paintAdOverlayZones(ctx: CanvasRenderingContext2D, input: AdOver
       case "headline":
         paintTextZone(ctx, z, size.w, size.h, copy.headline, {
           weight: 700,
-          color: onPanel(z) ? ink : paper,
+          color: onLight(z) ? ink : paper,
           sizeFrac: 0.4,
         });
         break;
       case "body":
         paintTextZone(ctx, z, size.w, size.h, copy.description, {
           weight: 400,
-          color: onPanel(z) ? dim : "rgba(243,241,236,0.78)",
+          color: onLight(z) ? dim : "rgba(243,241,236,0.78)",
           sizeFrac: 0.3,
           dim: true,
         });
@@ -240,7 +259,7 @@ export function paintAdOverlayZones(ctx: CanvasRenderingContext2D, input: AdOver
       case "legal":
         paintTextZone(ctx, z, size.w, size.h, copy.legalLine, {
           weight: 400,
-          color: onPanel(z) ? dim : "rgba(243,241,236,0.7)",
+          color: onLight(z) ? dim : "rgba(243,241,236,0.7)",
           sizeFrac: 0.6,
           dim: true,
         });
@@ -262,12 +281,15 @@ export function paintAdFrame(canvas: HTMLCanvasElement, input: PaintAdFrameInput
   if (!ctx) return;
   applyHighQualitySmoothing(ctx);
 
-  const fallbackBg = palette[1] || "#1e2129";
+  // Real IAB display convention (and the approved mockup): a plain white
+  // card by default, not a branded-color block — the accent stays reserved
+  // for the CTA/logo. Only a real uploaded photo replaces this white base.
+  const fallbackBg = "#ffffff";
   ctx.fillStyle = fallbackBg;
   ctx.fillRect(0, 0, size.w, size.h);
 
   for (const z of wireframe.zones) {
     if (z.kind === "image") paintImageZone(ctx, z, size.w, size.h, image, fallbackBg);
   }
-  paintAdOverlayZones(ctx, { size, wireframe, copy, logo, palette });
+  paintAdOverlayZones(ctx, { size, wireframe, copy, logo, palette, hasBackgroundImage: !!image });
 }

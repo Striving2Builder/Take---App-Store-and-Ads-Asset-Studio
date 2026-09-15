@@ -83,7 +83,7 @@ export async function recordAdVideo(
   const draw = () => {
     paintVideoFrameIntoZones(ctx, wireframe, unit.exportPx, video);
     if (video.currentTime * 1000 >= targetMs - overlayWindowMs) {
-      paintAdOverlayZones(ctx, { size: unit.exportPx, wireframe, copy, logo, palette });
+      paintAdOverlayZones(ctx, { size: unit.exportPx, wireframe, copy, logo, palette, hasBackgroundImage: true });
     }
     raf = requestAnimationFrame(draw);
   };

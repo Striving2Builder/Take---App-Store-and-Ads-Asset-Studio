@@ -81,5 +81,18 @@ export function syncModePluginHighlights(): void {
     compRows.forEach((el) => {
       el.classList.toggle("is-active", Number(el.dataset.compSource) === activeSource);
     });
+    // Replicator's compare-block: keep the "{Competitor} · structure" lane
+    // label and role tag in sync with the active frame too, not just the
+    // rail's own row highlight — same active-row's real name, read straight
+    // back off its own DOM rather than re-importing competitor-beats here.
+    const activeRow = document.querySelector<HTMLElement>(`[data-comp-source="${activeSource}"]`);
+    const activeName = activeRow?.querySelector(".name")?.textContent;
+    const laneLabel = document.querySelector<HTMLElement>(".compare-lane-label");
+    if (laneLabel && activeName) laneLabel.textContent = `${activeName} · structure`;
+  }
+  const roleTag = document.querySelector<HTMLElement>("[data-role-tag] .role-tag");
+  if (roleTag) {
+    const frame = currentSet()?.frames[state.activeFrame];
+    if (frame) roleTag.textContent = frame.kicker || frame.role;
   }
 }

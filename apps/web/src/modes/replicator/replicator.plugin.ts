@@ -1,11 +1,41 @@
 /** OWNER: modes/replicator — competitor rail + role-cycle reference (labels only, never competitor pixels) */
 import type { ModeEditorPlugin } from "@take/modes-sdk";
 import { currentSet, state } from "../../app/app-state";
+import { $ } from "../../shared/dom";
 import { escapeHtml } from "../../shared/escape";
 import { renderEditor, roleLabel, syncFrameFromDom } from "../../editor/canvas/edit-canvas";
 import { syncModePluginHighlights } from "../mode-plugins";
 import { competitorBeatsFromPack, type CompetitorBeat } from "./competitor-beats";
 import { TRACE_ROLES } from "./replicator-builder";
+
+/** The abstract "Competitor · structure" lane next to the real canvas —
+ *  labels only (role tag + generic proportion bars), never a real
+ *  competitor screenshot. Real content: the active frame's own kicker and
+ *  which competitor its beat currently cycles to. */
+function renderCompareBlock(): void {
+  const host = $("#replicator-compare-block") as HTMLElement | null;
+  if (!host) return;
+  const beats = competitorBeatsFromPack(state.lastPack);
+  const frames = currentSet()?.frames || [];
+  const frame = frames[state.activeFrame];
+  if (!beats.length || !frame) {
+    host.hidden = true;
+    return;
+  }
+  host.hidden = false;
+  const label = beats[state.activeFrame % beats.length]?.label || "Competitor";
+  host.innerHTML = `
+    <div class="compare-lane">
+      <span class="compare-lane-label">${escapeHtml(label)} · structure</span>
+      <div class="compare-block" data-role-tag>
+        <span class="role-tag">${escapeHtml(frame.kicker || roleLabel(frame.role))}</span>
+        <div class="bar w60"></div>
+        <div class="bar w40"></div>
+      </div>
+    </div>
+    <span class="compare-vs">vs</span>
+  `;
+}
 
 function jumpTo(i: number) {
   syncFrameFromDom();
@@ -23,6 +53,7 @@ export const replicatorRailPlugin: ModeEditorPlugin = {
   title: "Competitor sources",
   slot: "rail",
   render(host) {
+    renderCompareBlock();
     const beats = competitorBeatsFromPack(state.lastPack);
     const frames = currentSet()?.frames || [];
     if (!beats.length) {
@@ -33,13 +64,13 @@ export const replicatorRailPlugin: ModeEditorPlugin = {
     const rows = beats
       .map((b: CompetitorBeat, i) => {
         const initial = (b.label.trim()[0] || "?").toUpperCase();
-        return `<div class="comp-row${i === activeBeatIndex ? " is-active" : ""}" data-comp-source="${i}">
+        return `<button type="button" class="comp-row${i === activeBeatIndex ? " is-active" : ""}" data-comp-source="${i}">
           <span class="comp-avatar">${escapeHtml(initial)}</span>
           <span class="comp-info">
             <span class="name">${escapeHtml(b.label)}</span>
             <span class="n mono">${b.screenshotCount} screenshot${b.screenshotCount === 1 ? "" : "s"} scanned</span>
           </span>
-        </div>`;
+        </button>`;
       })
       .join("");
     const totalShots = beats.reduce((n, b) => n + b.screenshotCount, 0);
