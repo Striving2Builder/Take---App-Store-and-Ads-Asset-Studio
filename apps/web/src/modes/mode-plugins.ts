@@ -1,6 +1,6 @@
 /** OWNER: modes — mount CreationMode plugins into Review / Edit slots */
 import { getMode } from "@take/modes-sdk";
-import { state } from "../app/app-state";
+import { currentSet, state } from "../app/app-state";
 import { $ } from "../shared/dom";
 import { applyExportHints } from "./apply-export-hints";
 
@@ -52,6 +52,10 @@ export function mountModePlugins(): void {
     "#frame-filmstrip-plugin",
     plugins.filter((p) => p.slot === "filmstrip")
   );
+  fillSlot(
+    "#replicator-comp-rail",
+    plugins.filter((p) => p.slot === "rail")
+  );
   updateModeChrome();
   applyExportHints();
 }
@@ -61,4 +65,21 @@ export function syncModePluginHighlights(): void {
     const i = Number((el as HTMLElement).dataset.pluginFrame);
     el.classList.toggle("is-active", i === state.activeFrame);
   });
+  // Role-cycle chips (Replicator's TRACE_ROLES, or any future mode reusing
+  // the pattern): highlight by the active frame's own real .role field,
+  // not a fixed frame index — several frames can share one role chip.
+  const activeRole = currentSet()?.frames[state.activeFrame]?.role;
+  document.querySelectorAll<HTMLElement>("[data-role-chip]").forEach((el) => {
+    el.classList.toggle("is-active", el.dataset.roleChip === activeRole);
+  });
+  // Replicator's competitor rail: same i % sourceCount cycle the rail's own
+  // render used to assign each frame to a source — recomputed from the real
+  // row count already on the page, no mode-specific import needed here.
+  const compRows = document.querySelectorAll<HTMLElement>("[data-comp-source]");
+  if (compRows.length) {
+    const activeSource = state.activeFrame % compRows.length;
+    compRows.forEach((el) => {
+      el.classList.toggle("is-active", Number(el.dataset.compSource) === activeSource);
+    });
+  }
 }

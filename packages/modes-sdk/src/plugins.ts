@@ -1,6 +1,6 @@
 /** OWNER: packages/modes-sdk — editor plugin + export hint types */
 
-export type ModeEditorSlot = "review" | "inspector" | "filmstrip";
+export type ModeEditorSlot = "review" | "inspector" | "filmstrip" | "rail";
 
 export type ModeEditorPlugin = {
   id: string;

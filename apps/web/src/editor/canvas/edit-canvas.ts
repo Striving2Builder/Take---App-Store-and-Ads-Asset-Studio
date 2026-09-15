@@ -130,6 +130,9 @@ async function syncLayoutStage() {
   phone.hidden = true;
 
   document.body.classList.toggle("is-ads-edit", state.mode === "ads");
+  document.body.classList.toggle("is-replicator-edit", state.mode === "replicator");
+  const constraintBar = $("#replicator-constraint-bar") as HTMLElement | null;
+  if (constraintBar) constraintBar.hidden = state.mode !== "replicator";
 
   if (state.mode === "ads") {
     stage.hidden = true;

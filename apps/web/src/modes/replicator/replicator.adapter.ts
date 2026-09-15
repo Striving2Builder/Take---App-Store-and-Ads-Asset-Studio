@@ -2,7 +2,7 @@
 import type { CreationMode } from "@take/modes-sdk";
 import { scanApp } from "@take/scan-client";
 import { buildReplicatorSets } from "./replicator-builder";
-import { replicatorInspectorPlugin, replicatorReviewPlugin } from "./replicator.plugin";
+import { replicatorInspectorPlugin, replicatorRailPlugin, replicatorReviewPlugin } from "./replicator.plugin";
 
 export const replicatorMode: CreationMode = {
   id: "replicator",
@@ -29,6 +29,6 @@ export const replicatorMode: CreationMode = {
     });
     return { inference: { ...brief, mode: "replicator" }, sets };
   },
-  getEditorPlugins: () => [replicatorReviewPlugin, replicatorInspectorPlugin],
+  getEditorPlugins: () => [replicatorReviewPlugin, replicatorInspectorPlugin, replicatorRailPlugin],
   getExportHints: () => ({}),
 };
