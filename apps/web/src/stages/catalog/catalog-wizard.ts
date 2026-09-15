@@ -32,6 +32,27 @@ import {
 
 const QUEUE_KEY = "take.catalog.review-queue";
 
+const IOS_BADGE_ICON =
+  '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="7" y="2" width="10" height="20" rx="2.5"/></svg>';
+const ANDROID_BADGE_ICON =
+  '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4.5 8.5 12 4l7.5 4.5v7L12 20l-7.5-4.5z"/></svg>';
+
+/** A device silhouette scaled to the real shellPx aspect ratio — not a
+ *  stock image, the box's own proportions are the real device geometry. */
+function deviceShapeHtml(d: DeviceProfile): string {
+  const w = d.shellPx?.w || 1;
+  const h = d.shellPx?.h || 1;
+  const maxH = 84;
+  const aspect = w / h;
+  const shapeH = maxH;
+  const shapeW = Math.max(18, Math.round(shapeH * aspect));
+  const badge = d.platform === "android" ? ANDROID_BADGE_ICON : IOS_BADGE_ICON;
+  return `<div class="catalog-shape-wrap">
+    <span class="catalog-plat-badge">${badge}</span>
+    <div class="catalog-shape" style="width:${shapeW}px;height:${shapeH}px"></div>
+  </div>`;
+}
+
 function loadQueue(): DeviceProposal[] {
   try {
     const raw = JSON.parse(localStorage.getItem(QUEUE_KEY) || "[]") as unknown;
@@ -81,8 +102,9 @@ function renderCatalogNow() {
       const confidence = sourceConfidenceOf(d.source);
       const inherit = inheritNote(d.source);
       return `<li class="catalog-device-card is-${confidence}">
+        ${deviceShapeHtml(d)}
         <span class="catalog-device-family mono">${escapeHtml(familyLabel(d))}</span>
-        ${confidence === "inherited" ? `<span class="catalog-confidence-badge" title="${escapeHtml(inherit || "Uses an existing device frame")}">INHERITED</span>` : ""}
+        ${confidence === "inherited" ? `<span class="catalog-confidence-badge" title="${escapeHtml(inherit || "Uses an existing device frame")}">INHERITED</span>` : `<span class="catalog-confidence-badge is-measured">MEASURED</span>`}
         <strong>${escapeHtml(d.name)}</strong>
         <span class="catalog-device-size">${escapeHtml(sizeLine(d))}</span>
         ${inherit ? `<span class="catalog-device-note">${escapeHtml(inherit)}</span>` : ""}

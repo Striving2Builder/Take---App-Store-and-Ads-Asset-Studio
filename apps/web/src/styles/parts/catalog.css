@@ -51,6 +51,63 @@
   color: var(--paper-dim);
 }
 
+.catalog-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.1rem;
+  margin: -0.25rem 0 0.85rem;
+}
+
+.catalog-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.76rem;
+  color: var(--paper-dim);
+}
+
+.catalog-legend-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex: none;
+}
+.catalog-legend-dot.is-measured { background: var(--good); }
+.catalog-legend-dot.is-inherited { background: transparent; border: 1.5px dashed var(--paper-dim); }
+
+.catalog-shape-wrap {
+  height: 96px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--ink-3);
+  border-radius: var(--radius-sm);
+  position: relative;
+}
+
+.catalog-shape {
+  background: var(--ink-2);
+  border: 1.5px solid var(--line-strong);
+  border-radius: 10px;
+}
+
+.catalog-device-card.is-inherited .catalog-shape { border-style: dashed; }
+
+.catalog-plat-badge {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  width: 20px;
+  height: 20px;
+  border-radius: 5px;
+  background: var(--ink-2);
+  color: var(--paper-dim);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+}
+
 .catalog-now,
 .catalog-proposal-list {
   list-style: none;
@@ -91,6 +148,11 @@
   font-size: 0.6rem;
   letter-spacing: 0.04em;
   color: var(--warn);
+}
+
+.catalog-confidence-badge.is-measured {
+  border-color: var(--good);
+  color: var(--good);
 }
 
 .catalog-device-family {
