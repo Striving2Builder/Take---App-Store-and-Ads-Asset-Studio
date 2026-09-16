@@ -94,6 +94,12 @@ export const TRUTH_MARKS: TruthMark[] = [
     place: "after",
   },
   {
+    sel: "#edit-font-display, #edit-font-body",
+    status: "partial",
+    why: "Real font pick — changes the live DOM preview (headline/caption font-family) AND the actual exported PNG canvas (frame-render.ts + paint-strip-slice.ts both load and use the chosen webfont), not preview-only. Marked partial because it only covers the isolated/strip composition path: Ads-mode unit frames and widget/copy-marks extras still use their own separate hardcoded fonts, untouched by this control.",
+    place: "after",
+  },
+  {
     sel: "#upload-strip",
     status: "partial",
     why: "Uploads merge into asset bin + palette + canvas; not full CV analysis",

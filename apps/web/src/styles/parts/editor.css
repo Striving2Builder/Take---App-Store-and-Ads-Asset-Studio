@@ -657,7 +657,7 @@ body.is-ads-edit [data-panel="layers"] {
 
 .shot-headline {
   margin: 0;
-  font-family: var(--font-display);
+  font-family: var(--project-font-display, var(--font-display));
   font-weight: 800;
   font-size: 1.35rem;
   line-height: 1.1;
@@ -701,6 +701,7 @@ body.is-ads-edit [data-panel="layers"] {
 
 .shot-caption {
   margin: 0;
+  font-family: var(--project-font-body, var(--font-body));
   font-size: 0.85rem;
   color: var(--slice-ink-dim, var(--paper-dim));
   outline: none;
@@ -718,6 +719,38 @@ body.is-ads-edit [data-panel="layers"] {
   font-weight: 700;
   font-size: 1.05rem;
   margin: 0 0 0.5rem;
+}
+
+.panel-divider {
+  border: none;
+  border-top: 1px solid var(--line);
+  margin: 1.1rem 0;
+}
+
+.panel-subhead {
+  margin: 0 0 0.5rem;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--paper-dim);
+}
+
+.type-preview {
+  margin: 0.5rem 0 1rem;
+  padding: 0.65rem 0.8rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--ink-3);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--paper);
+}
+
+#type-preview-body {
+  font-weight: 500;
+  font-size: 0.88rem;
 }
 
 .meta-fields {

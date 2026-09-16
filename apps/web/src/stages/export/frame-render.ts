@@ -7,6 +7,7 @@ import { loadImg, wrapText } from "./canvas-text";
 import { scanIconUrl, shotUrlAt } from "./selected-shots";
 import { paintStripSlice, stripRecipeOfSet } from "./paint-strip-slice";
 import { applyHighQualitySmoothing } from "../../shared/canvas-quality";
+import { ensureFontsLoaded, fontStack } from "../../shared/typography";
 
 /** Current catalog export size for the selected device + orientation. */
 export function currentExportSize(): { w: number; h: number } {
@@ -33,6 +34,15 @@ export async function paintExportFrame(
   const ctx = canvas.getContext("2d");
   if (!ctx) return false;
   applyHighQualitySmoothing(ctx);
+
+  // Only override the app's own historical per-role defaults (headline/CTA
+  // system-ui, caption Georgia serif) once a set actually has a real
+  // typography pick — an untouched set must render pixel-identically to
+  // before this feature existed.
+  const typography = set.typography;
+  if (typography) await ensureFontsLoaded([typography.display, typography.body]);
+  const displayFace = typography ? fontStack(typography.display) : "system-ui, sans-serif";
+  const bodyFace = typography ? fontStack(typography.body) : "Georgia, serif";
 
   const accent = set.palette[0] || "#ff4d1a";
   const bg = set.palette[1] || "#0c0d10";
@@ -69,7 +79,7 @@ export async function paintExportFrame(
   ctx.fillText(frame.kicker.slice(0, 48), padX, Math.round(400 * (EXPORT_H / 2796)));
 
   ctx.fillStyle = "#f3f1ec";
-  ctx.font = `700 ${Math.round(72 * scale)}px system-ui, sans-serif`;
+  ctx.font = `700 ${Math.round(72 * scale)}px ${displayFace}`;
   wrapText(
     ctx,
     frame.headline,
@@ -80,7 +90,7 @@ export async function paintExportFrame(
   );
 
   ctx.fillStyle = "#c8c4bb";
-  ctx.font = `400 ${Math.round(40 * scale)}px Georgia, serif`;
+  ctx.font = `400 ${Math.round(40 * scale)}px ${bodyFace}`;
   wrapText(
     ctx,
     frame.caption,
@@ -97,7 +107,7 @@ export async function paintExportFrame(
   ctx.fillStyle = accent;
   ctx.fillRect(padX, ctaY, ctaW, ctaH);
   ctx.fillStyle = "#0c0d10";
-  ctx.font = `700 ${Math.round(36 * scale)}px system-ui, sans-serif`;
+  ctx.font = `700 ${Math.round(36 * scale)}px ${bodyFace}`;
   ctx.fillText(cta, padX + Math.round(24 * scale), ctaY + Math.round(62 * scale));
 
   return true;

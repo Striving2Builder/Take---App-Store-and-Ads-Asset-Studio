@@ -22,4 +22,8 @@ export type ProjectSet = {
   };
   /** Ads mode: one message across N ad units (see StoryFrame.adUnitId) — not App Store/Play metadata */
   adCopy?: AdCopy;
+  /** Display/body font pairing — applied to headline+kicker (display) and
+   *  caption+CTA (body) in both the live DOM preview and the PNG export
+   *  canvas. Absent means the app's own default stack (Manrope/system-ui). */
+  typography?: { display: string; body: string };
 };
