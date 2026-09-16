@@ -753,6 +753,47 @@ body.is-ads-edit [data-panel="layers"] {
   font-size: 0.88rem;
 }
 
+.kit-card {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.65rem 0.75rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  margin: 0.5rem 0 0.65rem;
+}
+
+.kit-mark {
+  width: 34px;
+  height: 34px;
+  border-radius: var(--radius-sm);
+  flex: none;
+  background: linear-gradient(155deg, var(--signal), color-mix(in srgb, var(--signal) 60%, #7b2fd6));
+  background-size: cover;
+  background-position: center;
+}
+
+.kit-info { min-width: 0; }
+.kit-info .name {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.84rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.kit-info .meta {
+  font-size: 0.66rem;
+  color: var(--paper-dim);
+}
+
+.kit-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+.kit-actions .btn { flex: 1; }
+
 .meta-fields {
   display: flex;
   flex-direction: column;

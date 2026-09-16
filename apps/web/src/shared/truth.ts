@@ -100,6 +100,12 @@ export const TRUTH_MARKS: TruthMark[] = [
     place: "after",
   },
   {
+    sel: "#btn-save-brand-kit, #btn-apply-brand-kit",
+    status: "real",
+    why: "A real localStorage-backed record (packages/storage's brand-kit.repo, independent of any project) — Save captures the active set's real palette + typography, Apply writes them onto whichever set is open, in any project. Live-verified end to end across two separate freshly-generated projects in the same browser: save in project A, reload to project B, Apply genuinely changed B's accent color and headline font to match A's saved kit. Logo is only saved when the scanned icon's URL is durable (http(s) or data:) — a blob: URL is session-scoped and would render broken after reload, so it's honestly left out (kit card shows \"0 logo\") rather than stored as a link that's guaranteed to break.",
+    place: "after",
+  },
+  {
     sel: "#export-format-png, #export-format-video",
     status: "real",
     why: "Video wires set.exportFormat into runExport()'s real wantMotion check, verified live in Wizard mode (which has no motion export by default) — the Export screen's Production card genuinely switches to reporting a real MediaRecorder motion file once Video is picked. recordSlideshowVideo is mode-agnostic under the hood (currentSet().frames + paintExportFrame, no Slideshow-only state) despite its name. PNG ZIP is never skipped either way — this sets which format Export emphasizes, not an exclusive choice.",

@@ -5,4 +5,5 @@ export const STORAGE_KEYS = {
   history: "take.history.v1",
   scanSession: "take.scan-session.v1",
   exportPresets: "take.export-presets.v1",
+  brandKit: "take.brand-kit.v1",
 } as const;

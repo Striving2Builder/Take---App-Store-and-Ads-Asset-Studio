@@ -20,6 +20,7 @@ import { syncPaletteWheel } from "../inspectors/palette-wheel";
 import { syncTypographyInspector } from "../inspectors/typography-inspector";
 import { syncRenderModeControl } from "../inspectors/render-mode";
 import { syncExportFormatControl } from "../inspectors/export-format-inspector";
+import { syncBrandKitCard } from "../inspectors/brand-kit-inspector";
 import { goalCta } from "../../modes/wizard/copy-builder";
 import { pickHeadline } from "../../modes/wizard/frames-builder";
 import { toast } from "../../shell/toast";
@@ -105,6 +106,7 @@ export function renderEditor() {
   syncTypographyInspector();
   syncRenderModeControl();
   syncExportFormatControl();
+  syncBrandKitCard();
   refreshScanPaletteSlot();
   const styleSel = $("#edit-style") as HTMLSelectElement | null;
   if (styleSel) styleSel.value = set.style;
