@@ -100,6 +100,12 @@ export const TRUTH_MARKS: TruthMark[] = [
     place: "after",
   },
   {
+    sel: "#export-format-png, #export-format-video",
+    status: "real",
+    why: "Video wires set.exportFormat into runExport()'s real wantMotion check, verified live in Wizard mode (which has no motion export by default) — the Export screen's Production card genuinely switches to reporting a real MediaRecorder motion file once Video is picked. recordSlideshowVideo is mode-agnostic under the hood (currentSet().frames + paintExportFrame, no Slideshow-only state) despite its name. PNG ZIP is never skipped either way — this sets which format Export emphasizes, not an exclusive choice.",
+    place: "after",
+  },
+  {
     sel: "#edit-font-display, #edit-font-body",
     status: "partial",
     why: "Real font pick — changes the live DOM preview (headline/caption font-family) AND the actual exported PNG canvas (frame-render.ts + paint-strip-slice.ts both load and use the chosen webfont), not preview-only. Marked partial because it only covers the isolated/strip composition path: Ads-mode unit frames and widget/copy-marks extras still use their own separate hardcoded fonts, untouched by this control.",

@@ -641,6 +641,14 @@
             <button type="button" id="render-mode-3d" class="fit-mode-btn" aria-pressed="false">3D</button>
           </div>
           <p class="hint tight">3D gives every device in this set a real yaw + depth (the same perspective render authored "yaw" templates use) — 2D keeps the flat, direct-facing shell.</p>
+
+          <hr class="panel-divider" />
+          <h4 class="panel-subhead">Default export format</h4>
+          <div class="fit-mode-control" role="radiogroup" aria-label="Default export format">
+            <button type="button" id="export-format-png" class="fit-mode-btn is-active" aria-pressed="true">PNG</button>
+            <button type="button" id="export-format-video" class="fit-mode-btn" aria-pressed="false">Video</button>
+          </div>
+          <p class="hint tight">Video adds a real recorded motion file to Export, on top of the PNG ZIP (never skipped) — the other format is always still one click away there.</p>
         </div>
         <div class="panel" data-panel-view="mode" hidden>
           <h3 class="inspector-title" id="mode-inspector-title">Mode</h3>

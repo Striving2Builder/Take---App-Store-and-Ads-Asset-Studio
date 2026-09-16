@@ -30,4 +30,10 @@ export type ProjectSet = {
    *  gets a real yaw/depth (paintProjected's perspective path); false/absent
    *  = flat (paintFlat), the app's original behavior. */
   render3d?: boolean;
+  /** Default export format preference — "video" adds a real MediaRecorder
+   *  motion file to what Export produces (recordSlideshowVideo is mode-
+   *  agnostic under the hood) even for modes that don't otherwise trigger
+   *  motion. The PNG ZIP is never skipped either way — this sets emphasis,
+   *  not an exclusive choice, matching Export's real one-button flow. */
+  exportFormat?: "png" | "video";
 };

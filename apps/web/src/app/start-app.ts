@@ -29,6 +29,7 @@ import { bindStyleInspector } from "../editor/inspectors/style-inspector";
 import { bindPaletteWheel } from "../editor/inspectors/palette-wheel";
 import { bindTypographyInspector } from "../editor/inspectors/typography-inspector";
 import { bindRenderModeControl } from "../editor/inspectors/render-mode";
+import { bindExportFormatControl } from "../editor/inspectors/export-format-inspector";
 import { bindLayoutDrag, onLayoutSelection } from "../editor/layout/layout-drag";
 import { ensureSetRecipe } from "../editor/layout/attach-recipe";
 import { addCopyOrVisual, applyPanoramaFromPicker, bindChromeExtras, bindElementsList, renderElementsList } from "../editor/inspectors/layers-inspector";
@@ -301,6 +302,7 @@ export function startApp() {
   bindPaletteWheel();
   bindTypographyInspector();
   bindRenderModeControl();
+  bindExportFormatControl();
   bindScanReceiptTabs();
   bindLayoutDrag();
   onLayoutSelection(() => {

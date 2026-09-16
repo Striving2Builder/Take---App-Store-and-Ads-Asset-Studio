@@ -172,7 +172,8 @@ export async function renderValidation() {
   const wantsMotion =
     hints.preferMotion ||
     state.mode === "slideshow" ||
-    selected.includes("slideshow");
+    selected.includes("slideshow") ||
+    set.exportFormat === "video";
   const extra = plan.files.filter((f) => f.fit !== "native").length;
   const dwellNote = wantsMotion
     ? `${
@@ -262,7 +263,8 @@ export async function runExport() {
   const wantMotion =
     selected.includes("slideshow") ||
     state.mode === "slideshow" ||
-    Boolean(hints.preferMotion);
+    Boolean(hints.preferMotion) ||
+    set.exportFormat === "video";
 
   toast("Rendering PNG frames…");
   try {
