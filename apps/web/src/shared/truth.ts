@@ -90,7 +90,31 @@ export const TRUTH_MARKS: TruthMark[] = [
   {
     sel: '[data-panel-view="style"] .inspector-title',
     status: "partial",
-    why: "Lock uses --project-accent on canvas; From scan when palette extracted",
+    why: "Palette wheel is real pointer input (hue/saturation from click position + a lightness slider) feeding the real generatePalette() harmony math and real per-swatch WCAG contrast badges. Also real arrow-key input (role=slider, tabindex, aria-valuetext) — the wheel is not pointer-only. Marked partial only for the pre-existing nuance: Lock uses --project-accent on canvas, not the app's own --signal; From scan swaps in when a live palette exists.",
+    place: "after",
+  },
+  {
+    sel: "#render-mode-2d, #render-mode-3d",
+    status: "real",
+    why: "3D writes a real rotateYDeg + depth onto every device in the set's layout recipe — the same hasPerspective()/paintProjected() engine authored \"yaw\" templates use, verified live: exported PNG pixels genuinely differ (a real angled side-face renders, not a CSS filter). Creates a real layout recipe on demand (ensureSetRecipe) if the set doesn't have one yet, so it works for plain Wizard sets too. Toggling 3D always applies a freshly generated tilt pattern rather than restoring a specific template's original authored angles if they'd been overridden — disclosed, not silently lossy. Displayed state (and the click handler) is driven by the recipe's actual device tilt, not just the render3d flag — 6 real shipped templates (layout-yaw-*, layout-blob-across-5, layout-bleed-illust-5) author real tilt without this toggle ever being touched, and the control now reflects that instead of falsely showing \"2D\" while the canvas is genuinely in perspective. Hidden entirely in Ads mode (#render-mode-section), where it has nothing real to act on.",
+    place: "after",
+  },
+  {
+    sel: "#btn-save-brand-kit, #btn-apply-brand-kit",
+    status: "real",
+    why: "A real localStorage-backed record (packages/storage's brand-kit.repo, independent of any project) — Save captures the active set's real palette + typography, Apply writes them onto whichever set is open, in any project. Live-verified end to end across two separate freshly-generated projects in the same browser: save in project A, reload to project B, Apply genuinely changed B's accent color and headline font to match A's saved kit. Logo is only saved when the scanned icon's URL is durable (http(s) or data:) — a blob: URL is session-scoped and would render broken after reload, so it's honestly left out (kit card shows \"0 logo\") rather than stored as a link that's guaranteed to break.",
+    place: "after",
+  },
+  {
+    sel: "#export-format-png, #export-format-video",
+    status: "real",
+    why: "Video wires set.exportFormat into runExport()'s real wantMotion check, verified live in Wizard mode (which has no motion export by default) — the Export screen's Production card genuinely switches to reporting a real MediaRecorder motion file once Video is picked. recordSlideshowVideo is mode-agnostic under the hood (currentSet().frames + paintExportFrame, no Slideshow-only state) despite its name. PNG ZIP is never skipped either way — this sets which format Export emphasizes, not an exclusive choice. Hidden entirely in Ads mode (#export-format-section), where ad-export.ts never reads exportFormat.",
+    place: "after",
+  },
+  {
+    sel: "#edit-font-display, #edit-font-body",
+    status: "partial",
+    why: "Real font pick — changes the live DOM preview (headline/caption font-family) AND the actual exported PNG canvas (frame-render.ts + paint-strip-slice.ts both load and use the chosen webfont), not preview-only. An untouched set (no pick made) now leaves the CSS override unset entirely rather than pinning a shorter fallback stack, so it inherits tokens.css's real --font-display/--font-body fallback chain exactly as before this control existed. Marked partial because it only covers the isolated/strip composition path: widget/copy-marks extras still use their own separate hardcoded fonts. Hidden entirely in Ads mode (#typography-section), where paint-ad-frame.ts never reads it.",
     place: "after",
   },
   {
@@ -160,7 +184,7 @@ export const TRUTH_MARKS: TruthMark[] = [
   {
     sel: "#device-picker",
     status: "partial",
-    why: "Catalog + TAKE SVG shell families (island/punch/fold/flip); not photoreal product photos",
+    why: "Catalog + APPPAL SVG shell families (island/punch/fold/flip); not photoreal product photos",
     place: "after",
   },
   {
@@ -214,7 +238,7 @@ export const TRUTH_MARKS: TruthMark[] = [
   {
     sel: "#copy-marks-row",
     status: "real",
-    why: "**word** paints a pill, ++word++ an underline. Script face is this extra only — store headline stays system-ui.",
+    why: "**word** paints a pill, ++word++ an underline. Script face is this element only — store headline stays system-ui.",
     place: "after",
   },
   {
@@ -226,7 +250,7 @@ export const TRUTH_MARKS: TruthMark[] = [
   {
     sel: "#shape-row",
     status: "real",
-    why: "Procedural blob/wave/star/dots/scribble extras — not competitor art",
+    why: "Procedural blob/wave/star/dots/scribble shapes — not competitor art",
     place: "after",
   },
   {
@@ -238,7 +262,7 @@ export const TRUTH_MARKS: TruthMark[] = [
   {
     sel: "#widget-fields-row",
     status: "real",
-    why: "Edit selected widget score, label, quote, name, pills. Empty score paints an em dash.",
+    why: "Edit selected proof element's score, label, quote, name, pills. Empty score paints an em dash.",
     place: "after",
   },
   {
@@ -250,7 +274,7 @@ export const TRUTH_MARKS: TruthMark[] = [
   {
     sel: "#slice-rule-row",
     status: "real",
-    why: "Add/remove/fan-3 phones on this PNG; landscape is this device in a portrait store file; mini screen is an extra, not a DeviceInstance.",
+    why: "Add/remove/fan-3 devices on this PNG; landscape is this device in a portrait store file; mini screen is an element, not a DeviceInstance.",
     place: "after",
   },
   {
@@ -262,13 +286,19 @@ export const TRUTH_MARKS: TruthMark[] = [
   {
     sel: "#pos-preset-grid",
     status: "real",
-    why: "Stamps selected device from PLACEMENT_PRESETS. Yaw/Pitch project a 2.5D shell (not OEM photos). Bleed next/prev is one phone clipped across two store PNGs.",
+    why: "Stamps selected device from PLACEMENT_PRESETS. Yaw/Pitch project a 2.5D shell (not OEM photos). Bleed next/prev is one device clipped across two store PNGs.",
     place: "after",
   },
   {
     sel: "#tilt-sliders-row",
     status: "real",
-    why: "Yaw −35…35 and pitch −20…20 on the selected phone. Same rotateXDeg/rotateYDeg as presets. Cheap warp, not WebGL.",
+    why: "Yaw −35…35 and pitch −20…20 on the selected device. Same rotateXDeg/rotateYDeg as presets. Cheap warp, not WebGL.",
+    place: "after",
+  },
+  {
+    sel: "#device-fit-row",
+    status: "real",
+    why: "Sets DeviceInstance.fit, read by paint-devices.ts's screenBitmap() — the same value affects the live preview and the exported PNG. Cover crops to fill; Contain letterboxes.",
     place: "after",
   },
   {
@@ -281,14 +311,14 @@ export const TRUTH_MARKS: TruthMark[] = [
   // Export
   {
     sel: "#export-presets",
-    status: "partial",
-    why: "Checked presets emit PNG at listed WxH; TikTok+motion adds 1080×1920 video; layered/bundle stay FAKE",
+    status: "real",
+    why: "Every listed preset emits real files at its listed WxH; TikTok+motion adds 1080×1920 video",
     place: "corner",
   },
   {
     sel: "#btn-export",
-    status: "partial",
-    why: "ZIP: store at catalog exportPx plus extra sizes from checked presets; layered/bundle skipped",
+    status: "real",
+    why: "ZIP: store at catalog exportPx plus extra sizes from checked presets",
     place: "after",
   },
   {
@@ -299,8 +329,8 @@ export const TRUTH_MARKS: TruthMark[] = [
   },
   {
     sel: "#catalog-wizard",
-    status: "partial",
-    why: "Check for new devices uses a bundled research list (not a live scrape). Add updates this browser’s catalog. Disk publish is Advanced / CLI.",
+    status: "real",
+    why: "Browses a bundled, cited research pack shipped with the app (not a live scrape — copy says so). Add updates this browser’s catalog. Disk publish is Advanced / CLI.",
     place: "corner",
   },
   {
@@ -310,17 +340,17 @@ export const TRUTH_MARKS: TruthMark[] = [
     place: "after",
   },
   {
-    sel: "#validation-card",
-    status: "partial",
-    why: "Char/count checks; notes ZIP PNG count, catalog store WxH, skipped FAKE presets",
+    sel: "#export-checks",
+    status: "real",
+    why: "Per-store (App Store/Google Play) char-limit + screenshot sizing checks, plus a Production card for ZIP/motion/panorama notes",
     place: "corner",
   },
 
   // Ads mode
   {
     sel: ".ads-thumb-grid",
-    status: "real",
-    why: "Each thumbnail is paintAdFrame — a real composition at that unit's native WxH from the chosen wireframe, headline/CTA/logo positioned for that shape. ZIP export uses the same painter.",
+    status: "partial",
+    why: "Each thumbnail is paintAdFrame — a real composition at that unit's native WxH from the chosen wireframe, headline/CTA positioned for that shape. No logo upload exists yet: every unit falls back to an advertiser-initial mark. ZIP export uses the same painter.",
     place: "corner",
   },
   {
@@ -342,6 +372,12 @@ export const TRUTH_MARKS: TruthMark[] = [
     status: "real",
     why: "Click the thumb to browse every slice. System cards are store-count canvases plus dual-store mobile geometry for the 20 refs (one card each; visible under Mobile / iOS / Android filters; Edit iOS|Android swaps the shell; photo plates empty until you drop an image). Use applies the look (or arms Wizard if you have not scanned).",
     place: "after",
+  },
+  {
+    sel: "#palette-showcase",
+    status: "real",
+    why: "Real generatePalette() output + real WCAG contrast math per swatch (AAA/AA/AA·L/LOW). Seed is whichever brand color actually exists this session — scanned icon swatch, else the active project's accent, else the studio default — and the heading says which, rather than always claiming a scanned icon.",
+    place: "corner",
   },
 ];
 

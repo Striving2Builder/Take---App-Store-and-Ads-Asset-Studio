@@ -84,7 +84,7 @@ function photoSpan(): TemplateRecord {
     ],
     extras: [
       photoPlate("photo-cut", 0, 1.0, 0.22, 0.86, 0.28),
-      copyMark("photo-hint", 0, "Your photo ++spans++ this cut", undefined, 0.88),
+      copyMark("photo-hint", 0, "Your photo ++spans++ this cut", undefined, 0.88, true),
     ],
   });
 }

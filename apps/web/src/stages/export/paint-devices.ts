@@ -48,10 +48,31 @@ function coverShot(
   off.drawImage(img, (sw - dw) / 2, (sh - dh) / 2, dw, dh);
 }
 
+/** Whole screenshot visible, letterboxed on whichever axis has slack — the
+ *  opposite trade-off from cover (nothing cropped, but bars can show if the
+ *  screenshot's aspect doesn't match the device screen's). */
+function containShot(
+  off: CanvasRenderingContext2D,
+  img: HTMLImageElement,
+  sw: number,
+  sh: number
+) {
+  off.fillStyle = "#0c0d10";
+  off.fillRect(0, 0, sw, sh);
+  const iw = img.naturalWidth || img.width;
+  const ih = img.naturalHeight || img.height;
+  if (iw < 1 || ih < 1) return;
+  const scale = Math.min(Math.min(sw / iw, sh / ih), MAX_SCREENSHOT_UPSCALE);
+  const dw = iw * scale;
+  const dh = ih * scale;
+  off.drawImage(img, (sw - dw) / 2, (sh - dh) / 2, dw, dh);
+}
+
 async function screenBitmap(
   img: HTMLImageElement | null,
   sw: number,
-  sh: number
+  sh: number,
+  fit: "cover" | "contain" = "cover"
 ): Promise<HTMLCanvasElement | null> {
   const w = Math.max(8, Math.round(sw));
   const h = Math.max(8, Math.round(sh));
@@ -61,7 +82,7 @@ async function screenBitmap(
   const ctx = canvas.getContext("2d");
   if (!ctx) return null;
   applyHighQualitySmoothing(ctx);
-  if (img) coverShot(ctx, img, w, h);
+  if (img) (fit === "contain" ? containShot : coverShot)(ctx, img, w, h);
   else {
     ctx.fillStyle = "#0c0d10";
     ctx.fillRect(0, 0, w, h);
@@ -83,7 +104,8 @@ function paintFlat(
   inset: { x: number; y: number; w: number; h: number },
   shot: HTMLCanvasElement | null,
   deviceId: string,
-  orientation: "portrait" | "landscape"
+  orientation: "portrait" | "landscape",
+  shellView: "front" | "back" = "front"
 ) {
   const device = getDevice(deviceId);
   const shell =
@@ -106,14 +128,20 @@ function paintFlat(
   ctx.save();
   roundRect(ctx, sx, sy, sw, sh, world.w * 0.08);
   ctx.clip();
-  if (shot) ctx.drawImage(shot, sx, sy, sw, sh);
-  else {
+  if (shellView === "back") {
+    // Real back panel is never the screenshot — a plain body-material fill,
+    // not a fabricated texture no catalog entry actually specifies.
+    ctx.fillStyle = "#1c1e24";
+    ctx.fillRect(sx, sy, sw, sh);
+  } else if (shot) {
+    ctx.drawImage(shot, sx, sy, sw, sh);
+  } else {
     ctx.fillStyle = "#0c0d10";
     ctx.fillRect(sx, sy, sw, sh);
   }
   ctx.restore();
   if (device && shell) {
-    paintShellChromeLocal(ctx, device, shell, world.w, world.h, x, y, inset);
+    paintShellChromeLocal(ctx, device, shell, world.w, world.h, x, y, inset, shellView);
   }
   ctx.restore();
 }
@@ -185,16 +213,18 @@ export async function paintDevice(
 ) {
   const id = deviceId || state.deviceId;
   const world = toWorldInstance(inst, sliceW, sliceH);
-  const imgUrl = shotUrlAt(inst.shotIndex);
-  const img = imgUrl ? await loadImg(imgUrl) : null;
   const instOrient = inst.orientation || recipeDefault || state.orientation;
   const inset = resolveMetrics(id, state.platform, instOrient).inset;
   const sw = world.w * inset.w;
   const sh = world.h * inset.h;
-  const shot = await screenBitmap(img, sw, sh);
+  // Back view never shows the screenshot — skip the fetch/decode entirely.
+  const showBack = state.shellView === "back" && !hasPerspective(inst);
+  const imgUrl = showBack ? null : shotUrlAt(inst.shotIndex);
+  const img = imgUrl ? await loadImg(imgUrl) : null;
+  const shot = await screenBitmap(img, sw, sh, inst.fit || "cover");
   if (hasPerspective(inst)) {
     paintProjected(ctx, inst, sliceW, sliceH, inset, shot, id, instOrient);
     return;
   }
-  paintFlat(ctx, world, inset, shot, id, instOrient);
+  paintFlat(ctx, world, inset, shot, id, instOrient, showBack ? "back" : "front");
 }

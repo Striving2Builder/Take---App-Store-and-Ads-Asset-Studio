@@ -1,5 +1,11 @@
 /** OWNER: stages/catalog — customer catalog: check → add. Disk publish stays CLI. */
-import { getDevice, listDevices, replaceCatalog, type DeviceProfile } from "@take/device-catalog";
+import {
+  getDevice,
+  listDevices,
+  replaceCatalog,
+  sourceConfidenceOf,
+  type DeviceProfile,
+} from "@take/device-catalog";
 import {
   classifyChange,
   createMemoryReviewGate,
@@ -25,6 +31,27 @@ import {
 } from "./catalog-copy";
 
 const QUEUE_KEY = "take.catalog.review-queue";
+
+const IOS_BADGE_ICON =
+  '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="7" y="2" width="10" height="20" rx="2.5"/></svg>';
+const ANDROID_BADGE_ICON =
+  '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4.5 8.5 12 4l7.5 4.5v7L12 20l-7.5-4.5z"/></svg>';
+
+/** A device silhouette scaled to the real shellPx aspect ratio — not a
+ *  stock image, the box's own proportions are the real device geometry. */
+function deviceShapeHtml(d: DeviceProfile): string {
+  const w = d.shellPx?.w || 1;
+  const h = d.shellPx?.h || 1;
+  const maxH = 84;
+  const aspect = w / h;
+  const shapeH = maxH;
+  const shapeW = Math.max(18, Math.round(shapeH * aspect));
+  const badge = d.platform === "android" ? ANDROID_BADGE_ICON : IOS_BADGE_ICON;
+  return `<div class="catalog-shape-wrap">
+    <span class="catalog-plat-badge">${badge}</span>
+    <div class="catalog-shape" style="width:${shapeW}px;height:${shapeH}px"></div>
+  </div>`;
+}
 
 function loadQueue(): DeviceProposal[] {
   try {
@@ -72,9 +99,12 @@ function renderCatalogNow() {
   if (!el) return;
   el.innerHTML = devices
     .map((d) => {
+      const confidence = sourceConfidenceOf(d.source);
       const inherit = inheritNote(d.source);
-      return `<li class="catalog-device-card">
+      return `<li class="catalog-device-card is-${confidence}">
+        ${deviceShapeHtml(d)}
         <span class="catalog-device-family mono">${escapeHtml(familyLabel(d))}</span>
+        ${confidence === "inherited" ? `<span class="catalog-confidence-badge" title="${escapeHtml(inherit || "Uses an existing device frame")}">INHERITED</span>` : `<span class="catalog-confidence-badge is-measured">MEASURED</span>`}
         <strong>${escapeHtml(d.name)}</strong>
         <span class="catalog-device-size">${escapeHtml(sizeLine(d))}</span>
         ${inherit ? `<span class="catalog-device-note">${escapeHtml(inherit)}</span>` : ""}
@@ -111,10 +141,13 @@ async function renderList() {
       });
       const ok = ev && mat.ok;
       const added = p.reviewStatus === "approved";
-      const inherit = inheritNote(mat.ok ? mat.device.source : p.proposed.source);
+      const proposalSource = mat.ok ? mat.device.source : p.proposed.source;
+      const confidence = sourceConfidenceOf(proposalSource);
+      const inherit = inheritNote(proposalSource);
       const size = mat.ok ? sizeLine(mat.device) : "";
-      return `<li data-prop="${escapeHtml(p.id)}" class="catalog-update-card">
+      return `<li data-prop="${escapeHtml(p.id)}" class="catalog-update-card is-${confidence}">
         <span class="catalog-device-family mono">${escapeHtml(changeLine(kind, summary))}</span>
+        ${confidence === "inherited" ? `<span class="catalog-confidence-badge" title="${escapeHtml(inherit || "Uses an existing device frame")}">INHERITED</span>` : ""}
         <strong>${escapeHtml(p.proposed.name)}</strong>
         <span class="catalog-device-size">${escapeHtml(size)}</span>
         ${inherit ? `<span class="catalog-device-note">${escapeHtml(inherit)}</span>` : ""}
@@ -188,7 +221,7 @@ async function ingestSnapshots() {
     await gate.clear();
     appliedCount = 0;
     await updateChrome();
-    toast("You’re up to date");
+    toast("Nothing new in the bundled research pack");
     return;
   }
   await gate.clear();
@@ -197,7 +230,9 @@ async function ingestSnapshots() {
   heroState = "updates";
   await updateChrome();
   toast(
-    proposals.length === 1 ? "1 new device is ready to add" : `${proposals.length} new devices are ready to add`
+    proposals.length === 1
+      ? "1 device from the research pack is ready to add"
+      : `${proposals.length} devices from the research pack are ready to add`
   );
 }
 

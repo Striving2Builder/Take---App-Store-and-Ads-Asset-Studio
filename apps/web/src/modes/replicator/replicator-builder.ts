@@ -8,7 +8,7 @@ import {
 } from "./competitor-beats";
 import type { ModePackSlice } from "@take/modes-sdk";
 
-const TRACE_ROLES = ["HOOK", "PROBLEM", "SHIFT", "PROOF", "FEATURE", "CTA"];
+export const TRACE_ROLES = ["HOOK", "PROBLEM", "SHIFT", "PROOF", "FEATURE", "CTA"];
 
 export function buildReplicatorSets(
   brief: InferenceBrief,

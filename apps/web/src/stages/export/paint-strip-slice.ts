@@ -10,12 +10,13 @@ import type { StoryFrame } from "@take/core";
 import { currentSet, state } from "../../app/app-state";
 import { goalCta } from "../../modes/wizard/copy-builder";
 import { loadImg, wrapText } from "./canvas-text";
-import { inkForBackground } from "../../shared/contrast-ink";
+import { inkForBackground, type Ink } from "../../shared/contrast-ink";
 import { scanIconUrl } from "./selected-shots";
 import { paintBackground } from "./paint-background";
 import { paintDevice } from "./paint-devices";
 import { paintExtras } from "./paint-extras";
 import { applyHighQualitySmoothing } from "../../shared/canvas-quality";
+import { ensureFontsLoaded, fontStack } from "../../shared/typography";
 
 export type PaintSliceOpts = {
   w?: number;
@@ -48,20 +49,26 @@ function paintType(
   sliceW: number,
   sliceH: number,
   frame: StoryFrame,
-  accent: string
+  accent: string,
+  ink: Ink,
+  typography?: { display: string; body: string }
 ) {
   const family = typeBandForSlice(recipe, sliceIndex);
   if (family === "none") return;
   const band = typeBandRect(family, sliceW, sliceH, recipe.typeScale);
   if (band.w <= 0 || band.h <= 0) return;
+  // Only override the app's own historical defaults once a set actually
+  // has a real typography pick — an untouched set renders pixel-identically
+  // to before this feature existed.
+  const displayFace = typography ? fontStack(typography.display) : "system-ui, sans-serif";
+  const bodyFace = typography ? fontStack(typography.body) : "system-ui, sans-serif";
   const padX = Math.round(sliceW * 0.07);
   const maxTextW = sliceW - padX * 2;
   const scale = sliceW / 1290;
-  const ink = inkForBackground(recipe.background.colorA, recipe.background.colorB);
   ctx.fillStyle = ink.text;
   ctx.font = `600 ${Math.round(28 * scale)}px ui-monospace, monospace`;
   ctx.fillText(frame.kicker.slice(0, 48), padX, band.y + Math.round(band.h * 0.28));
-  ctx.font = `700 ${Math.round(56 * scale)}px system-ui, sans-serif`;
+  ctx.font = `700 ${Math.round(56 * scale)}px ${displayFace}`;
   wrapText(
     ctx,
     frame.headline,
@@ -75,7 +82,7 @@ function paintType(
   ctx.fillStyle = accent;
   ctx.fillRect(padX, ctaY, Math.round(360 * scale), Math.round(72 * scale));
   ctx.fillStyle = "#0c0d10";
-  ctx.font = `700 ${Math.round(28 * scale)}px system-ui, sans-serif`;
+  ctx.font = `700 ${Math.round(28 * scale)}px ${bodyFace}`;
   ctx.fillText(cta, padX + Math.round(18 * scale), ctaY + Math.round(46 * scale));
 }
 
@@ -116,7 +123,8 @@ export async function paintStripSlice(
   for (const inst of ordered) {
     await paintDevice(ctx, sliceW, sliceH, inst, deviceId, recipe.defaultOrientation);
   }
-  await paintExtras(ctx, recipe.extras, sliceW, sliceH);
+  const ink = inkForBackground(recipe.background.colorA, recipe.background.colorB);
+  await paintExtras(ctx, recipe.extras, sliceW, sliceH, ink);
   ctx.restore();
 
   if (!opts?.skipType && typeBandForSlice(recipe, sliceIndex) !== "none") {
@@ -131,7 +139,9 @@ export async function paintStripSlice(
     const frame = frames[sliceIndex];
     if (frame) {
       const accent = (opts?.palette || set?.palette)?.[0] || "#ff4d1a";
-      paintType(ctx, recipe, sliceIndex, sliceW, sliceH, frame, accent);
+      const typography = set?.typography;
+      if (typography) await ensureFontsLoaded([typography.display, typography.body]);
+      paintType(ctx, recipe, sliceIndex, sliceW, sliceH, frame, accent, ink, typography);
     }
   }
   return true;

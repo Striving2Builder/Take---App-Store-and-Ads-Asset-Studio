@@ -74,6 +74,43 @@ function paintButtonsLocal(
   }
 }
 
+/** One rear camera module: dark rounded square + a single lens circle. No
+ *  per-lens layout is real data (HardwareHotspots.rearCameras is one rect
+ *  per device, not per-lens), so this stays deliberately plain rather than
+ *  inventing a triple-lens arrangement no catalog entry actually specifies. */
+function paintRearCameraLocal(ctx: CanvasRenderingContext2D, r: LocalRect) {
+  const rad = Math.min(r.w, r.h) * 0.28;
+  fillLocalRound(ctx, r, "#111318", rad);
+  const cx = r.x + r.w / 2;
+  const cy = r.y + r.h / 2;
+  const outer = Math.min(r.w, r.h) * 0.32;
+  ctx.fillStyle = "#050506";
+  ctx.beginPath();
+  ctx.arc(cx, cy, outer, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.strokeStyle = "#2a3038";
+  ctx.lineWidth = Math.max(1, outer * 0.12);
+  ctx.stroke();
+  ctx.fillStyle = "#1a2430";
+  ctx.beginPath();
+  ctx.arc(cx - outer * 0.18, cy - outer * 0.18, outer * 0.3, 0, Math.PI * 2);
+  ctx.fill();
+}
+
+function paintRearCamerasLocal(
+  ctx: CanvasRenderingContext2D,
+  rects: ScreenInset[],
+  shell: PxSize,
+  localW: number,
+  localH: number,
+  originX: number,
+  originY: number
+) {
+  for (const rect of rects) {
+    paintRearCameraLocal(ctx, shellRectToLocal(rect, shell, localW, localH, originX, originY));
+  }
+}
+
 function homeIndicatorRect(
   device: DeviceProfile,
   shell: PxSize,
@@ -101,7 +138,10 @@ function homeIndicatorRect(
   };
 }
 
-/** Paint chrome in local device space (origin top-left of shell, after translate/rotate). */
+/** Paint chrome in local device space (origin top-left of shell, after translate/rotate).
+ *  shellView "back" paints rear cameras (real per-device hotspots) instead
+ *  of island/punch/home-indicator — side buttons stay, they're visible from
+ *  either side of a real phone. */
 export function paintShellChromeLocal(
   ctx: CanvasRenderingContext2D,
   device: DeviceProfile,
@@ -110,22 +150,29 @@ export function paintShellChromeLocal(
   localH: number,
   originX: number,
   originY: number,
-  inset: { x: number; y: number; w: number; h: number }
+  inset: { x: number; y: number; w: number; h: number },
+  shellView: "front" | "back" = "front"
 ) {
   const hw = device.hardware;
-  if (hw?.dynamicIsland) {
-    paintIslandLocal(
-      ctx,
-      shellRectToLocal(hw.dynamicIsland, shell, localW, localH, originX, originY)
-    );
-  } else if (hw?.frontCamera) {
-    paintPunchLocal(ctx, shellRectToLocal(hw.frontCamera, shell, localW, localH, originX, originY));
+  if (shellView === "back") {
+    if (hw?.rearCameras?.length) {
+      paintRearCamerasLocal(ctx, hw.rearCameras, shell, localW, localH, originX, originY);
+    }
+  } else {
+    if (hw?.dynamicIsland) {
+      paintIslandLocal(
+        ctx,
+        shellRectToLocal(hw.dynamicIsland, shell, localW, localH, originX, originY)
+      );
+    } else if (hw?.frontCamera) {
+      paintPunchLocal(ctx, shellRectToLocal(hw.frontCamera, shell, localW, localH, originX, originY));
+    }
+    const home = homeIndicatorRect(device, shell, inset, localW, localH, originX, originY);
+    if (home) fillLocalRound(ctx, home, "rgba(243,241,236,0.55)", home.h / 2);
   }
   if (hw?.buttons?.length) {
     paintButtonsLocal(ctx, hw.buttons, shell, localW, localH, originX, originY);
   }
-  const home = homeIndicatorRect(device, shell, inset, localW, localH, originX, originY);
-  if (home) fillLocalRound(ctx, home, "rgba(243,241,236,0.55)", home.h / 2);
 }
 
 function mapUv(front: Quad, u: number, v: number) {

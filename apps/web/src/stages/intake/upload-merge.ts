@@ -51,6 +51,10 @@ export function mergeUploadsIntoResult(
   }
   assets = assets.slice(0, 16);
 
+  // "Upload analysis not implemented" hasn't been emitted by this app since
+  // before this filter was written — no current code path produces it. Kept
+  // as migration hygiene: a project saved by an older build can still carry
+  // that string in its stored warnings, and it shouldn't resurface here.
   capture = {
     ...capture,
     adapter: capture.adapter === "none" ? "uploads" : capture.adapter,

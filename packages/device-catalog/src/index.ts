@@ -15,7 +15,9 @@ export type {
   ScreenInset,
   ShellKind,
   ShellView,
+  SourceConfidence,
 } from "./device.types";
+export { sourceConfidenceOf } from "./source-confidence";
 export {
   listDevices,
   getDevice,

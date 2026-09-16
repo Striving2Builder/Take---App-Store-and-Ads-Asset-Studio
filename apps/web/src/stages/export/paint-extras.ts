@@ -2,18 +2,20 @@
 import { toWorldInstance, type ExtraSlot } from "@take/template-engine";
 import { fitRect } from "@take/export-presets";
 import { MAX_SCREENSHOT_UPSCALE } from "@take/device-catalog";
+import type { Ink } from "../../shared/contrast-ink";
 import { loadImg } from "./canvas-text";
 import { roundRect } from "./canvas-round-rect";
 import { ensureScriptFace, paintMarkedCopy } from "./paint-copy-marks";
 import { paintShape } from "./paint-shapes";
-import { paintWidget } from "./paint-widgets";
+import { paintSampleMarker, paintWidget } from "./paint-widgets";
 import { shotUrlAt } from "./selected-shots";
 
 export async function paintExtras(
   ctx: CanvasRenderingContext2D,
   extras: ExtraSlot[] | undefined,
   sliceW: number,
-  sliceH: number
+  sliceH: number,
+  ink: Ink
 ) {
   if (!extras?.length) return;
   if (extras.some((s) => s.face === "script")) await ensureScriptFace();
@@ -40,7 +42,7 @@ export async function paintExtras(
     const x = -world.w / 2;
     const y = -world.h / 2;
     if (slot.widget) {
-      paintWidget(ctx, slot, x, y, world.w, world.h);
+      paintWidget(ctx, slot, x, y, world.w, world.h, ink);
     } else if (slot.shape) {
       paintShape(ctx, slot.shape, x, y, world.w, world.h, slot.fill || "rgba(243,241,236,0.38)");
     } else if (slot.kind === "visual") {
@@ -73,6 +75,8 @@ export async function paintExtras(
         ctx.fill();
       }
     } else {
+      ctx.save();
+      if (slot.sample) ctx.globalAlpha = 0.45;
       paintMarkedCopy(
         ctx,
         slot.text || "",
@@ -81,8 +85,12 @@ export async function paintExtras(
         y,
         world.w,
         Math.max(14, Math.round(world.h * 0.5)),
-        slot.fill || "#f3f1ec"
+        ink.text
       );
+      ctx.restore();
+      if (slot.sample) {
+        paintSampleMarker(ctx, x, y, world.w, world.h);
+      }
     }
     ctx.restore();
   }

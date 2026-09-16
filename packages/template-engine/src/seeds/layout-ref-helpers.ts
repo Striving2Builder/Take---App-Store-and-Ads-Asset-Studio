@@ -72,7 +72,8 @@ export function copyMark(
   sliceIndex: number,
   text: string,
   face?: ExtraSlot["face"],
-  y = 0.16
+  y = 0.16,
+  sample = false
 ): ExtraSlot {
   return {
     id,
@@ -88,6 +89,7 @@ export function copyMark(
     text,
     face,
     authored: true,
+    sample,
   };
 }
 

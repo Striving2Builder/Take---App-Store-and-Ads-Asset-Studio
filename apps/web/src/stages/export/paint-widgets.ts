@@ -1,16 +1,41 @@
 /** OWNER: stages/export — rating / review / pills ExtraSlot widgets */
 import { widgetCopy, type ExtraSlot } from "@take/template-engine";
+import type { Ink } from "../../shared/contrast-ink";
 import { wrapText } from "./canvas-text";
 import { roundRect } from "./canvas-round-rect";
 
+/** A real 5-point star polygon (outer/inner vertices alternating), not a
+ *  font glyph — this gets baked straight into the exported PNG, so its
+ *  shape can't depend on whatever star character a viewer's system font
+ *  happens to render. */
+function starPath(ctx: CanvasRenderingContext2D, cx: number, cy: number, outerR: number, innerR: number) {
+  const spikes = 5;
+  const step = Math.PI / spikes;
+  let rot = -Math.PI / 2;
+  ctx.beginPath();
+  ctx.moveTo(cx + Math.cos(rot) * outerR, cy + Math.sin(rot) * outerR);
+  for (let i = 0; i < spikes; i++) {
+    rot += step;
+    ctx.lineTo(cx + Math.cos(rot) * innerR, cy + Math.sin(rot) * innerR);
+    rot += step;
+    ctx.lineTo(cx + Math.cos(rot) * outerR, cy + Math.sin(rot) * outerR);
+  }
+  ctx.closePath();
+}
+
 function paintStars(ctx: CanvasRenderingContext2D, cx: number, y: number, count: number, size: number) {
   const n = Math.max(1, Math.min(5, Math.round(count)));
+  const outerR = size * 0.5;
+  const innerR = outerR * 0.42;
+  const gap = size * 0.22;
+  const totalW = n * outerR * 2 + (n - 1) * gap;
+  let x = cx - totalW / 2 + outerR;
   ctx.fillStyle = "#e8c36a";
-  ctx.font = `700 ${Math.round(size)}px system-ui, sans-serif`;
-  ctx.textAlign = "center";
-  ctx.textBaseline = "middle";
-  ctx.fillText("★★★★★".slice(0, n), cx, y);
-  ctx.textAlign = "left";
+  for (let i = 0; i < n; i++) {
+    starPath(ctx, x, y, outerR, innerR);
+    ctx.fill();
+    x += outerR * 2 + gap;
+  }
 }
 
 function paintWreath(ctx: CanvasRenderingContext2D, cx: number, cy: number, r: number, fill: string) {
@@ -24,13 +49,38 @@ function paintWreath(ctx: CanvasRenderingContext2D, cx: number, cy: number, r: n
   ctx.stroke();
 }
 
-export function paintWidget(ctx: CanvasRenderingContext2D, slot: ExtraSlot, x: number, y: number, w: number, h: number) {
+export function paintSampleMarker(ctx: CanvasRenderingContext2D, x: number, y: number, w: number, h: number) {
+  ctx.save();
+  ctx.strokeStyle = "rgba(26,26,26,0.55)";
+  ctx.lineWidth = Math.max(1, Math.min(w, h) * 0.012);
+  ctx.setLineDash([Math.max(4, w * 0.03), Math.max(4, w * 0.02)]);
+  roundRect(ctx, x, y, w, h, Math.min(16, h * 0.12));
+  ctx.stroke();
+  ctx.restore();
+}
+
+/** Sample content (unfilled rating/review/tags) is dimmed + dashed so it
+ *  reads as "fill this in" — never mistaken for real, shippable copy. */
+export function paintWidget(
+  ctx: CanvasRenderingContext2D,
+  slot: ExtraSlot,
+  x: number,
+  y: number,
+  w: number,
+  h: number,
+  sceneInk: Ink
+) {
   const fill = slot.fill || "#f3f1ec";
   const ink = "#1a1a1a";
   const copy = widgetCopy(slot);
+  ctx.save();
+  if (copy.isSample) ctx.globalAlpha = 0.45;
   if (slot.widget === "rating") {
-    paintWreath(ctx, x + w / 2, y + h * 0.42, Math.min(w, h) * 0.42, fill);
-    ctx.fillStyle = fill;
+    // Drawn straight onto the scene background (no card behind it) —
+    // needs the scene's own contrast ink, not a fixed pale default.
+    const sceneFill = slot.fill || sceneInk.text;
+    paintWreath(ctx, x + w / 2, y + h * 0.42, Math.min(w, h) * 0.42, sceneFill);
+    ctx.fillStyle = sceneFill;
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
     ctx.font = `800 ${Math.max(14, Math.round(h * 0.28))}px system-ui, sans-serif`;
@@ -39,9 +89,7 @@ export function paintWidget(ctx: CanvasRenderingContext2D, slot: ExtraSlot, x: n
     ctx.fillText(copy.storeLabel, x + w / 2, y + h * 0.72);
     ctx.textAlign = "left";
     paintStars(ctx, x + w / 2, y + h * 0.54, copy.stars, h * 0.16);
-    return;
-  }
-  if (slot.widget === "review") {
+  } else if (slot.widget === "review") {
     ctx.fillStyle = fill;
     roundRect(ctx, x, y, w, h, Math.min(16, h * 0.12));
     ctx.fill();
@@ -54,26 +102,28 @@ export function paintWidget(ctx: CanvasRenderingContext2D, slot: ExtraSlot, x: n
     ctx.font = `600 ${Math.max(10, Math.round(h * 0.12))}px system-ui, sans-serif`;
     ctx.textBaseline = "middle";
     ctx.fillText(`— ${copy.attribution}`, x + w * 0.48, y + h * 0.78);
-    return;
-  }
-  const labels = copy.pills;
-  let px = x;
-  let py = y;
-  const gap = Math.max(6, w * 0.02);
-  const ph = Math.max(22, h * 0.7);
-  ctx.font = `700 ${Math.max(10, Math.round(ph * 0.42))}px system-ui, sans-serif`;
-  ctx.textBaseline = "middle";
-  for (const label of labels) {
-    const tw = ctx.measureText(label).width + ph * 0.9;
-    if (px + tw > x + w && px > x) {
-      px = x;
-      py += ph + gap;
+  } else {
+    const labels = copy.pills;
+    let px = x;
+    let py = y;
+    const gap = Math.max(6, w * 0.02);
+    const ph = Math.max(22, h * 0.7);
+    ctx.font = `700 ${Math.max(10, Math.round(ph * 0.42))}px system-ui, sans-serif`;
+    ctx.textBaseline = "middle";
+    for (const label of labels) {
+      const tw = ctx.measureText(label).width + ph * 0.9;
+      if (px + tw > x + w && px > x) {
+        px = x;
+        py += ph + gap;
+      }
+      ctx.fillStyle = fill;
+      roundRect(ctx, px, py, tw, ph, ph / 2);
+      ctx.fill();
+      ctx.fillStyle = ink;
+      ctx.fillText(label, px + ph * 0.4, py + ph / 2);
+      px += tw + gap;
     }
-    ctx.fillStyle = fill;
-    roundRect(ctx, px, py, tw, ph, ph / 2);
-    ctx.fill();
-    ctx.fillStyle = ink;
-    ctx.fillText(label, px + ph * 0.4, py + ph / 2);
-    px += tw + gap;
   }
+  ctx.restore();
+  if (copy.isSample) paintSampleMarker(ctx, x, y, w, h);
 }

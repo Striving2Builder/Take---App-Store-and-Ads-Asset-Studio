@@ -83,8 +83,6 @@ export const templateInspectorPlugin: ModeEditorPlugin = {
     host.querySelector("#mode-template-pick")?.addEventListener("change", (e) => {
       const id = (e.target as HTMLSelectElement).value;
       state.templateId = id;
-      const arm = document.querySelector("#template-pick") as HTMLSelectElement | null;
-      if (arm) arm.value = id;
     });
     host.querySelector("#tpl-apply-library")?.addEventListener("click", () => {
       const brief = state.inference;

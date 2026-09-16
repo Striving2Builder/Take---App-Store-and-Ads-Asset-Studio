@@ -16,7 +16,7 @@
 
 .btn:active { transform: scale(0.98); }
 .btn.primary { background: var(--signal); color: var(--ink); }
-.btn.primary:hover { background: #ff6a3d; }
+.btn.primary:hover { background: #5670d6; }
 .btn.ghost {
   border-color: var(--line-strong);
   color: var(--paper);
@@ -29,6 +29,9 @@
 .btn:hover .btn-arrow { transform: translateX(4px); }
 
 .icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   width: 2rem;
   height: 2rem;
   border: 1px solid var(--line-strong);
@@ -37,3 +40,4 @@
   transition: color 0.2s, border-color 0.2s;
 }
 .icon-btn:hover { color: var(--signal); border-color: var(--signal); }
+.icon-btn:disabled { opacity: 0.35; cursor: default; pointer-events: none; }

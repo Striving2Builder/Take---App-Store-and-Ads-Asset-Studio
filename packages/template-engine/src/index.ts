@@ -20,7 +20,6 @@ export { EXTRA_SHAPES, EXTRA_WIDGETS, EXTRA_FACES } from "./template.types";
 export type { GenerateInput, DeviceMetrics } from "./generate/types";
 export type { Grammar, GrammarTokens, GrammarProductions } from "./grammar/tokens";
 export { refreshVariantId, refreshCopy } from "./variant";
-export { batchFromTemplate } from "./batch";
 export { applyTemplate } from "./apply/apply-template";
 export type { ApplyTemplateInput, ApplyTemplateResult } from "./apply/apply-template";
 export { mapShotsToFrames } from "./apply/map-shots";

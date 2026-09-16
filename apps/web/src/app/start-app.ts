@@ -16,25 +16,32 @@ import { hydrateScanSession } from "../stages/intake/scan-pipeline";
 import { renderReview } from "../stages/review/review.render";
 import {
   addFrame,
+  handleRedo,
+  handleUndo,
   regenFrame,
   removeFrame,
   renderEditor,
   syncFrameFromDom,
 } from "../editor/canvas/edit-canvas";
+import { isTypingTarget } from "../shared/typing-target";
 import { bindMetaFields } from "../editor/inspectors/copy-inspector";
 import { bindStyleInspector } from "../editor/inspectors/style-inspector";
-import { bindLayerToggles } from "../editor/layers/layer-toggles";
+import { bindPaletteWheel } from "../editor/inspectors/palette-wheel";
+import { bindTypographyInspector } from "../editor/inspectors/typography-inspector";
+import { bindRenderModeControl } from "../editor/inspectors/render-mode";
+import { bindExportFormatControl } from "../editor/inspectors/export-format-inspector";
+import { bindBrandKitInspector } from "../editor/inspectors/brand-kit-inspector";
 import { bindLayoutDrag, onLayoutSelection } from "../editor/layout/layout-drag";
 import { ensureSetRecipe } from "../editor/layout/attach-recipe";
-import { addCopyOrVisual, applyPanoramaFromPicker, bindChromeExtras } from "../editor/inspectors/layers-inspector";
+import { addCopyOrVisual, applyPanoramaFromPicker, bindChromeExtras, bindElementsList, renderElementsList } from "../editor/inspectors/layers-inspector";
 import { bindCopyMarks, renderCopyMarksRow } from "../editor/inspectors/copy-marks";
 import { bindWidgetFields, renderWidgetFields } from "../editor/inspectors/widget-fields";
 import { bindTiltSliders, renderTiltSliders } from "../editor/inspectors/tilt-sliders";
+import { bindFitRow, renderFitRow } from "../editor/inspectors/fit-toggle";
 import { bindPositionPresets } from "../editor/inspectors/position-presets";
 import { mountDevicePicker, syncDevicePickerValue } from "../editor/device/device-picker";
-import { mountFitControl, syncFitControlUi } from "../editor/device/fit-control";
 import { mountOrientationControl, syncOrientationUi } from "../editor/device/orientation-control";
-import { mountShellViewControl, syncShellViewUi } from "../editor/device/shell-view-control";
+import { mountShellViewControl } from "../editor/device/shell-view-control";
 import {
   mountStoreTargetControl,
   syncStoreTargetUi,
@@ -114,7 +121,23 @@ function bindGlobalClicks() {
     const filter = t.closest("[data-filter]") as HTMLElement | null;
     if (filter) {
       state.filter = filter.dataset.filter || "all";
-      $$(".filter").forEach((el) => el.classList.toggle("on", el === filter));
+      $$("[data-filter]").forEach((el) => el.classList.toggle("on", el === filter));
+      renderLibrary();
+      return;
+    }
+
+    const compositionFilter = t.closest("[data-composition]") as HTMLElement | null;
+    if (compositionFilter) {
+      state.compositionFilter = compositionFilter.dataset.composition || "all";
+      $$("[data-composition]").forEach((el) => el.classList.toggle("on", el === compositionFilter));
+      renderLibrary();
+      return;
+    }
+
+    const frameCountFilter = t.closest("[data-frame-count]") as HTMLElement | null;
+    if (frameCountFilter) {
+      state.frameCountFilter = frameCountFilter.dataset.frameCount || "all";
+      $$("[data-frame-count]").forEach((el) => el.classList.toggle("on", el === frameCountFilter));
       renderLibrary();
       return;
     }
@@ -162,6 +185,18 @@ function bindEditorActions() {
   $("#btn-regen-frame")?.addEventListener("click", regenFrame);
   $("#btn-remove-frame")?.addEventListener("click", removeFrame);
   $("#btn-add-frame")?.addEventListener("click", addFrame);
+  $("#btn-undo")?.addEventListener("click", handleUndo);
+  $("#btn-redo")?.addEventListener("click", handleRedo);
+  document.addEventListener("keydown", (e) => {
+    if (!(e.ctrlKey || e.metaKey) || isTypingTarget(e.target)) return;
+    if (e.key.toLowerCase() === "z" && !e.shiftKey) {
+      e.preventDefault();
+      handleUndo();
+    } else if (e.key.toLowerCase() === "y" || (e.key.toLowerCase() === "z" && e.shiftKey)) {
+      e.preventDefault();
+      handleRedo();
+    }
+  });
   $("#btn-add-copy")?.addEventListener("click", () => {
     const err = addCopyOrVisual("copy");
     toast(err || "Copy block on this slice — drag on the canvas");
@@ -265,18 +300,26 @@ export function startApp() {
   bindExportActions();
   bindMetaFields();
   bindStyleInspector();
+  bindPaletteWheel();
+  bindTypographyInspector();
+  bindRenderModeControl();
+  bindExportFormatControl();
+  bindBrandKitInspector();
   bindScanReceiptTabs();
-  bindLayerToggles();
   bindLayoutDrag();
   onLayoutSelection(() => {
     renderCopyMarksRow();
     renderWidgetFields();
     renderTiltSliders();
+    renderFitRow();
+    renderElementsList();
   });
   bindCopyMarks();
   bindWidgetFields();
   bindTiltSliders();
+  bindFitRow();
   bindPositionPresets();
+  bindElementsList();
   bindChromeExtras(() => {
     state.editView = "slice";
     renderEditor();
@@ -295,7 +338,6 @@ export function startApp() {
     void renderValidation();
   };
   mountStoreTargetControl({ onChange: onDeviceUi });
-  mountFitControl({ onChange: onDeviceUi });
   mountOrientationControl({ onChange: onDeviceUi });
   mountShellViewControl({ onChange: onDeviceUi });
   mountCatalogWizard();
@@ -322,9 +364,7 @@ export function startApp() {
     }
     if (name === "edit") {
       syncDevicePickerValue();
-      syncFitControlUi();
       syncOrientationUi();
-      syncShellViewUi();
       syncStoreTargetUi();
       mountModePlugins();
       const modeLink = $("#mode-panel-link") as HTMLElement | null;
@@ -339,6 +379,12 @@ export function startApp() {
     }
   });
 
-  document.documentElement.style.setProperty("--signal", "#ff4d1a");
-  document.documentElement.style.setProperty("--project-accent", "#ff4d1a");
+  // Seed --project-accent (read by CSS before any real project/palette is
+  // loaded) from the actual current --signal token, not a hardcoded hex —
+  // a literal here silently wins over tokens.css forever via inline-style
+  // specificity, which is exactly how this line kept forcing the old
+  // orange onto every boot even after tokens.css moved on. --signal itself
+  // is never touched from JS; it's tokens.css's value alone.
+  const bootAccent = getComputedStyle(document.documentElement).getPropertyValue("--signal").trim();
+  if (bootAccent) document.documentElement.style.setProperty("--project-accent", bootAccent);
 }

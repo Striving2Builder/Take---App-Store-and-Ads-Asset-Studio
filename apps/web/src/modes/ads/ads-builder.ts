@@ -56,7 +56,7 @@ export function buildAdSets(
       name: "Ad set",
       styleLabel: "Ads · native IAB composition",
       style: brief.style,
-      blurb: `${ids.length} ad unit${ids.length === 1 ? "" : "s"} — headline, CTA, and logo composed per size, not a resized screenshot.`,
+      blurb: `${ids.length} ad unit${ids.length === 1 ? "" : "s"} — headline, CTA, and an advertiser-initial mark composed per size, not a resized screenshot.`,
       frames,
       copy: {
         iosTitle: clip(copy.headline, 30),

@@ -3,6 +3,11 @@ import type { CapturedPalette } from "@take/scan-client";
 import { currentSet, state } from "../../app/app-state";
 import { $ } from "../../shared/dom";
 import { toast } from "../../shell/toast";
+import { scheduleLayoutPaint } from "../layout/layout-live-paint";
+import { generatePalette, rotateHue } from "../../shared/palette-gen";
+import { relativeLuminance, contrastGrade } from "../../shared/contrast-ink";
+
+const GRADE_LABEL = { AAA: "AAA", AA: "AA", "AA-LARGE": "AA·L", LOW: "LOW" } as const;
 
 /** Brand accent for the phone canvas only — never overwrite global --signal. */
 export function applyProjectAccent(hex: string) {
@@ -19,10 +24,11 @@ export function renderPalette(colors: string[]) {
   const host = $("#palette");
   if (!host) return;
   host.innerHTML = colors
-    .map(
-      (c, i) =>
-        `<button type="button" class="swatch ${i === 0 ? "is-locked" : ""}" data-swatch="${i}" style="background:${c}" title="${c}" aria-label="Color ${c}"></button>`
-    )
+    .map((c, i) => {
+      const ink = relativeLuminance(c) > 0.5 ? "#14151b" : "#ffffff";
+      const badge = contrastGrade(c, ink);
+      return `<button type="button" class="swatch ${i === 0 ? "is-locked" : ""}" data-swatch="${i}" style="background:${c}" title="${c} · contrast ${badge.ratio.toFixed(1)}:1" aria-label="Color ${c}"><span class="swatch-badge" style="color:${ink}">${GRADE_LABEL[badge.grade]}</span></button>`;
+    })
     .join("");
 }
 
@@ -62,6 +68,7 @@ function applyScanPaletteToSet(pal: CapturedPalette) {
   applyProjectAccent(colors[0]);
   renderPalette(set.palette);
   refreshScanPaletteSlot();
+  scheduleLayoutPaint();
   toast(`Scan palette applied · ${colors[0]}`);
 }
 
@@ -78,6 +85,7 @@ export function bindStyleInspector() {
       if (set) {
         set.palette = [sw.hex, ...set.palette.filter((c) => c !== sw.hex)];
         renderPalette(set.palette);
+        scheduleLayoutPaint();
       }
       applyProjectAccent(sw.hex);
       toast(`Canvas accent · ${sw.hex}`);
@@ -86,6 +94,24 @@ export function bindStyleInspector() {
 
     if (t.closest?.("#btn-use-scan-palette") && state.scanPalette) {
       applyScanPaletteToSet(state.scanPalette);
+      return;
+    }
+
+    if (t.closest?.("#btn-generate-palette")) {
+      const set = currentSet();
+      if (!set) {
+        toast("Open a concept set in the editor first");
+        return;
+      }
+      const currentAccent = set.palette[0] || "#3e5ac4";
+      // A real, non-trivial rotation each click (40-140°) — a genuinely
+      // different generated direction, not a re-roll of the same hue.
+      const nextSeed = rotateHue(currentAccent, 40 + Math.random() * 100);
+      set.palette = generatePalette(nextSeed);
+      applyProjectAccent(set.palette[0]);
+      renderPalette(set.palette);
+      scheduleLayoutPaint();
+      toast(`New palette generated · ${set.palette[0]}`);
       return;
     }
 
@@ -105,6 +131,7 @@ export function bindStyleInspector() {
     set.palette = [color, ...set.palette.filter((_, idx) => idx !== i)];
     applyProjectAccent(color);
     renderPalette(set.palette);
+    scheduleLayoutPaint();
     toast(`Brand color locked · ${color}`);
   });
 }

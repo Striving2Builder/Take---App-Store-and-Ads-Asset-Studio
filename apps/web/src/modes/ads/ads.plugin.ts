@@ -18,9 +18,11 @@ import {
   type Jurisdiction,
 } from "@take/ad-compliance";
 import { state, currentSet } from "../../app/app-state";
+import { $ } from "../../shared/dom";
 import { escapeHtml } from "../../shared/escape";
 import { loadImg } from "../../stages/export/canvas-text";
 import { paintAdFrame } from "../../stages/export/paint-ad-frame";
+import { rasterSizeFor } from "../../shared/hidpi-raster";
 
 export const FAMILY_LABEL: Record<AdUnitFamily, string> = {
   leaderboard: "Leaderboard",
@@ -137,9 +139,74 @@ export const adsReviewPlugin: ModeEditorPlugin = {
   },
 };
 
+/** Which set.frames index the Edit-stage single preview shows — the active
+ *  frame if it carries a real ad unit, else the first frame that does. */
+function focusedAdsFrameIndex(): number {
+  const frames = currentSet()?.frames || [];
+  if (frames[state.activeFrame]?.adUnitId) return state.activeFrame;
+  const i = frames.findIndex((f) => f.adUnitId);
+  return i === -1 ? state.activeFrame : i;
+}
+
+/** Edit-stage focused preview — one ad unit at real scale with its dims
+ *  label, not the Review screen's small-thumbnail grid (renderAdsThumbGrid
+ *  stays a grid there; this is the Edit-stage-only single view). */
+export async function renderAdsFocusedPreview(host: HTMLElement): Promise<void> {
+  const set = currentSet();
+  const frames = set?.frames || [];
+  if (!frames.length) {
+    host.innerHTML = `<p class="hint tight">Check ad units on the left, then Generate to see a native preview here.</p>`;
+    return;
+  }
+  const i = focusedAdsFrameIndex();
+  const frame = frames[i];
+  const unit = frame?.adUnitId ? getAdUnit(frame.adUnitId) : undefined;
+  if (!frame?.adUnitId || !unit) {
+    host.innerHTML = `<p class="hint tight">No ad unit on this frame — pick one on the left, then Regenerate.</p>`;
+    return;
+  }
+  host.innerHTML = `<div class="ads-focus-wrap">
+    <span class="ads-focus-dims mono">${unit.exportPx.w} × ${unit.exportPx.h} · ${escapeHtml(unit.label)}</span>
+    <canvas class="ads-focus-canvas" style="aspect-ratio:${unit.exportPx.w}/${unit.exportPx.h}"></canvas>
+  </div>`;
+  const canvas = host.querySelector<HTMLCanvasElement>(".ads-focus-canvas");
+  if (!canvas || !set?.adCopy) return;
+  const cw = rasterSizeFor(canvas.clientWidth, window.devicePixelRatio || 1, 420);
+  canvas.width = cw;
+  canvas.height = Math.round(cw * (unit.exportPx.h / unit.exportPx.w));
+  await paintThumb(canvas, frame.adUnitId!, frame.wireframeId, set.adCopy);
+}
+
+/** Rail rows are checkboxes for inclusion (unitCheckboxesHtml, unchanged) —
+ *  clicking a row's info text instead focuses that unit's frame in the
+ *  single preview, when it already has one. Not a selection change. */
+export function bindAdsRailFocus(host: ParentNode, onFocus: () => void): void {
+  host.querySelectorAll<HTMLElement>(".ads-unit-row").forEach((row) => {
+    const info = row.querySelector<HTMLElement>(".ads-unit-focus-hit");
+    if (!info) return;
+    const focus = () => {
+      const id = row.querySelector("input")?.value;
+      const frames = currentSet()?.frames || [];
+      const i = frames.findIndex((f) => f.adUnitId === id);
+      if (i === -1) return;
+      state.activeFrame = i;
+      onFocus();
+    };
+    info.addEventListener("click", focus);
+    info.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        focus();
+      }
+    });
+  });
+}
+
 export function unitCheckboxesHtml(): string {
   const selected = new Set(state.adUnitIds);
   const families = listAdUnitFamilies();
+  const frames = currentSet()?.frames || [];
+  const focusedUnitId = frames.length ? frames[focusedAdsFrameIndex()]?.adUnitId : undefined;
   return families
     .map((fam) => {
       const units = listAdUnits({ family: fam });
@@ -149,10 +216,12 @@ export function unitCheckboxesHtml(): string {
           .map((u) => {
             const spec = u.kind !== "display" ? fmtUnitSpec(u) : "";
             return `<label class="ads-unit-check">
-              <span class="ads-unit-row">
+              <span class="ads-unit-row${u.id === focusedUnitId ? " is-focused" : ""}">
                 <input type="checkbox" value="${u.id}"${selected.has(u.id) ? " checked" : ""} />
-                <span>${escapeHtml(u.label)}</span>
-                <em class="mono">${u.exportPx.w}×${u.exportPx.h}</em>
+                <span class="ads-unit-focus-hit" role="button" tabindex="0" aria-label="Preview ${escapeHtml(u.label)}">
+                  <span>${escapeHtml(u.label)}</span>
+                  <em class="mono">${u.exportPx.w}×${u.exportPx.h}</em>
+                </span>
               </span>
               ${spec ? `<small class="ads-unit-spec mono">${escapeHtml(spec)}</small>` : ""}
             </label>`;
@@ -197,16 +266,27 @@ function categoryAndJurisdictionHtml(copy: AdCopy): string {
   </div>`;
 }
 
+// Inline SVG, not dingbat glyphs — a canvas-drawn icon renders identically
+// everywhere; a unicode symbol depends on whatever the viewer's system font
+// happens to ship. currentColor inherits each row's existing status color.
+const MARK_WARNING =
+  '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5 21 19H3z"/><line x1="12" y1="9" x2="12" y2="13.5"/><circle cx="12" cy="16.5" r="0.6" fill="currentColor" stroke="none"/></svg>';
+const MARK_CHECK =
+  '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
+const MARK_MISSING =
+  '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg>';
+const MARK_INFO = '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="4"/></svg>';
+
 function requirementRow(req: ComplianceRequirement, cls: string, mark: string): string {
   return `<li class="${cls}" title="${escapeHtml(req.description)} — ${escapeHtml(req.source)}"><span class="mark">${mark}</span> ${escapeHtml(req.label)}</li>`;
 }
 
 function checklistListItems(result: ReturnType<typeof checkLegalCompliance>): string {
   return [
-    ...result.prohibitions.map((r) => requirementRow(r, "prohibit", "⚠")),
-    ...result.satisfied.map((r) => requirementRow(r, "ok", "✓")),
-    ...result.missing.map((r) => requirementRow(r, "warn", "✕")),
-    ...result.advisories.map((r) => requirementRow(r, "info", "•")),
+    ...result.prohibitions.map((r) => requirementRow(r, "prohibit", MARK_WARNING)),
+    ...result.satisfied.map((r) => requirementRow(r, "ok", MARK_CHECK)),
+    ...result.missing.map((r) => requirementRow(r, "warn", MARK_MISSING)),
+    ...result.advisories.map((r) => requirementRow(r, "info", MARK_INFO)),
   ].join("");
 }
 
@@ -227,6 +307,26 @@ function copyFieldsHtml(copy: AdCopy): string {
     ${metaFieldHtml(LEGAL_FIELD, copy)}
     ${complianceChecklistHtml(copy)}
   </div>`;
+}
+
+/** Edit-stage left rail — unit-inclusion checkboxes (unitCheckboxesHtml,
+ *  same real data as the Intake picker) plus click-to-focus onto the
+ *  single preview. Distinct DOM/host from the Intake and inspector uses,
+ *  same underlying functions — one source of truth, three mount points. */
+export function renderAdsUnitRail(): void {
+  const host = $("#ads-unit-rail") as HTMLElement | null;
+  if (!host) return;
+  host.hidden = false;
+  host.innerHTML = `
+    <p class="label-caps">Ad units</p>
+    <p class="hint tight">Check units, then Regenerate to rebuild the set. Click a unit's name to preview it.</p>
+    <div class="ads-unit-grid">${unitCheckboxesHtml()}</div>
+  `;
+  bindUnitCheckboxes(host);
+  bindAdsRailFocus(host, () => {
+    void renderAdsFocusedPreview($("#ads-edit-stage") as HTMLElement);
+    renderAdsUnitRail();
+  });
 }
 
 /** Shared by the intake picker and the post-Generate inspector — same binding, one source of truth. */
@@ -252,13 +352,9 @@ export const adsInspectorPlugin: ModeEditorPlugin = {
     const copy = set?.adCopy;
     const missingUrl = copy && !copy.clickThroughUrl.trim();
     host.innerHTML = `
-      <p class="hint tight">Select ad units, then Regenerate to rebuild the set. Every export needs a click-through URL.</p>
       ${missingUrl ? `<p class="hint tight" style="color:var(--warn)">No click-through URL — export will warn.</p>` : ""}
-      <div class="ads-unit-grid">${unitCheckboxesHtml()}</div>
-      ${copy ? copyFieldsHtml(copy) : `<p class="hint tight">Generate first to edit ad copy.</p>`}
+      ${copy ? copyFieldsHtml(copy) : `<p class="hint tight">Check ad units on the left, then Generate to edit ad copy.</p>`}
     `;
-
-    bindUnitCheckboxes(host);
 
     const refreshChecklist = () => {
       const s = currentSet();
@@ -289,6 +385,9 @@ export const adsInspectorPlugin: ModeEditorPlugin = {
           });
         }
         if (key === "headline" || key === "description" || key === "legalLine") refreshChecklist();
+        if (key === "headline" || key === "description" || key === "cta") {
+          void renderAdsFocusedPreview($("#ads-edit-stage") as HTMLElement);
+        }
       });
     });
 

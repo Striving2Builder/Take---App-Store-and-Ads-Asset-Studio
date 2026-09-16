@@ -1,5 +1,11 @@
-/** OWNER: shell — mount Real/Partial/Fake honesty badges */
+/** OWNER: shell — mount Real/Partial/Fake honesty badges
+ *  Internal QA tool only. Under the zero-fake-features policy, a shipped
+ *  build should have nothing left to badge as PARTIAL/FAKE — so this never
+ *  mounts outside local dev, regardless of which of the functions below a
+ *  caller invokes. */
 import { TRUTH_LABEL, TRUTH_MARKS, type TruthStatus } from "../shared/truth";
+
+const DEV_ONLY = import.meta.env.DEV;
 
 function badgeEl(status: TruthStatus, why: string) {
   const el = document.createElement("span");
@@ -12,6 +18,7 @@ function badgeEl(status: TruthStatus, why: string) {
 }
 
 export function mountTruthBadges() {
+  if (!DEV_ONLY) return;
   TRUTH_MARKS.forEach((mark) => {
     const target = document.querySelector(mark.sel);
     if (!target) return;
@@ -43,6 +50,7 @@ export function mountTruthBadges() {
 }
 
 export function mountTruthLegend() {
+  if (!DEV_ONLY) return;
   if (document.getElementById("truth-legend")) return;
 
   const bar = document.createElement("aside");

@@ -47,6 +47,8 @@ export type DeviceInstance = {
   authored?: boolean;
   /** Shell orientation; default = recipe defaultOrientation. Export PNG size stays the set's. */
   orientation?: "portrait" | "landscape";
+  /** Screenshot fill inside this device's screen inset. Default "cover". */
+  fit?: "cover" | "contain";
 };
 
 /** Extra copy/visual on the export slice — not kicker/headline/caption, not world bg. */
@@ -78,6 +80,9 @@ export type ExtraSlot = {
   shotIndex?: number;
   /** Extra copy face only — not kicker/headline. */
   face?: ExtraFace;
+  /** Authored placeholder ("Your photo spans this cut") — dim + mark it so
+   *  it never ships as if it were real copy. */
+  sample?: boolean;
 };
 
 export type LayoutProvenance = {

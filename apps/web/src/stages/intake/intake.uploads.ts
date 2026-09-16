@@ -104,7 +104,9 @@ function paintUploadPreview() {
     .map((u) => {
       if (u.kind === "video") {
         const dur = u.durationMs ? `${(u.durationMs / 1000).toFixed(1)}s` : "";
-        return `<span class="upload-thumb-video" title="${escapeHtml(u.name)}"><img src="${u.posterUrl || ""}" alt="${escapeHtml(u.name)}" /><em>▶ ${dur}</em></span>`;
+        const playIcon =
+          '<svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M6 4l14 8-14 8V4z"/></svg>';
+        return `<span class="upload-thumb-video" title="${escapeHtml(u.name)}"><img src="${u.posterUrl || ""}" alt="${escapeHtml(u.name)}" /><em>${playIcon} ${dur}</em></span>`;
       }
       return `<span class="upload-thumb-wrap"><img class="upload-thumb" src="${u.url}" alt="${escapeHtml(u.name)}" />${qualityBadge(u)}</span>`;
     })

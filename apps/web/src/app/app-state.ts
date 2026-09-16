@@ -27,6 +27,10 @@ export type AppState = {
   selectedSet: number;
   activeFrame: number;
   filter: string;
+  /** Library: recipe.composition — "all" | "isolated" | "strip" */
+  compositionFilter: string;
+  /** Library: recipe.frameCount, stringified — "all" | "5" | "8" | "10" */
+  frameCountFilter: string;
   /** Library: hide recipes tagged "needs-polish" (unfinished seed examples) */
   hideDrafts: boolean;
   deviceId: string;
@@ -60,7 +64,9 @@ export const state: AppState = {
   selectedSet: 0,
   activeFrame: 0,
   filter: "all",
-  hideDrafts: false,
+  compositionFilter: "all",
+  frameCountFilter: "all",
+  hideDrafts: true,
   deviceId: "apple.iphone-16-pro-max",
   fitMode: "cover",
   orientation: "portrait",

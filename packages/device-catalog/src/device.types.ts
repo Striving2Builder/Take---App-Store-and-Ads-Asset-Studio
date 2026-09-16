@@ -7,6 +7,10 @@ export type ShellKind = "frame" | "asset";
 export type DeviceFitMode = "cover" | "contain" | "safe-area";
 export type DeviceOrientation = "portrait" | "landscape";
 export type ShellView = "front" | "back";
+/** Derived from `source` — whether this profile's chrome/hardware geometry
+ * was measured for this exact SKU, or inherited from a family relative
+ * (source text carries "inferredFrom: <id>"). See sourceConfidenceOf(). */
+export type SourceConfidence = "measured" | "inherited";
 
 export type PxSize = { w: number; h: number };
 export type ScreenInset = { x: number; y: number; w: number; h: number };

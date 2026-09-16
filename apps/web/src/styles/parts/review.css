@@ -31,12 +31,14 @@
 }
 
 .chip {
-  font-family: var(--font-mono);
-  font-size: 0.6rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  padding: 0.35rem 0.55rem;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.76rem;
+  letter-spacing: normal;
+  text-transform: none;
+  padding: 0.35rem 0.65rem;
   border: 1px solid var(--line-strong);
+  border-radius: 20px;
   color: var(--paper-dim);
 }
 
@@ -53,15 +55,17 @@
 
 .set-card {
   border: 1px solid var(--line);
+  border-radius: var(--radius-md);
   background: var(--ink-2);
-  padding: 1rem;
+  padding: 1.1rem;
   cursor: pointer;
-  transition: border-color 0.25s, transform 0.25s var(--ease);
+  transition: border-color 0.25s, transform 0.25s var(--ease), box-shadow 0.25s;
   position: relative;
   text-align: left;
   width: 100%;
   color: inherit;
 }
+.set-card:hover { box-shadow: var(--shadow); }
 
 .set-card:hover { border-color: var(--paper-dim); transform: translateY(-3px); }
 .set-card.is-selected {
@@ -83,11 +87,12 @@
 }
 
 .set-style {
-  font-family: var(--font-mono);
-  font-size: 0.6rem;
-  letter-spacing: 0.1em;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.68rem;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: var(--cyan);
+  color: var(--signal);
 }
 
 .storyboard {
@@ -102,6 +107,8 @@
   aspect-ratio: 9/16;
   background: var(--ink);
   border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
   position: relative;
   min-width: 0;
 }
@@ -116,14 +123,19 @@
 .storyboard.is-strip .story-frame {
   border-left-width: 0;
   border-right-width: 0;
+  border-radius: 0;
 }
 
 .storyboard.is-strip .story-frame:first-child {
   border-left-width: 1px;
+  border-top-left-radius: var(--radius-sm);
+  border-bottom-left-radius: var(--radius-sm);
 }
 
 .storyboard.is-strip .story-frame:last-child {
   border-right-width: 1px;
+  border-top-right-radius: var(--radius-sm);
+  border-bottom-right-radius: var(--radius-sm);
 }
 
 .story-frame .sf-label {
@@ -134,7 +146,7 @@
   font-family: var(--font-mono);
   font-size: 0.45rem;
   letter-spacing: 0.06em;
-  color: var(--cyan);
+  color: var(--signal);
   z-index: 1;
   white-space: nowrap;
   overflow: hidden;

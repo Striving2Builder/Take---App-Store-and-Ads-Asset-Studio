@@ -20,17 +20,31 @@ import { toast } from "../../shell/toast";
 import { renderReview } from "../review/review.render";
 import { renderEditor } from "../../editor/canvas/edit-canvas";
 import { mountModePlugins } from "../../modes/mode-plugins";
+import { syncOrientationUi } from "../../editor/device/orientation-control";
+import { syncStoreTargetUi } from "../../editor/device/store-target-control";
+import { syncShellViewUi } from "../../editor/device/shell-view-control";
 import { persistExportPresetIds } from "../export/persist-presets";
 import { syncExportPresetChecks } from "../export/mount-presets";
 import { paintLibraryThumbs } from "./library-thumb";
-import { libraryFilterMatch, isDraftTemplate } from "./library-filter";
+import {
+  libraryFilterMatch,
+  libraryCompositionMatch,
+  libraryFrameCountMatch,
+  isDraftTemplate,
+} from "./library-filter";
 import { newLayoutFromLibrary, useLibraryRecipe } from "./library-use";
 import { openLibraryPreview } from "./library-preview";
+import { renderPaletteShowcase } from "./palette-showcase";
 
 export async function renderLibrary() {
+  renderPaletteShowcase();
   const all = listLayoutTemplates();
   const filtered = all.filter(
-    (t) => libraryFilterMatch(t, state.filter) && (!state.hideDrafts || !isDraftTemplate(t))
+    (t) =>
+      libraryFilterMatch(t, state.filter) &&
+      libraryCompositionMatch(t, state.compositionFilter) &&
+      libraryFrameCountMatch(t, state.frameCountFilter) &&
+      (!state.hideDrafts || !isDraftTemplate(t))
   );
 
   const projects = await listProjects();
@@ -147,13 +161,20 @@ export async function handleLibraryAction(id: string, action: string) {
     renderReview();
     renderEditor();
     mountModePlugins();
+    syncOrientationUi();
+    syncStoreTargetUi();
+    syncShellViewUi();
     toast(`Opened project “${proj.name}”`);
     pushHistory("project.open", id);
     return;
   }
 
   if (action === "use") {
+    const tpl = getTemplates().find((t) => t.id === id);
     useLibraryRecipe(id);
+    if (tpl && isDraftTemplate(tpl)) {
+      toast(`“${tpl.name}” is a draft — device placement isn't fully refined yet`);
+    }
   } else if (action === "preview") {
     void openLibraryPreview(id);
   } else if (action === "new-layout") {

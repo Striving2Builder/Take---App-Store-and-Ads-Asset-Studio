@@ -42,7 +42,7 @@ export function applySliceRule(rule: string): string | null {
   }
   if (rule === "landscape" || rule === "portrait") {
     const instId = selectedLayoutDeviceId() || deviceOnSlice(recipe, slice, metrics)?.id;
-    if (!instId) return "No phone on this PNG";
+    if (!instId) return "No device on this PNG";
     const result = setInstanceOrientation({
       recipe,
       instanceId: instId,

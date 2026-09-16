@@ -25,6 +25,7 @@
   margin-bottom: 1.25rem;
   padding: 1rem 1.15rem;
   border: 1px dashed var(--line-strong);
+  border-radius: var(--radius-md);
   background: var(--ink-2);
 }
 
@@ -36,11 +37,12 @@
 
 .library-upload .hint { margin-bottom: 0; }
 .library-upload-button { cursor: pointer; }
-.library-upload-count { color: var(--signal); font-family: var(--font-mono); font-size: 0.62rem; text-transform: uppercase; }
+.library-upload-count { color: var(--signal); font-family: var(--font-display); font-weight: 700; font-size: 0.76rem; }
 
 .filter {
   text-align: left;
   padding: 0.5rem 0.65rem;
+  border-radius: var(--radius-sm);
   font-family: var(--font-display);
   font-weight: 600;
   font-size: 0.9rem;
@@ -61,14 +63,92 @@
   gap: 0.45rem;
   padding: 0.5rem 0.65rem;
   margin-top: 0.15rem;
-  font-family: var(--font-mono);
-  font-size: 0.68rem;
-  letter-spacing: 0.04em;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.82rem;
+  letter-spacing: normal;
   color: var(--paper-dim);
   cursor: pointer;
 }
 .filter-toggle:hover { color: var(--paper); }
 .filter-toggle input { accent-color: var(--signal); cursor: pointer; }
+
+.palette-showcase {
+  display: flex;
+  align-items: center;
+  gap: 1.75rem;
+  margin-bottom: 1.25rem;
+  padding: 1.35rem 1.6rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background: var(--ink-2);
+}
+
+.palette-showcase-lead { flex: 0 0 230px; }
+
+.palette-showcase-lead .eyebrow {
+  margin: 0 0 0.4rem;
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--signal);
+}
+
+.palette-showcase-lead h3 {
+  margin: 0 0 0.4rem;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1rem;
+}
+
+.palette-showcase-lead p {
+  margin: 0;
+  font-size: 0.82rem;
+  color: var(--paper-dim);
+  line-height: 1.45;
+}
+
+.palette-swatch-row {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 0.75rem;
+}
+
+.palette-swatch {
+  height: 74px;
+  border-radius: var(--radius-md);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 0.5rem 0.6rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.palette-swatch-badge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  font-weight: 700;
+  padding: 1px 5px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.85);
+  color: #111318;
+}
+
+.palette-swatch-hex {
+  font-size: 0.66rem;
+  font-weight: 600;
+}
+
+@media (max-width: 760px) {
+  .palette-showcase { flex-direction: column; align-items: stretch; }
+  .palette-swatch-row { grid-template-columns: repeat(auto-fit, minmax(90px, 1fr)); }
+}
 
 .library-grid {
   display: grid;
@@ -78,13 +158,14 @@
 
 .tpl-card {
   border: 1px solid var(--line);
+  border-radius: var(--radius-md);
   background: var(--ink-2);
   overflow: hidden;
   text-align: left;
   color: inherit;
   width: 100%;
   cursor: default;
-  transition: border-color 0.2s, transform 0.2s;
+  transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
 }
 
 .tpl-card:hover {
@@ -149,9 +230,11 @@
 .tpl-add-shot {
   padding: 0.35rem 0.45rem;
   border: 1px dashed var(--line-strong);
+  border-radius: var(--radius-sm);
   color: var(--paper-dim);
-  font-family: var(--font-mono);
-  font-size: 0.55rem;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.68rem;
   white-space: nowrap;
 }
 
@@ -176,10 +259,10 @@
   position: absolute;
   left: 10px;
   bottom: 10px;
-  font-family: var(--font-mono);
-  font-size: 0.55rem;
-  letter-spacing: 0.1em;
-  color: var(--cyan);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.68rem;
+  color: var(--signal);
   pointer-events: none;
 }
 
@@ -193,18 +276,19 @@
 }
 
 .tpl-meta {
-  font-family: var(--font-mono);
-  font-size: 0.58rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.74rem;
+  letter-spacing: normal;
+  text-transform: none;
   color: var(--paper-dim);
 }
 
 .tpl-slot-note {
   margin: 0.45rem 0 0;
   color: var(--paper-dim);
-  font-family: var(--font-mono);
-  font-size: 0.58rem;
+  font-family: var(--font-display);
+  font-size: 0.74rem;
 }
 
 .tpl-actions {
@@ -215,12 +299,14 @@
 
 .tpl-actions button {
   flex: 1;
-  padding: 0.4rem;
+  padding: 0.45rem;
   border: 1px solid var(--line);
-  font-family: var(--font-mono);
-  font-size: 0.55rem;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.74rem;
+  letter-spacing: normal;
+  text-transform: none;
   color: var(--paper-dim);
 }
 .tpl-actions button:hover { color: var(--signal); border-color: var(--signal); }

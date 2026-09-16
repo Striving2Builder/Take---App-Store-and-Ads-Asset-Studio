@@ -1,33 +1,95 @@
-/** OWNER: modes/replicator — compare lane (labels only, never competitor pixels) */
+/** OWNER: modes/replicator — competitor rail + role-cycle reference (labels only, never competitor pixels) */
 import type { ModeEditorPlugin } from "@take/modes-sdk";
 import { currentSet, state } from "../../app/app-state";
+import { $ } from "../../shared/dom";
 import { escapeHtml } from "../../shared/escape";
-import { renderEditor, syncFrameFromDom } from "../../editor/canvas/edit-canvas";
+import { renderEditor, roleLabel, syncFrameFromDom } from "../../editor/canvas/edit-canvas";
 import { syncModePluginHighlights } from "../mode-plugins";
-import { competitorBeatsFromPack } from "./competitor-beats";
+import { competitorBeatsFromPack, type CompetitorBeat } from "./competitor-beats";
+import { TRACE_ROLES } from "./replicator-builder";
 
-function compareHtml(): string {
+/** The abstract "Competitor · structure" lane next to the real canvas —
+ *  labels only (role tag + generic proportion bars), never a real
+ *  competitor screenshot. Real content: the active frame's own kicker and
+ *  which competitor its beat currently cycles to. */
+function renderCompareBlock(): void {
+  const host = $("#replicator-compare-block") as HTMLElement | null;
+  if (!host) return;
   const beats = competitorBeatsFromPack(state.lastPack);
   const frames = currentSet()?.frames || [];
-  if (!beats.length && !frames.length) {
-    return `<p class="hint tight">Add a competitor Extra Source or upload refs, then Generate.</p>`;
+  const frame = frames[state.activeFrame];
+  if (!beats.length || !frame) {
+    host.hidden = true;
+    return;
   }
-  const rows = frames
-    .map((f, i) => {
-      const beat = beats[i % Math.max(1, beats.length)];
-      const vs = beat ? escapeHtml(beat.label) : "upload ref";
-      return `<li data-plugin-frame="${i}" class="${i === state.activeFrame ? "is-active" : ""}">
-        <span class="mono">${escapeHtml(f.kicker || f.role)}</span>
-        <span>${escapeHtml(f.headline)}</span>
-        <span class="hint tight">vs ${vs}</span>
-      </li>`;
-    })
-    .join("");
-  return `
-    <p class="hint tight">Structure map only — competitor screenshots never land on your canvas (brand merge is compare-only).</p>
-    <ol class="mode-compare-list">${rows}</ol>
+  host.hidden = false;
+  const label = beats[state.activeFrame % beats.length]?.label || "Competitor";
+  host.innerHTML = `
+    <div class="compare-lane">
+      <span class="compare-lane-label">${escapeHtml(label)} · structure</span>
+      <div class="compare-block" data-role-tag>
+        <span class="role-tag">${escapeHtml(frame.kicker || roleLabel(frame.role))}</span>
+        <div class="bar w60"></div>
+        <div class="bar w40"></div>
+      </div>
+    </div>
+    <span class="compare-vs">vs</span>
   `;
 }
+
+function jumpTo(i: number) {
+  syncFrameFromDom();
+  state.activeFrame = i;
+  renderEditor();
+  syncModePluginHighlights();
+}
+
+/** Left rail — real competitor sources from the scanned pack (name, real
+ *  scanned-screenshot count), plus the real frame-count-derivation note.
+ *  Clicking a source jumps to the first frame whose compare beat cycles to
+ *  it (competitorBeatsFromPack's own i % beats.length assignment). */
+export const replicatorRailPlugin: ModeEditorPlugin = {
+  id: "replicator-rail",
+  title: "Competitor sources",
+  slot: "rail",
+  render(host) {
+    renderCompareBlock();
+    const beats = competitorBeatsFromPack(state.lastPack);
+    const frames = currentSet()?.frames || [];
+    if (!beats.length) {
+      host.innerHTML = `<p class="label-caps">Competitor sources</p><p class="hint tight">Add a competitor Extra Source, then Generate — frame count and sequence come from its scanned screenshots.</p>`;
+      return;
+    }
+    const activeBeatIndex = state.activeFrame % beats.length;
+    const rows = beats
+      .map((b: CompetitorBeat, i) => {
+        const initial = (b.label.trim()[0] || "?").toUpperCase();
+        return `<button type="button" class="comp-row${i === activeBeatIndex ? " is-active" : ""}" data-comp-source="${i}">
+          <span class="comp-avatar">${escapeHtml(initial)}</span>
+          <span class="comp-info">
+            <span class="name">${escapeHtml(b.label)}</span>
+            <span class="n mono">${b.screenshotCount} screenshot${b.screenshotCount === 1 ? "" : "s"} scanned</span>
+          </span>
+        </button>`;
+      })
+      .join("");
+    const totalShots = beats.reduce((n, b) => n + b.screenshotCount, 0);
+    host.innerHTML = `
+      <p class="label-caps">Competitor sources</p>
+      ${rows}
+      <p class="hint tight">Frame count comes from the competitor's own scanned screenshot count, clamped 3–12.${
+        totalShots ? ` ${totalShots} scanned screenshot${totalShots === 1 ? "" : "s"} → ${frames.length} frame${frames.length === 1 ? "" : "s"} here.` : ""
+      }</p>
+    `;
+    host.querySelectorAll<HTMLElement>("[data-comp-source]").forEach((row) => {
+      row.addEventListener("click", () => {
+        const bi = Number(row.dataset.compSource);
+        const fi = frames.findIndex((_, i) => i % beats.length === bi);
+        if (fi !== -1) jumpTo(fi);
+      });
+    });
+  },
+};
 
 export const replicatorReviewPlugin: ModeEditorPlugin = {
   id: "replicator-review",
@@ -42,21 +104,24 @@ export const replicatorReviewPlugin: ModeEditorPlugin = {
   },
 };
 
+/** Mode tab — the fixed role cycle is reference info; kicker/headline stay
+ *  the real, already-editable Content-tab/canvas fields, not duplicated
+ *  here (same shape as the Slideshow inspector). */
 export const replicatorInspectorPlugin: ModeEditorPlugin = {
   id: "replicator-inspector",
-  title: "Compare",
+  title: "Replicator",
   slot: "inspector",
   render(host) {
-    host.innerHTML = compareHtml();
-    host.querySelectorAll("[data-plugin-frame]").forEach((el) => {
-      el.addEventListener("click", () => {
-        const i = Number((el as HTMLElement).dataset.pluginFrame);
-        if (Number.isNaN(i)) return;
-        syncFrameFromDom();
-        state.activeFrame = i;
-        renderEditor();
-        syncModePluginHighlights();
-      });
-    });
+    host.innerHTML = `
+      <p class="hint tight">Kicker and headline are per-frame — edit them on the canvas and in the Content tab.</p>
+      <p class="label-caps">Beat roles (fixed cycle)</p>
+      <div class="role-chain">
+        ${TRACE_ROLES.map(
+          (r) =>
+            `<span class="role-chip${r === currentSet()?.frames[state.activeFrame]?.role ? " is-active" : ""}" data-role-chip="${r}">${escapeHtml(roleLabel(r))}</span>`
+        ).join("")}
+      </div>
+      <p class="hint tight">Structure only, never competitor pixels — this cycle sets sequence, not content.</p>
+    `;
   },
 };

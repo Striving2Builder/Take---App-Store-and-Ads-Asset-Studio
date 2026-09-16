@@ -1,5 +1,12 @@
 /** OWNER: editor/canvas — contenteditable sync + frame render + scan assets */
 import { FRAME_ROLES } from "@take/core";
+
+// Display-only: FRAME_ROLES stays SCREAMING_CASE for internal matching, but
+// the mockup's UI chrome never renders labels in all caps (that mono/uppercase
+// skin was the "engineering tool" look flagged for removal).
+export function roleLabel(role: string) {
+  return role.charAt(0) + role.slice(1).toLowerCase();
+}
 import { currentFrame, currentSet, state } from "../../app/app-state";
 import { $, $$ } from "../../shared/dom";
 import { escapeHtml } from "../../shared/escape";
@@ -9,24 +16,38 @@ import {
   renderPalette,
   refreshScanPaletteSlot,
 } from "../inspectors/style-inspector";
+import { syncPaletteWheel } from "../inspectors/palette-wheel";
+import { syncTypographyInspector } from "../inspectors/typography-inspector";
+import { syncRenderModeControl } from "../inspectors/render-mode";
+import { syncExportFormatControl } from "../inspectors/export-format-inspector";
+import { syncBrandKitCard } from "../inspectors/brand-kit-inspector";
 import { goalCta } from "../../modes/wizard/copy-builder";
+import { pickHeadline } from "../../modes/wizard/frames-builder";
 import { toast } from "../../shell/toast";
 import { applyDeviceFrame } from "../device/apply-device-frame";
-import { cssObjectFitForMode } from "../device/shell-composite";
-import { scanIconUrl, shotUrlAt } from "../../stages/export/selected-shots";
 import { paintStripSlice, stripRecipeOfSet } from "../../stages/export/paint-strip-slice";
 import { refreshStripPreview } from "../strip/strip-preview";
 import { refreshSetView } from "../strip/set-view";
 import { syncLayoutDrag } from "../layout/layout-drag";
 import { ensureSetRecipe } from "../layout/attach-recipe";
-import { renderPanoramaPicker, renderTypeBandRow } from "../inspectors/layers-inspector";
+import { renderElementsList, renderPanoramaPicker, renderTypeBandRow } from "../inspectors/layers-inspector";
 import { renderCopyMarksRow } from "../inspectors/copy-marks";
 import { renderWidgetFields } from "../inspectors/widget-fields";
 import { renderTiltSliders } from "../inspectors/tilt-sliders";
+import { renderFitRow } from "../inspectors/fit-toggle";
 import { resolveExportSize } from "@take/device-catalog";
-import { renderAdsThumbGrid } from "../../modes/ads/ads.plugin";
+import { renderAdsFocusedPreview, renderAdsUnitRail } from "../../modes/ads/ads.plugin";
 import { rasterSizeFor } from "../../shared/hidpi-raster";
 import { inkForBackground } from "../../shared/contrast-ink";
+import {
+  applyRestoredSet,
+  beginRestore,
+  commitHistory,
+  endRestore,
+  redo,
+  syncHistoryButtons,
+  undo,
+} from "../history/edit-history";
 
 export function syncFrameFromDom() {
   const frame = currentFrame();
@@ -36,60 +57,13 @@ export function syncFrameFromDom() {
   frame.caption = ($("#shot-caption")?.textContent || "").trim();
 }
 
-function applyCanvasAssets(frameIndex: number) {
-  const screen = $("#phone-screen") as HTMLElement | null;
-  const content = $("#shot-content") as HTMLElement | null;
-  if (!screen || !content) return;
-
-  const layoutOn = !!stripRecipeOfSet();
-  const shot = layoutOn ? null : shotUrlAt(frameIndex);
-  const icon = layoutOn ? null : scanIconUrl();
-  const fit = cssObjectFitForMode(state.fitMode);
-
-  let shotEl = screen.querySelector(".scan-shot-fill") as HTMLImageElement | null;
-  if (shot) {
-    if (!shotEl) {
-      shotEl = document.createElement("img");
-      shotEl.className = "scan-shot-fill";
-      shotEl.alt = "";
-      shotEl.referrerPolicy = "no-referrer";
-      screen.insertBefore(shotEl, content);
-    }
-    shotEl.src = shot;
-    shotEl.style.objectFit = fit;
-    shotEl.hidden = false;
-    screen.dataset.hasScanShot = "1";
-    content.classList.add("has-scan-shot");
-  } else {
-    if (shotEl) shotEl.hidden = true;
-    delete screen.dataset.hasScanShot;
-    content.classList.remove("has-scan-shot");
-  }
-
-  // Clear legacy background-image approach
-  screen.style.backgroundImage = "";
-  screen.style.backgroundSize = "";
-  screen.style.backgroundPosition = "";
-
-  let badge = content.querySelector(".scan-icon-badge") as HTMLImageElement | null;
-  if (icon) {
-    if (!badge) {
-      badge = document.createElement("img");
-      badge.className = "scan-icon-badge";
-      badge.alt = "App icon";
-      badge.referrerPolicy = "no-referrer";
-      content.prepend(badge);
-    }
-    badge.src = icon;
-    badge.hidden = false;
-  } else if (badge) {
-    badge.hidden = true;
-  }
-}
-
 export function renderEditor() {
   const set = currentSet();
   if (!set) return;
+  // Guarantee a recipe before anything renders: the canvas-painted path
+  // (paintStripSlice via #layout-stage) is now the only rendering model —
+  // #phone-mock's raw-screenshot DOM path is retired, not just unused.
+  if (state.mode !== "ads") ensureSetRecipe();
 
   applyDeviceFrame();
 
@@ -99,7 +73,8 @@ export function renderEditor() {
       .map(
         (f, i) => `<li>
         <button type="button" class="${i === state.activeFrame ? "is-active" : ""}" data-frame="${i}">
-          <span>${String(i + 1).padStart(2, "0")} ${escapeHtml(f.role)}</span>
+          <span class="frame-num mono">${String(i + 1).padStart(2, "0")}</span>
+          <span class="frame-role">${escapeHtml(roleLabel(f.role))}</span>
         </button>
       </li>`
       )
@@ -112,10 +87,10 @@ export function renderEditor() {
   if (label) {
     label.textContent =
       state.mode === "ads"
-        ? `AD SET · ${set.frames.filter((f) => f.adUnitId).length} unit${set.frames.length === 1 ? "" : "s"}`
+        ? `Ad set · ${set.frames.filter((f) => f.adUnitId).length} unit${set.frames.length === 1 ? "" : "s"}`
         : state.editView === "set"
-          ? `SET · ${set.frames.length} frames · store carousel`
-          : `FRAME ${String(frame.index + 1).padStart(2, "0")} · ${frame.role}`;
+          ? `Set · ${set.frames.length} frames · store carousel`
+          : `Frame ${String(frame.index + 1).padStart(2, "0")} · ${roleLabel(frame.role)}`;
   }
   const k = $("#shot-kicker");
   const h = $("#shot-headline");
@@ -124,10 +99,14 @@ export function renderEditor() {
   if (h) h.textContent = frame.headline;
   if (c) c.textContent = frame.caption;
 
-  applyCanvasAssets(state.activeFrame);
   applyProjectAccent(set.palette[0]);
   renderMetaFields(set.copy);
   renderPalette(set.palette);
+  syncPaletteWheel();
+  syncTypographyInspector();
+  syncRenderModeControl();
+  syncExportFormatControl();
+  syncBrandKitCard();
   refreshScanPaletteSlot();
   const styleSel = $("#edit-style") as HTMLSelectElement | null;
   if (styleSel) styleSel.value = set.style;
@@ -138,30 +117,45 @@ export function renderEditor() {
   void refreshSetView();
   renderPanoramaPicker();
   renderTypeBandRow();
+  renderElementsList();
   renderCopyMarksRow();
   renderWidgetFields();
   renderTiltSliders();
+  renderFitRow();
+  commitHistory();
+  syncHistoryButtons();
 }
 
+/** #layout-stage (canvas-painted, export-accurate) is the only rendering
+ *  model now. #phone-mock stays in the DOM only until the shell rebuild
+ *  physically removes it; this function never shows it. */
 async function syncLayoutStage() {
   const phone = $("#phone-mock") as HTMLElement | null;
   const stage = $("#layout-stage") as HTMLElement | null;
   const adsStage = $("#ads-edit-stage") as HTMLElement | null;
   const canvas = $("#layout-slice-canvas") as HTMLCanvasElement | null;
-  const screen = $("#phone-screen") as HTMLElement | null;
   const content = $("#shot-content") as HTMLElement | null;
   const recipe = stripRecipeOfSet();
-  if (!phone || !stage || !canvas || !screen || !content) return;
+  if (!phone || !stage || !canvas || !content) return;
+  phone.hidden = true;
 
   document.body.classList.toggle("is-ads-edit", state.mode === "ads");
+  document.body.classList.toggle("is-replicator-edit", state.mode === "replicator");
+  document.body.classList.toggle("is-slideshow-edit", state.mode === "slideshow");
+  const constraintBar = $("#replicator-constraint-bar") as HTMLElement | null;
+  if (constraintBar) constraintBar.hidden = state.mode !== "replicator";
+  if (state.mode !== "replicator") {
+    const compareBlock = $("#replicator-compare-block") as HTMLElement | null;
+    if (compareBlock) compareBlock.hidden = true;
+  }
 
   if (state.mode === "ads") {
-    phone.hidden = true;
     stage.hidden = true;
     if (adsStage) {
       adsStage.hidden = false;
-      renderAdsThumbGrid(adsStage);
+      void renderAdsFocusedPreview(adsStage);
     }
+    renderAdsUnitRail();
     const activePanel = document.querySelector(".meta-link.is-active") as HTMLElement | null;
     if (activePanel?.dataset.panel === "copy" || activePanel?.dataset.panel === "layers") {
       $$(".meta-link").forEach((el) => el.classList.toggle("is-active", el.getAttribute("data-panel") === "mode"));
@@ -174,42 +168,35 @@ async function syncLayoutStage() {
     return;
   }
   if (adsStage) adsStage.hidden = true;
+  const railEl = $("#ads-unit-rail") as HTMLElement | null;
+  if (railEl) railEl.hidden = true;
 
   if (state.editView === "set") {
-    phone.hidden = true;
     stage.hidden = true;
     syncLayoutDrag();
     return;
   }
 
-  if (recipe) {
-    phone.hidden = true;
-    stage.hidden = false;
-    stage.appendChild(content);
-    const ink = inkForBackground(recipe.background.colorA, recipe.background.colorB);
-    content.style.setProperty("--slice-ink", ink.text);
-    content.style.setProperty("--slice-ink-dim", ink.dim);
-    content.style.setProperty("--slice-ink-accent", ink.accent);
-    const { w, h } = resolveExportSize(state.deviceId, state.platform, state.orientation).size;
-    const cw = rasterSizeFor(stage.clientWidth, window.devicePixelRatio || 1, 264);
-    await paintStripSlice(canvas, state.activeFrame, {
-      w: cw,
-      h: Math.round(cw * (h / w)),
-      skipType: true,
-      recipe,
-      frames: currentSet()?.frames,
-      palette: currentSet()?.palette,
-    });
-    syncLayoutDrag();
-  } else {
-    phone.hidden = false;
-    stage.hidden = true;
-    content.style.removeProperty("--slice-ink");
-    content.style.removeProperty("--slice-ink-dim");
-    content.style.removeProperty("--slice-ink-accent");
-    screen.appendChild(content);
-    syncLayoutDrag();
-  }
+  // renderEditor() calls ensureSetRecipe() before this runs, so a non-ads
+  // set always has one here — no fallback branch needed.
+  if (!recipe) return;
+  stage.hidden = false;
+  stage.appendChild(content);
+  const ink = inkForBackground(recipe.background.colorA, recipe.background.colorB);
+  content.style.setProperty("--slice-ink", ink.text);
+  content.style.setProperty("--slice-ink-dim", ink.dim);
+  content.style.setProperty("--slice-ink-accent", ink.accent);
+  const { w, h } = resolveExportSize(state.deviceId, state.platform, state.orientation).size;
+  const cw = rasterSizeFor(stage.clientWidth, window.devicePixelRatio || 1, 264);
+  await paintStripSlice(canvas, state.activeFrame, {
+    w: cw,
+    h: Math.round(cw * (h / w)),
+    skipType: true,
+    recipe,
+    frames: currentSet()?.frames,
+    palette: currentSet()?.palette,
+  });
+  syncLayoutDrag();
 }
 
 export function addFrame() {
@@ -232,7 +219,6 @@ export function addFrame() {
     dwellMs: state.mode === "slideshow" ? 2000 : undefined,
   });
   state.activeFrame = i;
-  if (stripRecipeOfSet()) ensureSetRecipe();
   renderEditor();
   toast("Frame added");
 }
@@ -249,23 +235,42 @@ export function removeFrame() {
     f.kicker = `${String(i + 1).padStart(2, "0")} · ${f.role}`;
   });
   state.activeFrame = Math.min(state.activeFrame, set.frames.length - 1);
-  if (stripRecipeOfSet()) ensureSetRecipe();
   renderEditor();
   toast("Frame removed");
 }
 
 export function regenFrame() {
   const frame = currentFrame();
+  const inf = state.inference;
   if (!frame) return;
-  const alts = [
-    "A sharper cut",
-    "One honest beat",
-    "Less chrome. More signal.",
-    "Proof over polish",
-    "Open. Act. Leave.",
-  ];
-  frame.headline = alts[Math.floor(Math.random() * alts.length)];
-  frame.caption = state.inference?.value || frame.caption;
+  if (!inf) {
+    toast("Scan or fill Advanced first — regenerate needs a brief to draw from");
+    return;
+  }
+  const [headline, caption] = pickHeadline(inf, frame.headline);
+  frame.headline = headline;
+  frame.caption = caption;
   renderEditor();
   toast("Frame regenerated");
+}
+
+function afterHistoryJump(restored: ReturnType<typeof undo>, label: string) {
+  if (!restored) {
+    toast(`Nothing to ${label.toLowerCase()}`);
+    return;
+  }
+  applyRestoredSet(restored);
+  state.activeFrame = Math.min(state.activeFrame, restored.frames.length - 1);
+  beginRestore();
+  renderEditor();
+  endRestore();
+  toast(label);
+}
+
+export function handleUndo() {
+  afterHistoryJump(undo(), "Undone");
+}
+
+export function handleRedo() {
+  afterHistoryJump(redo(), "Redone");
 }
