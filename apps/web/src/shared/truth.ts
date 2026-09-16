@@ -90,13 +90,13 @@ export const TRUTH_MARKS: TruthMark[] = [
   {
     sel: '[data-panel-view="style"] .inspector-title',
     status: "partial",
-    why: "Palette wheel is real pointer input (hue/saturation from click position + a lightness slider) feeding the real generatePalette() harmony math and real per-swatch WCAG contrast badges. Marked partial only for the pre-existing nuance: Lock uses --project-accent on canvas, not the app's own --signal; From scan swaps in when a live palette exists.",
+    why: "Palette wheel is real pointer input (hue/saturation from click position + a lightness slider) feeding the real generatePalette() harmony math and real per-swatch WCAG contrast badges. Also real arrow-key input (role=slider, tabindex, aria-valuetext) — the wheel is not pointer-only. Marked partial only for the pre-existing nuance: Lock uses --project-accent on canvas, not the app's own --signal; From scan swaps in when a live palette exists.",
     place: "after",
   },
   {
     sel: "#render-mode-2d, #render-mode-3d",
     status: "real",
-    why: "3D writes a real rotateYDeg + depth onto every device in the set's layout recipe — the same hasPerspective()/paintProjected() engine authored \"yaw\" templates use, verified live: exported PNG pixels genuinely differ (a real angled side-face renders, not a CSS filter). Creates a real layout recipe on demand (ensureSetRecipe) if the set doesn't have one yet, so it works for plain Wizard sets too. Toggling 3D always applies a freshly generated tilt pattern rather than restoring a specific template's original authored angles if they'd been overridden — disclosed, not silently lossy.",
+    why: "3D writes a real rotateYDeg + depth onto every device in the set's layout recipe — the same hasPerspective()/paintProjected() engine authored \"yaw\" templates use, verified live: exported PNG pixels genuinely differ (a real angled side-face renders, not a CSS filter). Creates a real layout recipe on demand (ensureSetRecipe) if the set doesn't have one yet, so it works for plain Wizard sets too. Toggling 3D always applies a freshly generated tilt pattern rather than restoring a specific template's original authored angles if they'd been overridden — disclosed, not silently lossy. Displayed state (and the click handler) is driven by the recipe's actual device tilt, not just the render3d flag — 6 real shipped templates (layout-yaw-*, layout-blob-across-5, layout-bleed-illust-5) author real tilt without this toggle ever being touched, and the control now reflects that instead of falsely showing \"2D\" while the canvas is genuinely in perspective. Hidden entirely in Ads mode (#render-mode-section), where it has nothing real to act on.",
     place: "after",
   },
   {
@@ -108,13 +108,13 @@ export const TRUTH_MARKS: TruthMark[] = [
   {
     sel: "#export-format-png, #export-format-video",
     status: "real",
-    why: "Video wires set.exportFormat into runExport()'s real wantMotion check, verified live in Wizard mode (which has no motion export by default) — the Export screen's Production card genuinely switches to reporting a real MediaRecorder motion file once Video is picked. recordSlideshowVideo is mode-agnostic under the hood (currentSet().frames + paintExportFrame, no Slideshow-only state) despite its name. PNG ZIP is never skipped either way — this sets which format Export emphasizes, not an exclusive choice.",
+    why: "Video wires set.exportFormat into runExport()'s real wantMotion check, verified live in Wizard mode (which has no motion export by default) — the Export screen's Production card genuinely switches to reporting a real MediaRecorder motion file once Video is picked. recordSlideshowVideo is mode-agnostic under the hood (currentSet().frames + paintExportFrame, no Slideshow-only state) despite its name. PNG ZIP is never skipped either way — this sets which format Export emphasizes, not an exclusive choice. Hidden entirely in Ads mode (#export-format-section), where ad-export.ts never reads exportFormat.",
     place: "after",
   },
   {
     sel: "#edit-font-display, #edit-font-body",
     status: "partial",
-    why: "Real font pick — changes the live DOM preview (headline/caption font-family) AND the actual exported PNG canvas (frame-render.ts + paint-strip-slice.ts both load and use the chosen webfont), not preview-only. Marked partial because it only covers the isolated/strip composition path: Ads-mode unit frames and widget/copy-marks extras still use their own separate hardcoded fonts, untouched by this control.",
+    why: "Real font pick — changes the live DOM preview (headline/caption font-family) AND the actual exported PNG canvas (frame-render.ts + paint-strip-slice.ts both load and use the chosen webfont), not preview-only. An untouched set (no pick made) now leaves the CSS override unset entirely rather than pinning a shorter fallback stack, so it inherits tokens.css's real --font-display/--font-body fallback chain exactly as before this control existed. Marked partial because it only covers the isolated/strip composition path: widget/copy-marks extras still use their own separate hardcoded fonts. Hidden entirely in Ads mode (#typography-section), where paint-ad-frame.ts never reads it.",
     place: "after",
   },
   {

@@ -16,6 +16,16 @@ function applyProjectFonts(display: string, body: string) {
   document.documentElement.style.setProperty("--project-font-body", fontStack(body));
 }
 
+/** Remove the override entirely (rather than setting it to the Manrope
+ *  default) so the real CSS fallback — tokens.css's own --font-display /
+ *  --font-body, with their fuller system-font fallback chain — applies for
+ *  a set that has no real typography pick, matching the canvas export
+ *  painters' "untouched set renders exactly as before" guarantee. */
+function clearProjectFonts() {
+  document.documentElement.style.removeProperty("--project-font-display");
+  document.documentElement.style.removeProperty("--project-font-body");
+}
+
 function paintPreviews(display: string, body: string) {
   const dp = $("#type-preview-display") as HTMLElement | null;
   const bp = $("#type-preview-body") as HTMLElement | null;
@@ -27,13 +37,16 @@ function paintPreviews(display: string, body: string) {
  *  called whenever the editor renders so the panel never shows a stale pick. */
 export function syncTypographyInspector() {
   const set = currentSet();
-  const t = set?.typography || DEFAULT_TYPOGRAPHY;
+  const t = set?.typography;
+  const display = t?.display ?? DEFAULT_TYPOGRAPHY.display;
+  const body = t?.body ?? DEFAULT_TYPOGRAPHY.body;
   const displaySel = $("#edit-font-display") as HTMLSelectElement | null;
   const bodySel = $("#edit-font-body") as HTMLSelectElement | null;
-  if (displaySel) displaySel.value = t.display;
-  if (bodySel) bodySel.value = t.body;
-  applyProjectFonts(t.display, t.body);
-  paintPreviews(t.display, t.body);
+  if (displaySel) displaySel.value = display;
+  if (bodySel) bodySel.value = body;
+  if (t) applyProjectFonts(t.display, t.body);
+  else clearProjectFonts();
+  paintPreviews(display, body);
 }
 
 export function bindTypographyInspector() {

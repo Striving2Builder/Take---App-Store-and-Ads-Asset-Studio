@@ -7,6 +7,7 @@
  *  those fields back out (paintFlat). Toggling 3D always applies a freshly
  *  generated tilt pattern; it does not restore a specific template's
  *  original authored angles if they'd been overridden — disclosed, not a bug. */
+import { hasPerspective } from "@take/template-engine";
 import { currentSet } from "../../app/app-state";
 import { $ } from "../../shared/dom";
 import { scheduleLayoutPaint } from "../layout/layout-live-paint";
@@ -19,6 +20,16 @@ function tiltFor(index: number): { rotateXDeg: number; rotateYDeg: number; depth
   const sign = index % 2 === 0 ? 1 : -1;
   const mag = 16 + (index % 3) * 4;
   return { rotateXDeg: 0, rotateYDeg: sign * mag, depth: DEPTH };
+}
+
+/** The real, ground-truth state: a template can ship with its own authored
+ *  tilt (6 real "yaw"/"blob"/"bleed-illust" templates do) without this
+ *  toggle ever having been touched, so set.render3d alone can't be trusted
+ *  as "is this actually rendering flat or in perspective." */
+function actualIs3d(): boolean {
+  if (currentSet()?.render3d) return true;
+  const recipe = stripRecipeOfSet();
+  return !!recipe?.devices.some((d) => hasPerspective(d));
 }
 
 function apply3d(to3d: boolean) {
@@ -37,8 +48,7 @@ function apply3d(to3d: boolean) {
 }
 
 export function syncRenderModeControl() {
-  const set = currentSet();
-  const is3d = !!set?.render3d;
+  const is3d = actualIs3d();
   const btn2d = $("#render-mode-2d") as HTMLButtonElement | null;
   const btn3d = $("#render-mode-3d") as HTMLButtonElement | null;
   if (btn2d) {
@@ -59,7 +69,11 @@ export function bindRenderModeControl() {
   function setMode(to3d: boolean) {
     const set = currentSet();
     if (!set) return;
-    if (!!set.render3d === to3d) return;
+    // No early-return-if-unchanged here on purpose: set.render3d can be
+    // false while a template's own authored tilt is already rendering in
+    // 3D (actualIs3d() above) — the click must still run to actually
+    // flatten (or re-tilt) the real geometry, not just skip because the
+    // flag alone looked like a no-op.
     set.render3d = to3d;
     apply3d(to3d);
     syncRenderModeControl();

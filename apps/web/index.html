@@ -590,7 +590,7 @@
           <h3 class="inspector-title">Style & palette</h3>
           <div id="scan-palette-slot" class="scan-palette-slot" hidden></div>
           <div class="palette-wheel-row">
-            <div class="palette-wheel" id="palette-wheel"><div class="palette-wheel-pin" id="palette-wheel-pin"></div></div>
+            <div class="palette-wheel" id="palette-wheel" role="slider" tabindex="0" aria-label="Palette hue and saturation — arrow keys adjust" aria-valuemin="0" aria-valuemax="100" aria-valuenow="60" aria-valuetext="Hue 264 degrees, saturation 60 percent"><div class="palette-wheel-pin" id="palette-wheel-pin"></div></div>
             <label class="wheel-lightness-label">Lightness <span id="palette-lightness-val">50%</span>
               <input type="range" id="palette-lightness" min="0" max="100" value="50" />
             </label>
@@ -609,30 +609,32 @@
           </label>
           <button type="button" class="btn ghost small block" id="btn-refresh-variant">Refresh structural variant</button>
 
-          <hr class="panel-divider" />
-          <h4 class="panel-subhead">Typography</h4>
-          <label class="block-label">Display face — headline &amp; kicker
-            <select id="edit-font-display">
-              <option value="Manrope">Manrope</option>
-              <option value="Space Grotesk">Space Grotesk</option>
-              <option value="Bricolage Grotesque">Bricolage Grotesque</option>
-              <option value="IBM Plex Sans">IBM Plex Sans</option>
-              <option value="Source Serif 4">Source Serif 4</option>
-              <option value="Newsreader">Newsreader</option>
-            </select>
-          </label>
-          <p class="type-preview" id="type-preview-display">Words on the tip of your tongue.</p>
-          <label class="block-label">Body face — caption &amp; CTA
-            <select id="edit-font-body">
-              <option value="Manrope">Manrope</option>
-              <option value="Space Grotesk">Space Grotesk</option>
-              <option value="Bricolage Grotesque">Bricolage Grotesque</option>
-              <option value="IBM Plex Sans">IBM Plex Sans</option>
-              <option value="Source Serif 4">Source Serif 4</option>
-              <option value="Newsreader">Newsreader</option>
-            </select>
-          </label>
-          <p class="type-preview" id="type-preview-body">Never lose a phrase mid-conversation again.</p>
+          <div class="style-section" id="typography-section">
+            <hr class="panel-divider" />
+            <h4 class="panel-subhead">Typography</h4>
+            <label class="block-label">Display face — headline &amp; kicker
+              <select id="edit-font-display">
+                <option value="Manrope">Manrope</option>
+                <option value="Space Grotesk">Space Grotesk</option>
+                <option value="Bricolage Grotesque">Bricolage Grotesque</option>
+                <option value="IBM Plex Sans">IBM Plex Sans</option>
+                <option value="Source Serif 4">Source Serif 4</option>
+                <option value="Newsreader">Newsreader</option>
+              </select>
+            </label>
+            <p class="type-preview" id="type-preview-display">Words on the tip of your tongue.</p>
+            <label class="block-label">Body face — caption &amp; CTA
+              <select id="edit-font-body">
+                <option value="Manrope">Manrope</option>
+                <option value="Space Grotesk">Space Grotesk</option>
+                <option value="Bricolage Grotesque">Bricolage Grotesque</option>
+                <option value="IBM Plex Sans">IBM Plex Sans</option>
+                <option value="Source Serif 4">Source Serif 4</option>
+                <option value="Newsreader">Newsreader</option>
+              </select>
+            </label>
+            <p class="type-preview" id="type-preview-body">Never lose a phrase mid-conversation again.</p>
+          </div>
 
           <hr class="panel-divider" />
           <h4 class="panel-subhead">Brand kit<span class="mono" style="font-size:0.6rem;color:var(--signal);margin-left:0.4rem;">CROSS-PROJECT</span></h4>
@@ -649,21 +651,25 @@
             <button type="button" class="btn ghost small" id="btn-apply-brand-kit">Apply kit</button>
           </div>
 
-          <hr class="panel-divider" />
-          <h4 class="panel-subhead">Canvas render</h4>
-          <div class="fit-mode-control" role="radiogroup" aria-label="Canvas render mode">
-            <button type="button" id="render-mode-2d" class="fit-mode-btn is-active" aria-pressed="true">2D</button>
-            <button type="button" id="render-mode-3d" class="fit-mode-btn" aria-pressed="false">3D</button>
+          <div class="style-section" id="render-mode-section">
+            <hr class="panel-divider" />
+            <h4 class="panel-subhead">Canvas render</h4>
+            <div class="fit-mode-control" role="radiogroup" aria-label="Canvas render mode">
+              <button type="button" id="render-mode-2d" class="fit-mode-btn is-active" aria-pressed="true">2D</button>
+              <button type="button" id="render-mode-3d" class="fit-mode-btn" aria-pressed="false">3D</button>
+            </div>
+            <p class="hint tight">3D gives every device in this set a real yaw + depth (the same perspective render authored "yaw" templates use) — 2D keeps the flat, direct-facing shell.</p>
           </div>
-          <p class="hint tight">3D gives every device in this set a real yaw + depth (the same perspective render authored "yaw" templates use) — 2D keeps the flat, direct-facing shell.</p>
 
-          <hr class="panel-divider" />
-          <h4 class="panel-subhead">Default export format</h4>
-          <div class="fit-mode-control" role="radiogroup" aria-label="Default export format">
-            <button type="button" id="export-format-png" class="fit-mode-btn is-active" aria-pressed="true">PNG</button>
-            <button type="button" id="export-format-video" class="fit-mode-btn" aria-pressed="false">Video</button>
+          <div class="style-section" id="export-format-section">
+            <hr class="panel-divider" />
+            <h4 class="panel-subhead">Default export format</h4>
+            <div class="fit-mode-control" role="radiogroup" aria-label="Default export format">
+              <button type="button" id="export-format-png" class="fit-mode-btn is-active" aria-pressed="true">PNG</button>
+              <button type="button" id="export-format-video" class="fit-mode-btn" aria-pressed="false">Video</button>
+            </div>
+            <p class="hint tight">Video adds a real recorded motion file to Export, on top of the PNG ZIP (never skipped) — the other format is always still one click away there.</p>
           </div>
-          <p class="hint tight">Video adds a real recorded motion file to Export, on top of the PNG ZIP (never skipped) — the other format is always still one click away there.</p>
         </div>
         <div class="panel" data-panel-view="mode" hidden>
           <h3 class="inspector-title" id="mode-inspector-title">Mode</h3>

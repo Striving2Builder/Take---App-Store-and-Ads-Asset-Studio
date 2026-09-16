@@ -489,7 +489,14 @@ body.is-ads-edit #btn-remove-frame,
 body.is-ads-edit .device-fit-hint,
 body.is-ads-edit .layout-stage-hint,
 body.is-ads-edit [data-panel="copy"],
-body.is-ads-edit [data-panel="layers"] {
+body.is-ads-edit [data-panel="layers"],
+/* Typography/2D-3D/export-format aren't wired into the ad-unit painter or
+   ad export path yet (paint-ad-frame.ts, ad-export.ts) — showing them here
+   would be a control with nowhere real to land. Palette (which ad rendering
+   does use) and the brand-kit palette half stay visible. */
+body.is-ads-edit #typography-section,
+body.is-ads-edit #render-mode-section,
+body.is-ads-edit #export-format-section {
   display: none !important;
 }
 
@@ -915,6 +922,11 @@ body.is-ads-edit [data-panel="layers"] {
     radial-gradient(circle at center, #fff 0%, rgba(255, 255, 255, 0) 100%),
     conic-gradient(from 90deg, red, yellow, lime, cyan, blue, magenta, red);
   box-shadow: inset 0 0 0 1px var(--line-strong);
+}
+
+.palette-wheel:focus-visible {
+  outline: 2px solid var(--signal);
+  outline-offset: 3px;
 }
 
 .palette-wheel-pin {

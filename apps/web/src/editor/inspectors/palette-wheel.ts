@@ -39,11 +39,18 @@ function currentHsl(): HSL {
 }
 
 function paintPin(hsl: HSL) {
+  const wheel = $("#palette-wheel") as HTMLElement | null;
   const pin = $("#palette-wheel-pin") as HTMLElement | null;
-  if (!pin) return;
-  const { x, y } = pointFromHueSat(hsl.h, hsl.s);
-  pin.style.left = `${x}px`;
-  pin.style.top = `${y}px`;
+  if (pin) {
+    const { x, y } = pointFromHueSat(hsl.h, hsl.s);
+    pin.style.left = `${x}px`;
+    pin.style.top = `${y}px`;
+  }
+  if (wheel) {
+    const sat = Math.round(hsl.s * 100);
+    wheel.setAttribute("aria-valuenow", String(sat));
+    wheel.setAttribute("aria-valuetext", `Hue ${Math.round(hsl.h)} degrees, saturation ${sat} percent`);
+  }
 }
 
 function paintLightness(hsl: HSL) {
@@ -108,6 +115,33 @@ export function bindPaletteWheel() {
     wheel.releasePointerCapture(e.pointerId);
     const accent = currentSet()?.palette?.[0];
     if (accent) toast(`Palette updated · ${accent}`);
+  });
+
+  wheel.addEventListener("keydown", (e) => {
+    if (!currentSet()) return;
+    const { h, s, l } = currentHsl();
+    const hueStep = e.shiftKey ? 15 : 5;
+    const satStep = e.shiftKey ? 0.1 : 0.05;
+    let hsl: HSL;
+    switch (e.key) {
+      case "ArrowLeft":
+        hsl = { h: (h - hueStep + 360) % 360, s, l };
+        break;
+      case "ArrowRight":
+        hsl = { h: (h + hueStep) % 360, s, l };
+        break;
+      case "ArrowUp":
+        hsl = { h, s: clamp(s + satStep, 0, 1), l };
+        break;
+      case "ArrowDown":
+        hsl = { h, s: clamp(s - satStep, 0, 1), l };
+        break;
+      default:
+        return;
+    }
+    e.preventDefault();
+    paintPin(hsl);
+    applyFromHsl(hsl);
   });
 
   slider.addEventListener("input", () => {
