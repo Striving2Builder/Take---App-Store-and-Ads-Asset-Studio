@@ -18,6 +18,7 @@ import {
 } from "../inspectors/style-inspector";
 import { syncPaletteWheel } from "../inspectors/palette-wheel";
 import { syncTypographyInspector } from "../inspectors/typography-inspector";
+import { syncRenderModeControl } from "../inspectors/render-mode";
 import { goalCta } from "../../modes/wizard/copy-builder";
 import { pickHeadline } from "../../modes/wizard/frames-builder";
 import { toast } from "../../shell/toast";
@@ -101,6 +102,7 @@ export function renderEditor() {
   renderPalette(set.palette);
   syncPaletteWheel();
   syncTypographyInspector();
+  syncRenderModeControl();
   refreshScanPaletteSlot();
   const styleSel = $("#edit-style") as HTMLSelectElement | null;
   if (styleSel) styleSel.value = set.style;

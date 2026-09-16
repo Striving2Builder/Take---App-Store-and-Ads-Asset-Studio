@@ -94,6 +94,12 @@ export const TRUTH_MARKS: TruthMark[] = [
     place: "after",
   },
   {
+    sel: "#render-mode-2d, #render-mode-3d",
+    status: "real",
+    why: "3D writes a real rotateYDeg + depth onto every device in the set's layout recipe — the same hasPerspective()/paintProjected() engine authored \"yaw\" templates use, verified live: exported PNG pixels genuinely differ (a real angled side-face renders, not a CSS filter). Creates a real layout recipe on demand (ensureSetRecipe) if the set doesn't have one yet, so it works for plain Wizard sets too. Toggling 3D always applies a freshly generated tilt pattern rather than restoring a specific template's original authored angles if they'd been overridden — disclosed, not silently lossy.",
+    place: "after",
+  },
+  {
     sel: "#edit-font-display, #edit-font-body",
     status: "partial",
     why: "Real font pick — changes the live DOM preview (headline/caption font-family) AND the actual exported PNG canvas (frame-render.ts + paint-strip-slice.ts both load and use the chosen webfont), not preview-only. Marked partial because it only covers the isolated/strip composition path: Ads-mode unit frames and widget/copy-marks extras still use their own separate hardcoded fonts, untouched by this control.",

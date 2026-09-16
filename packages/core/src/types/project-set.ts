@@ -26,4 +26,8 @@ export type ProjectSet = {
    *  caption+CTA (body) in both the live DOM preview and the PNG export
    *  canvas. Absent means the app's own default stack (Manrope/system-ui). */
   typography?: { display: string; body: string };
+  /** Canvas-render mode: true = every device in this set's layout recipe
+   *  gets a real yaw/depth (paintProjected's perspective path); false/absent
+   *  = flat (paintFlat), the app's original behavior. */
+  render3d?: boolean;
 };
