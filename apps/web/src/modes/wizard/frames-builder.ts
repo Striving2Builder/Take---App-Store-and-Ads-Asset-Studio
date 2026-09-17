@@ -46,6 +46,47 @@ export function pickHeadline(inf: InferenceBrief, avoidHeadline?: string): [stri
   return pool[Math.floor(Math.random() * pool.length)];
 }
 
+/** A real, role-appropriate eyebrow line — reads as marketing copy, not the
+ *  frame's internal position/role label. Pulls in real brief fields
+ *  (category, features, name) where they exist rather than inventing
+ *  specifics; the role-only fallback is a genuine, common marketing eyebrow
+ *  pattern (short category/status words), not fabricated content. */
+export function kickerFor(role: string, inf: InferenceBrief): string {
+  const category = (inf.category || "").trim().toUpperCase();
+  const feature = (inf.features[0] || "").trim().toUpperCase();
+  const name = (inf.name || "").trim().toUpperCase();
+  switch (role) {
+    case "HOOK":
+      return category || "NEW";
+    case "VALUE":
+      return "WHY IT MATTERS";
+    case "PROBLEM":
+      return "THE PROBLEM";
+    case "SHIFT":
+      return "A BETTER WAY";
+    case "PROOF":
+      return "REAL RESULTS";
+    case "FEATURE":
+      return feature ? clip(feature, 28) : "HOW IT WORKS";
+    case "RITUAL":
+      return "YOUR ROUTINE";
+    case "SOCIAL":
+      return "LOVED BY USERS";
+    case "DETAIL":
+      return "THE DETAILS";
+    case "OUTCOME":
+      return "THE OUTCOME";
+    case "TRUST":
+      return "WHY TRUST IT";
+    case "CTA":
+      return "GET STARTED";
+    case "CLOSE":
+      return name || "READY?";
+    default:
+      return category || "NEW";
+  }
+}
+
 export function buildFrames(
   inf: InferenceBrief,
   conceptIndex: number,
@@ -62,7 +103,7 @@ export function buildFrames(
       id: `f-${conceptIndex}-${i}`,
       index: i,
       role,
-      kicker: `${String(i + 1).padStart(2, "0")} · ${role}`,
+      kicker: kickerFor(role, inf),
       headline: h,
       caption: c,
       cta: goalCta(inf.goal),

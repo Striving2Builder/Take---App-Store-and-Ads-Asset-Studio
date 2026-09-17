@@ -1,6 +1,7 @@
 /** OWNER: modes/slideshow — ordered beats + default dwells (~15s) */
 import type { InferenceBrief, ProjectSet } from "@take/core";
 import { generateSets } from "../wizard/sets-builder";
+import { kickerFor } from "../wizard/frames-builder";
 
 export const SLIDE_ROLES = ["HOOK", "VALUE", "PROOF", "FEATURE", "SOCIAL", "CTA"] as const;
 
@@ -22,7 +23,7 @@ export function buildSlideshowSets(
     ...f,
     role: SLIDE_ROLES[i] || f.role,
     index: i,
-    kicker: `${String(i + 1).padStart(2, "0")} · ${SLIDE_ROLES[i] || f.role}`,
+    kicker: kickerFor(SLIDE_ROLES[i] || f.role, brief),
     dwellMs: DEFAULT_DWELLS_MS[i] || 2000,
   }));
   return sets;
