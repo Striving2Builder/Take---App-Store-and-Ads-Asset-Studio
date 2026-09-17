@@ -3,7 +3,7 @@ import type { ExtraSlot } from "../template.types";
 
 export const SAMPLE_SCORE_TEXT = "—";
 export const SAMPLE_STORE_LABEL = "Sample rating";
-export const SAMPLE_QUOTE = "Add your quote";
+export const SAMPLE_QUOTE = "This app changed how I start my mornings.";
 export const SAMPLE_ATTRIBUTION = "Sample";
 export const SAMPLE_PILLS = ["Tag one", "Tag two", "Tag three"];
 
