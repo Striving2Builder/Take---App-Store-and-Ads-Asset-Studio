@@ -2,7 +2,25 @@
 import type { InferenceBrief, ProjectSet } from "@take/core";
 import type { TemplateRecord } from "@take/template-engine";
 import { applyTemplate } from "@take/template-engine";
+import { getDevice } from "@take/device-catalog";
 import { buildCopy } from "../wizard/copy-builder";
+
+/** Prefer the caller's real device (e.g. one applyAutoDeviceMatch() picked
+ *  to fit an uploaded screenshot) over the recipe's own hardcoded default —
+ *  24 of 25 system recipes hardcode apple.iphone-16-pro-max, which was
+ *  silently forcing every template application to that device's export size
+ *  and upscaling (visibly blurring) any screenshot that wasn't natively
+ *  that resolution. Only when the two are on different platforms does the
+ *  recipe's device win, since that reflects a genuine shell requirement. */
+function resolveDeviceId(recipeDeviceId: string | undefined, contextDeviceId: string | undefined): string | undefined {
+  if (!contextDeviceId) return recipeDeviceId;
+  if (!recipeDeviceId) return contextDeviceId;
+  const recipePlatform = getDevice(recipeDeviceId)?.platform;
+  const contextPlatform = getDevice(contextDeviceId)?.platform;
+  return recipePlatform && contextPlatform && recipePlatform !== contextPlatform
+    ? recipeDeviceId
+    : contextDeviceId;
+}
 
 const FALLBACK_PALETTE = ["#ff4d1a", "#0c0d10", "#f3f1ec", "#3de0ff", "#1e2129"];
 
@@ -44,7 +62,7 @@ export function projectSetFromRecipe(
     frames: applied.frames,
     copy: buildCopy(brief, opts.index ?? 0),
     palette: paletteFor(recipe.lockBrand, recipe.palette, opts.seedPalette),
-    deviceId: recipe.deviceId || opts.deviceId,
+    deviceId: resolveDeviceId(recipe.deviceId, opts.deviceId),
     composition: recipe.composition,
     layout: { composition: recipe.composition, recipe },
   };

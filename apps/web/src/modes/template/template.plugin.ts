@@ -97,18 +97,25 @@ export const templateInspectorPlugin: ModeEditorPlugin = {
         const shell = resolveApplyStoreShell(brief.platform);
         recipe = bindRecipeShell(recipe, shell);
         state.platform = shell;
-        state.deviceId = recipe.deviceId || state.deviceId;
-        refreshDevicePickerForPlatform(shell);
+        // Only reset to the shell's default device when the current one
+        // isn't already on that platform — otherwise this silently threw
+        // away a real, resolution-matched device (applyAutoDeviceMatch())
+        // in favor of the recipe's hardcoded default, forcing an upscale.
+        if (getDevice(state.deviceId)?.platform !== shell) {
+          refreshDevicePickerForPlatform(shell);
+        }
       }
       const set = projectSetFromRecipe(recipe, brief, {
-        deviceId: recipe.deviceId || state.deviceId,
+        // Raw state.deviceId, not pre-resolved against recipe.deviceId — see
+        // projectSetFromRecipe's own platform-aware resolveDeviceId().
+        deviceId: state.deviceId,
         seedPalette: state.scanPalette?.swatches.map((s) => s.hex),
         index: 0,
       });
       state.sets = [set];
       state.selectedSet = 0;
       state.activeFrame = 0;
-      if (recipe.deviceId) state.deviceId = recipe.deviceId;
+      if (set.deviceId) state.deviceId = set.deviceId;
       if (recipe.defaultOrientation) state.orientation = recipe.defaultOrientation;
       syncDevicePickerValue();
       syncStoreTargetUi();

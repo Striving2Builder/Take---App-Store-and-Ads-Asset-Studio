@@ -41,7 +41,10 @@ export const wizardMode: CreationMode = {
           recipe = bindRecipeShell(recipe, shell);
         }
         const set = projectSetFromRecipe(recipe, brief, {
-          deviceId: recipe.deviceId || ctx.deviceId,
+          // Let projectSetFromRecipe's own resolveDeviceId() weigh the
+          // recipe's device against ctx.deviceId — passing the recipe's
+          // device pre-resolved here would always win and skip that check.
+          deviceId: ctx.deviceId,
           seedPalette: ctx.seedPalette,
         });
         return {

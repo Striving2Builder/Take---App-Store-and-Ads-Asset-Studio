@@ -7,6 +7,7 @@ import {
 } from "@take/storage";
 import { bindRecipeShell, generateLayout, recipeFromSaved } from "@take/template-engine";
 import { screenshotCountOk } from "@take/core";
+import { getDevice } from "@take/device-catalog";
 import { state } from "../../app/app-state";
 import { showStage } from "../../app/stage-machine";
 import { toast } from "../../shell/toast";
@@ -111,20 +112,31 @@ export function useLibraryRecipe(id: string): void {
     const shell = resolveApplyStoreShell(brief.platform);
     recipe = bindRecipeShell(recipe, shell);
     state.platform = shell;
-    state.deviceId = recipe.deviceId || state.deviceId;
-    refreshDevicePickerForPlatform(shell);
+    // Only reset to the shell's default device when the current one isn't
+    // already on that platform — a real, resolution-matched device from
+    // applyAutoDeviceMatch() shouldn't get silently replaced by the
+    // recipe's hardcoded default just because a template was applied.
+    if (getDevice(state.deviceId)?.platform !== shell) {
+      refreshDevicePickerForPlatform(shell);
+    }
     warnPlayIfNeeded(shell, recipe.frameCount);
   } else if (recipe.deviceId) {
-    state.deviceId = recipe.deviceId;
-    if ((recipe.tags || []).includes("android") || tpl.platform === "android") {
-      state.platform = "android";
-    } else if ((recipe.tags || []).includes("ios") || tpl.platform === "ios") {
-      state.platform = "ios";
+    const wantPlatform = (recipe.tags || []).includes("android") || tpl.platform === "android"
+      ? "android"
+      : (recipe.tags || []).includes("ios") || tpl.platform === "ios"
+        ? "ios"
+        : undefined;
+    if (wantPlatform && getDevice(state.deviceId)?.platform !== wantPlatform) {
+      state.deviceId = recipe.deviceId;
     }
+    if (wantPlatform) state.platform = wantPlatform;
   }
 
   const set = projectSetFromRecipe(recipe, brief, {
-    deviceId: recipe.deviceId || state.deviceId,
+    // Raw state.deviceId, not pre-resolved against recipe.deviceId — that
+    // let projectSetFromRecipe's own platform-aware resolveDeviceId() weigh
+    // the two instead of the recipe's hardcoded default always winning.
+    deviceId: state.deviceId,
     seedPalette: state.scanPalette?.swatches.map((s) => s.hex),
   });
   state.sets = [set];
