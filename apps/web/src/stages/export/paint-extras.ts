@@ -15,7 +15,8 @@ export async function paintExtras(
   extras: ExtraSlot[] | undefined,
   sliceW: number,
   sliceH: number,
-  ink: Ink
+  ink: Ink,
+  realFeatures?: string[]
 ) {
   if (!extras?.length) return;
   if (extras.some((s) => s.face === "script")) await ensureScriptFace();
@@ -42,7 +43,7 @@ export async function paintExtras(
     const x = -world.w / 2;
     const y = -world.h / 2;
     if (slot.widget) {
-      paintWidget(ctx, slot, x, y, world.w, world.h, ink);
+      paintWidget(ctx, slot, x, y, world.w, world.h, ink, realFeatures);
     } else if (slot.shape) {
       paintShape(ctx, slot.shape, x, y, world.w, world.h, slot.fill || "rgba(243,241,236,0.38)");
     } else if (slot.kind === "visual") {

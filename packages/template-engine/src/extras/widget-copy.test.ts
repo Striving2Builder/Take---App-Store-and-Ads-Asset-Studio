@@ -52,4 +52,24 @@ const base: ExtraSlot = {
   assert(!copy.isSample, "authored review is not sample");
 }
 
+{
+  const copy = widgetCopy({ ...base, kind: "copy", widget: "pills", pills: ["Cook", "Plan", "Share"] });
+  assert(copy.pills.join(",") === "Cook,Plan,Share", "no real features — falls back to authored pills");
+  assert(copy.isSample, "authored-only pills (no real brief data) are still marked sample");
+}
+
+{
+  const copy = widgetCopy(
+    { ...base, kind: "copy", widget: "pills", pills: ["Cook", "Plan", "Share"] },
+    ["Offline sync", "Dark mode"]
+  );
+  assert(copy.pills.join(",") === "Offline sync,Dark mode", "real brief features win over a template's own pills");
+  assert(!copy.isSample, "real feature-derived pills are not sample");
+}
+
+{
+  const copy = widgetCopy({ ...base, kind: "copy", widget: "pills" });
+  assert(copy.isSample, "no pills and no real features — sample");
+}
+
 console.log("widget-copy.test ok");

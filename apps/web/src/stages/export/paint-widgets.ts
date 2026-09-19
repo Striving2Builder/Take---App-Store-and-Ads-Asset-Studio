@@ -68,11 +68,12 @@ export function paintWidget(
   y: number,
   w: number,
   h: number,
-  sceneInk: Ink
+  sceneInk: Ink,
+  realFeatures?: string[]
 ) {
   const fill = slot.fill || "#f3f1ec";
   const ink = "#1a1a1a";
-  const copy = widgetCopy(slot);
+  const copy = widgetCopy(slot, realFeatures);
   ctx.save();
   if (copy.isSample) ctx.globalAlpha = 0.45;
   if (slot.widget === "rating") {

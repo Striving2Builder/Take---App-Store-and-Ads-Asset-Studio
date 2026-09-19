@@ -124,7 +124,9 @@ export async function paintStripSlice(
     await paintDevice(ctx, sliceW, sliceH, inst, deviceId, recipe.defaultOrientation);
   }
   const ink = inkForBackground(recipe.background.colorA, recipe.background.colorB);
-  await paintExtras(ctx, recipe.extras, sliceW, sliceH, ink);
+  const inf = state.inference;
+  const realFeatures = inf ? [...inf.features, ...inf.differentiators].filter(Boolean) : undefined;
+  await paintExtras(ctx, recipe.extras, sliceW, sliceH, ink, realFeatures);
   ctx.restore();
 
   if (!opts?.skipType && typeBandForSlice(recipe, sliceIndex) !== "none") {
