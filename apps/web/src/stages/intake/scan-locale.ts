@@ -1,5 +1,6 @@
 /** OWNER: stages/intake — locale switcher for Scan */
-import { LOCALE_PRESETS, findLocalePreset } from "@take/scan-client";
+import { LOCALE_PRESETS, LOCALE_REGIONS, findLocalePreset } from "@take/scan-client";
+import { escapeHtml } from "../../shared/escape";
 import { $ } from "../../shared/dom";
 
 const STORAGE_KEY = "take.scan.locale";
@@ -25,9 +26,12 @@ export function mountLocaleSwitcher() {
     /* ignore */
   }
 
-  sel.innerHTML = LOCALE_PRESETS.map(
-    (p) => `<option value="${p.locale}">${p.label}</option>`
-  ).join("");
+  sel.innerHTML = LOCALE_REGIONS.map((region) => {
+    const opts = LOCALE_PRESETS.filter((p) => p.region === region)
+      .map((p) => `<option value="${p.locale}">${escapeHtml(p.label)}</option>`)
+      .join("");
+    return `<optgroup label="${escapeHtml(region)}">${opts}</optgroup>`;
+  }).join("");
 
   const preset = findLocalePreset(saved);
   sel.value = preset.locale;
