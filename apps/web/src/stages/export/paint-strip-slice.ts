@@ -4,6 +4,7 @@ import {
   typeBandRect,
   worldSize,
   backgroundDestSize,
+  hasRealLayout,
   type TemplateRecord,
 } from "@take/template-engine";
 import type { StoryFrame } from "@take/core";
@@ -32,7 +33,7 @@ function asRecipe(raw: unknown): TemplateRecord | null {
   if (!raw || typeof raw !== "object") return null;
   const r = raw as TemplateRecord;
   if (r.composition !== "strip" && r.composition !== "isolated") return null;
-  if (!Array.isArray(r.devices) || !r.devices.length || !r.frameCount) return null;
+  if (!Array.isArray(r.devices) || !r.frameCount || !hasRealLayout(r)) return null;
   return r;
 }
 

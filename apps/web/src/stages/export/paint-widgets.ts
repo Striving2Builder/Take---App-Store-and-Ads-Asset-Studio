@@ -90,6 +90,21 @@ export function paintWidget(
     ctx.fillText(copy.storeLabel, x + w / 2, y + h * 0.72);
     ctx.textAlign = "left";
     paintStars(ctx, x + w / 2, y + h * 0.54, copy.stars, h * 0.16);
+  } else if (slot.widget === "award") {
+    // Same wreath primitive the rating widget uses, sized for a text label
+    // instead of a numeric score — matches the real "App of the Year" /
+    // "Editor's Choice" laurel pattern competitor screenshots use for
+    // press mentions and awards, which this app had no widget for at all.
+    const sceneFill = slot.fill || sceneInk.text;
+    paintWreath(ctx, x + w / 2, y + h * 0.4, Math.min(w, h) * 0.42, sceneFill);
+    ctx.fillStyle = sceneFill;
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.font = `800 ${Math.max(11, Math.round(h * 0.15))}px system-ui, sans-serif`;
+    wrapText(ctx, copy.label, x + w / 2, y + h * 0.34, w * 0.62, Math.max(13, h * 0.18));
+    ctx.font = `600 ${Math.max(9, Math.round(h * 0.1))}px system-ui, sans-serif`;
+    ctx.fillText(copy.sublabel, x + w / 2, y + h * 0.82);
+    ctx.textAlign = "left";
   } else if (slot.widget === "review") {
     ctx.fillStyle = fill;
     roundRect(ctx, x, y, w, h, Math.min(16, h * 0.12));

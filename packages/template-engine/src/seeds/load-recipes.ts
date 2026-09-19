@@ -26,6 +26,16 @@ import layout_yaw_stack_5 from "../../../../catalogs/templates/2026.08/recipes/l
 import layout_pano_yaw_5 from "../../../../catalogs/templates/2026.08/recipes/layout-pano-yaw-5.json";
 import layout_proof_float_5 from "../../../../catalogs/templates/2026.08/recipes/layout-proof-float-5.json";
 import layout_two_up_badge_5 from "../../../../catalogs/templates/2026.08/recipes/layout-two-up-badge-5.json";
+import layout_trust_award_5 from "../../../../catalogs/templates/2026.08/recipes/layout-trust-award-5.json";
+import layout_press_row_5 from "../../../../catalogs/templates/2026.08/recipes/layout-press-row-5.json";
+import layout_fullbleed_raw_5 from "../../../../catalogs/templates/2026.08/recipes/layout-fullbleed-raw-5.json";
+import layout_fullbleed_hook_5 from "../../../../catalogs/templates/2026.08/recipes/layout-fullbleed-hook-5.json";
+import layout_hero_solid_5 from "../../../../catalogs/templates/2026.08/recipes/layout-hero-solid-5.json";
+import layout_hero_award_badge_5 from "../../../../catalogs/templates/2026.08/recipes/layout-hero-award-badge-5.json";
+import layout_dynamic_tilt_5 from "../../../../catalogs/templates/2026.08/recipes/layout-dynamic-tilt-5.json";
+import layout_feature_ribbons_5 from "../../../../catalogs/templates/2026.08/recipes/layout-feature-ribbons-5.json";
+import layout_peek_stack_5 from "../../../../catalogs/templates/2026.08/recipes/layout-peek-stack-5.json";
+import layout_photo_claim_5 from "../../../../catalogs/templates/2026.08/recipes/layout-photo-claim-5.json";
 
 const RAW: TemplateRecord[] = [
   seed_strip_bleed_hook,
@@ -53,6 +63,16 @@ const RAW: TemplateRecord[] = [
   layout_pano_yaw_5,
   layout_proof_float_5,
   layout_two_up_badge_5,
+  layout_trust_award_5,
+  layout_press_row_5,
+  layout_fullbleed_raw_5,
+  layout_fullbleed_hook_5,
+  layout_hero_solid_5,
+  layout_hero_award_badge_5,
+  layout_dynamic_tilt_5,
+  layout_feature_ribbons_5,
+  layout_peek_stack_5,
+  layout_photo_claim_5,
 ] as TemplateRecord[];
 
 export const STRIP_BLEED_HOOK: TemplateRecord = RAW[0];

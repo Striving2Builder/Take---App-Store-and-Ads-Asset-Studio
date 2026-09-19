@@ -1,0 +1,99 @@
+{
+  "tags": [
+    "mobile",
+    "layout",
+    "screenshots"
+  ],
+  "version": 1,
+  "deviceId": "apple.iphone-16-pro-max",
+  "defaultOrientation": "portrait",
+  "typeScale": "m",
+  "lockBrand": false,
+  "provenance": {
+    "source": "seed",
+    "grammarVersion": "2026.08"
+  },
+  "frameCount": 5,
+  "style": "premium",
+  "extras": [
+    {
+      "id": "fh-hook",
+      "kind": "visual",
+      "sliceIndex": 0,
+      "x": 0.5,
+      "y": 0.5,
+      "w": 1.02,
+      "h": 2.207382,
+      "rotationDeg": 0,
+      "z": 1,
+      "shotIndex": 0,
+      "authored": true
+    }
+  ],
+  "id": "layout-fullbleed-hook-5",
+  "name": "Layout · full-bleed hook",
+  "composition": "isolated",
+  "typeFamily": "top",
+  "background": {
+    "kind": "gradient",
+    "colorA": "#1a2840",
+    "colorB": "#0c1220"
+  },
+  "palette": [
+    "#f3f1ec",
+    "#1a2840",
+    "#4d7cff",
+    "#0c1220",
+    "#ffffff"
+  ],
+  "devices": [
+    {
+      "id": "fh1",
+      "x": 1.5,
+      "y": 0.56,
+      "w": 0.56,
+      "h": 1.211896,
+      "rotationDeg": 0,
+      "z": 1,
+      "shotIndex": 1,
+      "placement": "center",
+      "authored": true
+    },
+    {
+      "id": "fh2",
+      "x": 2.5,
+      "y": 0.56,
+      "w": 0.56,
+      "h": 1.211896,
+      "rotationDeg": 0,
+      "z": 1,
+      "shotIndex": 2,
+      "placement": "center",
+      "authored": true
+    },
+    {
+      "id": "fh3",
+      "x": 3.5,
+      "y": 0.56,
+      "w": 0.56,
+      "h": 1.211896,
+      "rotationDeg": 0,
+      "z": 1,
+      "shotIndex": 3,
+      "placement": "center",
+      "authored": true
+    },
+    {
+      "id": "fh4",
+      "x": 4.5,
+      "y": 0.56,
+      "w": 0.56,
+      "h": 1.211896,
+      "rotationDeg": 0,
+      "z": 1,
+      "shotIndex": 4,
+      "placement": "center",
+      "authored": true
+    }
+  ]
+}

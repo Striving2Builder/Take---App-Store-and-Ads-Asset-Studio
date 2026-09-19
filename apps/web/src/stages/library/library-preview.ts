@@ -1,7 +1,7 @@
 /** OWNER: stages/library — browse all slices of a recipe before Use */
 import { getTemplates } from "@take/storage";
 import { getDevice, resolveExportSize } from "@take/device-catalog";
-import { recipeFromSaved, type TemplateRecord } from "@take/template-engine";
+import { hasRealLayout, recipeFromSaved, type TemplateRecord } from "@take/template-engine";
 import { $ } from "../../shared/dom";
 import { escapeHtml } from "../../shared/escape";
 import { toast } from "../../shell/toast";
@@ -27,7 +27,7 @@ export async function openLibraryPreview(id: string): Promise<void> {
     return;
   }
   const recipe = recipeFromSaved({ ...tpl, layout: tpl.layout });
-  if (!recipe.devices.length) {
+  if (!hasRealLayout(recipe)) {
     toast("That card has no layout to preview");
     return;
   }

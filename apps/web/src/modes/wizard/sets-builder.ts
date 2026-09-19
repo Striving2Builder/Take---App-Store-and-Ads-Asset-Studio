@@ -4,6 +4,7 @@ import { getTemplates, isLayoutRecipe, type SavedTemplate } from "@take/storage"
 import {
   bindRecipeShell,
   ensureIsolatedRecipe,
+  hasRealLayout,
   recipeFromSaved,
   type StoreShell,
   type TemplateRecord,
@@ -40,7 +41,7 @@ function shuffledRecipePool(shell: StoreShell): SavedTemplate[] {
  *  extra slots with the same bare fallback we're trying to get away from. */
 function buildRecipe(chosen: SavedTemplate, shell: StoreShell, deviceId?: string): TemplateRecord | null {
   let recipe = recipeFromSaved({ ...chosen, layout: chosen.layout });
-  if (!recipe.devices.length) return null;
+  if (!hasRealLayout(recipe)) return null;
   if (isMobileTagged(recipe.tags, chosen.platform)) {
     recipe = bindRecipeShell(recipe, shell);
   }

@@ -1,0 +1,96 @@
+{
+  "tags": [
+    "mobile",
+    "layout",
+    "screenshots"
+  ],
+  "version": 1,
+  "deviceId": "apple.iphone-16-pro-max",
+  "defaultOrientation": "portrait",
+  "typeScale": "m",
+  "lockBrand": false,
+  "provenance": {
+    "source": "seed",
+    "grammarVersion": "2026.08"
+  },
+  "frameCount": 5,
+  "style": "premium",
+  "extras": [],
+  "id": "layout-hero-solid-5",
+  "name": "Layout · hero solid",
+  "composition": "isolated",
+  "typeFamily": "top",
+  "background": {
+    "kind": "solid",
+    "colorA": "#e0532b"
+  },
+  "palette": [
+    "#ffffff",
+    "#e0532b",
+    "#141413",
+    "#ffd166",
+    "#0c0d10"
+  ],
+  "devices": [
+    {
+      "id": "hs0",
+      "x": 0.5,
+      "y": 0.58,
+      "w": 0.6,
+      "h": 1.29846,
+      "rotationDeg": 0,
+      "z": 1,
+      "shotIndex": 0,
+      "placement": "center",
+      "authored": true
+    },
+    {
+      "id": "hs1",
+      "x": 1.5,
+      "y": 0.58,
+      "w": 0.6,
+      "h": 1.29846,
+      "rotationDeg": 0,
+      "z": 1,
+      "shotIndex": 1,
+      "placement": "center",
+      "authored": true
+    },
+    {
+      "id": "hs2",
+      "x": 2.5,
+      "y": 0.58,
+      "w": 0.6,
+      "h": 1.29846,
+      "rotationDeg": 0,
+      "z": 1,
+      "shotIndex": 2,
+      "placement": "center",
+      "authored": true
+    },
+    {
+      "id": "hs3",
+      "x": 3.5,
+      "y": 0.58,
+      "w": 0.6,
+      "h": 1.29846,
+      "rotationDeg": 0,
+      "z": 1,
+      "shotIndex": 3,
+      "placement": "center",
+      "authored": true
+    },
+    {
+      "id": "hs4",
+      "x": 4.5,
+      "y": 0.58,
+      "w": 0.6,
+      "h": 1.29846,
+      "rotationDeg": 0,
+      "z": 1,
+      "shotIndex": 4,
+      "placement": "center",
+      "authored": true
+    }
+  ]
+}

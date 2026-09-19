@@ -1,0 +1,65 @@
+{
+  "tags": [
+    "mobile",
+    "layout",
+    "screenshots"
+  ],
+  "version": 1,
+  "deviceId": "apple.iphone-16-pro-max",
+  "defaultOrientation": "portrait",
+  "typeScale": "m",
+  "lockBrand": false,
+  "provenance": {
+    "source": "seed",
+    "grammarVersion": "2026.08"
+  },
+  "frameCount": 5,
+  "style": "premium",
+  "extras": [
+    { "id": "pc-shape-0", "kind": "visual", "sliceIndex": 0, "x": 0.5, "y": 0.75, "w": 0.9, "h": 0.35, "rotationDeg": 0, "z": 0, "shape": "wave", "fill": "rgba(255,255,255,0.16)", "authored": true },
+    { "id": "pc-shape-1", "kind": "visual", "sliceIndex": 1, "x": 1.5, "y": 0.72, "w": 0.85, "h": 0.32, "rotationDeg": 0, "z": 0, "shape": "blob", "fill": "rgba(255,255,255,0.14)", "authored": true },
+    { "id": "pc-shape-2", "kind": "visual", "sliceIndex": 2, "x": 2.5, "y": 0.74, "w": 0.88, "h": 0.34, "rotationDeg": 0, "z": 0, "shape": "dots", "fill": "rgba(255,255,255,0.18)", "authored": true }
+  ],
+  "id": "layout-photo-claim-5",
+  "name": "Layout · bold claim",
+  "composition": "isolated",
+  "typeFamily": "bottom",
+  "background": {
+    "kind": "gradient",
+    "colorA": "#ff8a3d",
+    "colorB": "#e0532b"
+  },
+  "palette": [
+    "#141413",
+    "#ff8a3d",
+    "#ffffff",
+    "#e0532b",
+    "#141413"
+  ],
+  "devices": [
+    {
+      "id": "pc3",
+      "x": 3.5,
+      "y": 0.58,
+      "w": 0.58,
+      "h": 1.255178,
+      "rotationDeg": 0,
+      "z": 1,
+      "shotIndex": 3,
+      "placement": "center",
+      "authored": true
+    },
+    {
+      "id": "pc4",
+      "x": 4.5,
+      "y": 0.58,
+      "w": 0.58,
+      "h": 1.255178,
+      "rotationDeg": 0,
+      "z": 1,
+      "shotIndex": 4,
+      "placement": "center",
+      "authored": true
+    }
+  ]
+}

@@ -5,7 +5,7 @@ import {
   pushHistory,
   type SavedTemplate,
 } from "@take/storage";
-import { bindRecipeShell, generateLayout, recipeFromSaved } from "@take/template-engine";
+import { bindRecipeShell, generateLayout, hasRealLayout, recipeFromSaved } from "@take/template-engine";
 import { screenshotCountOk } from "@take/core";
 import { getDevice } from "@take/device-catalog";
 import { state } from "../../app/app-state";
@@ -93,7 +93,7 @@ export function useLibraryRecipe(id: string): void {
     return;
   }
   let recipe = recipeFromSaved({ ...tpl, layout: tpl.layout });
-  if (!recipe.devices.length) {
+  if (!hasRealLayout(recipe)) {
     toast("That card has no layout");
     return;
   }

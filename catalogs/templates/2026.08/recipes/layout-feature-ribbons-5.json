@@ -1,0 +1,125 @@
+{
+  "tags": [
+    "mobile",
+    "layout",
+    "screenshots"
+  ],
+  "version": 1,
+  "deviceId": "apple.iphone-16-pro-max",
+  "defaultOrientation": "portrait",
+  "typeScale": "m",
+  "lockBrand": false,
+  "provenance": {
+    "source": "seed",
+    "grammarVersion": "2026.08"
+  },
+  "frameCount": 5,
+  "style": "premium",
+  "extras": [
+    {
+      "id": "fr-ribbon-0",
+      "kind": "copy",
+      "sliceIndex": 0,
+      "x": 0.5,
+      "y": 0.14,
+      "w": 0.72,
+      "h": 0.1,
+      "rotationDeg": -8,
+      "z": 21,
+      "widget": "pills",
+      "fill": "#ffb703",
+      "authored": true
+    },
+    {
+      "id": "fr-ribbon-1",
+      "kind": "copy",
+      "sliceIndex": 1,
+      "x": 1.5,
+      "y": 0.85,
+      "w": 0.72,
+      "h": 0.1,
+      "rotationDeg": 8,
+      "z": 21,
+      "widget": "pills",
+      "fill": "#ffb703",
+      "authored": true
+    }
+  ],
+  "id": "layout-feature-ribbons-5",
+  "name": "Layout · feature ribbons",
+  "composition": "isolated",
+  "typeFamily": "top",
+  "background": {
+    "kind": "solid",
+    "colorA": "#0c2b2b"
+  },
+  "palette": [
+    "#f3f1ec",
+    "#0c2b2b",
+    "#ffb703",
+    "#083333",
+    "#ffffff"
+  ],
+  "devices": [
+    {
+      "id": "fr0",
+      "x": 0.5,
+      "y": 0.58,
+      "w": 0.56,
+      "h": 1.211896,
+      "rotationDeg": 0,
+      "z": 1,
+      "shotIndex": 0,
+      "placement": "center",
+      "authored": true
+    },
+    {
+      "id": "fr1",
+      "x": 1.5,
+      "y": 0.58,
+      "w": 0.56,
+      "h": 1.211896,
+      "rotationDeg": 0,
+      "z": 1,
+      "shotIndex": 1,
+      "placement": "center",
+      "authored": true
+    },
+    {
+      "id": "fr2",
+      "x": 2.5,
+      "y": 0.58,
+      "w": 0.56,
+      "h": 1.211896,
+      "rotationDeg": 0,
+      "z": 1,
+      "shotIndex": 2,
+      "placement": "center",
+      "authored": true
+    },
+    {
+      "id": "fr3",
+      "x": 3.5,
+      "y": 0.58,
+      "w": 0.56,
+      "h": 1.211896,
+      "rotationDeg": 0,
+      "z": 1,
+      "shotIndex": 3,
+      "placement": "center",
+      "authored": true
+    },
+    {
+      "id": "fr4",
+      "x": 4.5,
+      "y": 0.58,
+      "w": 0.56,
+      "h": 1.211896,
+      "rotationDeg": 0,
+      "z": 1,
+      "shotIndex": 4,
+      "placement": "center",
+      "authored": true
+    }
+  ]
+}

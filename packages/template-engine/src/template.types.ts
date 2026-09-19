@@ -8,7 +8,7 @@ export type ImageFit = "cover" | "contain";
 export type TypeBandKind = TypeFamily | "none";
 export const EXTRA_SHAPES = ["blob", "wave", "star", "dots", "scribble"] as const;
 export type ExtraShape = (typeof EXTRA_SHAPES)[number];
-export const EXTRA_WIDGETS = ["rating", "review", "pills"] as const;
+export const EXTRA_WIDGETS = ["rating", "review", "pills", "award"] as const;
 export type ExtraWidget = (typeof EXTRA_WIDGETS)[number];
 export const EXTRA_FACES = ["display", "script"] as const;
 export type ExtraFace = (typeof EXTRA_FACES)[number];
@@ -76,6 +76,9 @@ export type ExtraSlot = {
   attribution?: string;
   stars?: number;
   pills?: string[];
+  /** "award" widget only — e.g. label "EDITOR'S CHOICE", sublabel "App Store 2026". */
+  label?: string;
+  sublabel?: string;
   /** Mini-screen extra: scan shot index (not a DeviceInstance). */
   shotIndex?: number;
   /** Extra copy face only — not kicker/headline. */
@@ -113,6 +116,19 @@ export type TemplateRecord = {
   palette?: string[];
   provenance?: LayoutProvenance;
 };
+
+/** A recipe has real content — a device, or a real extra (a full-bleed
+ *  screenshot, an award badge, ...) — and isn't just an empty shell. Every
+ *  "does this card have a layout" check in the app used to test
+ *  `devices.length` alone, which was correct back when every template
+ *  always painted a device — but device-free compositions (full-bleed raw
+ *  screenshots, trust/award-only frames) are real, intentional designs,
+ *  not broken ones, so that check would have rejected them outright
+ *  (Library "Use" refusing them with "no layout", thumbnails silently
+ *  blank). Use this instead of checking `.devices.length` directly. */
+export function hasRealLayout(recipe: Pick<TemplateRecord, "devices" | "extras">): boolean {
+  return recipe.devices.length > 0 || (recipe.extras?.length ?? 0) > 0;
+}
 
 /** @deprecated identity-only alias — use TemplateRecord */
 export type TemplateIdentity = Pick<

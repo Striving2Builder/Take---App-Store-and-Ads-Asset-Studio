@@ -1,5 +1,5 @@
 /** OWNER: stages/library — paint card thumbs from recipe slice 0 */
-import { recipeFromSaved } from "@take/template-engine";
+import { hasRealLayout, recipeFromSaved } from "@take/template-engine";
 import type { SavedTemplate } from "@take/storage";
 import type { StoryFrame } from "@take/core";
 import { paintStripSlice } from "../export/paint-strip-slice";
@@ -26,7 +26,7 @@ export async function paintLibraryThumbs(root: HTMLElement, cards: SavedTemplate
       const tpl = cards.find((t) => t.id === id);
       if (!tpl) return;
       const recipe = recipeFromSaved({ ...tpl, layout: tpl.layout });
-      if (!recipe.devices.length) return;
+      if (!hasRealLayout(recipe)) return;
       // Each card shows 3 of these side by side in a grid cell shaped nothing
       // like the device's own aspect ratio (.tpl-preview is a fixed 4/5 box
       // split into 3 columns) — object-fit:contain doesn't actually constrain

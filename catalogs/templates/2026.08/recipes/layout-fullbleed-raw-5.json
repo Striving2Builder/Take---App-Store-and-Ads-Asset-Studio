@@ -1,0 +1,101 @@
+{
+  "tags": [
+    "mobile",
+    "layout",
+    "screenshots"
+  ],
+  "version": 1,
+  "deviceId": "apple.iphone-16-pro-max",
+  "defaultOrientation": "portrait",
+  "typeScale": "m",
+  "lockBrand": false,
+  "provenance": {
+    "source": "seed",
+    "grammarVersion": "2026.08"
+  },
+  "frameCount": 5,
+  "style": "premium",
+  "extras": [
+    {
+      "id": "fb0",
+      "kind": "visual",
+      "sliceIndex": 0,
+      "x": 0.5,
+      "y": 0.5,
+      "w": 1.02,
+      "h": 2.207382,
+      "rotationDeg": 0,
+      "z": 1,
+      "shotIndex": 0,
+      "authored": true
+    },
+    {
+      "id": "fb1",
+      "kind": "visual",
+      "sliceIndex": 1,
+      "x": 1.5,
+      "y": 0.5,
+      "w": 1.02,
+      "h": 2.207382,
+      "rotationDeg": 0,
+      "z": 1,
+      "shotIndex": 1,
+      "authored": true
+    },
+    {
+      "id": "fb2",
+      "kind": "visual",
+      "sliceIndex": 2,
+      "x": 2.5,
+      "y": 0.5,
+      "w": 1.02,
+      "h": 2.207382,
+      "rotationDeg": 0,
+      "z": 1,
+      "shotIndex": 2,
+      "authored": true
+    },
+    {
+      "id": "fb3",
+      "kind": "visual",
+      "sliceIndex": 3,
+      "x": 3.5,
+      "y": 0.5,
+      "w": 1.02,
+      "h": 2.207382,
+      "rotationDeg": 0,
+      "z": 1,
+      "shotIndex": 3,
+      "authored": true
+    },
+    {
+      "id": "fb4",
+      "kind": "visual",
+      "sliceIndex": 4,
+      "x": 4.5,
+      "y": 0.5,
+      "w": 1.02,
+      "h": 2.207382,
+      "rotationDeg": 0,
+      "z": 1,
+      "shotIndex": 4,
+      "authored": true
+    }
+  ],
+  "id": "layout-fullbleed-raw-5",
+  "name": "Layout · full-bleed raw",
+  "composition": "isolated",
+  "typeFamily": "top",
+  "background": {
+    "kind": "solid",
+    "colorA": "#101010"
+  },
+  "palette": [
+    "#f3f1ec",
+    "#101010",
+    "#ff4d1a",
+    "#2a2a2a",
+    "#ffffff"
+  ],
+  "devices": []
+}
