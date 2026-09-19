@@ -136,7 +136,10 @@ async function paintReviewThumbs() {
       frames: set.frames,
       palette: set.palette,
       deviceId: set.deviceId || state.deviceId,
-      skipType: true,
+      // Was skipType: true — that hid the one thing that actually
+      // distinguishes candidate layouts (headline/caption/kicker text and
+      // the type band's top/bottom/split position), making every card in
+      // this picker look identical regardless of real underlying variety.
     });
   }
 }

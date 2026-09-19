@@ -27,7 +27,11 @@ export function placeStrip(
   const bounds = maxBleed > 0 ? pickUniqueInts(rng, maxBleed, 1, n - 1) : [];
 
   bounds.forEach((b, bi) => {
-    const usePrev = rng() > 0.72;
+    // A fair coin flip — was rng() > 0.72, silently making bleed-next ~2.6x
+    // more common than bleed-prev, so the one visually distinctive element
+    // in a strip layout (a phone tilted hard at a slice boundary) leaned the
+    // same direction most of the time instead of varying freely.
+    const usePrev = rng() > 0.5;
     const placement: DevicePlacement = usePrev ? "bleed-prev" : "bleed-next";
     out.push(
       jitterInstance(rng, grammar, placement, {
