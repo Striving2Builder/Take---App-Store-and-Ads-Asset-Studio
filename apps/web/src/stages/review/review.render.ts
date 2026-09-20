@@ -11,7 +11,6 @@ import { rasterSizeFor } from "../../shared/hidpi-raster";
 const REVIEW_TITLES: Record<string, string> = {
   wizard: "Choose a concept",
   template: "Template set",
-  replicator: "Replicator structure",
   slideshow: "Slideshow storyboard",
   ads: "Ad units generated",
 };

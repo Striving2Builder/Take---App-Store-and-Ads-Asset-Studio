@@ -8,8 +8,7 @@
 }
 
 .edit-inspector,
-.ads-unit-rail,
-.replicator-comp-rail {
+.ads-unit-rail {
   border: 1px solid var(--line);
   background: var(--ink-2);
   padding: 1rem;
@@ -109,7 +108,7 @@
   padding: 0.2rem 0.15rem;
 }
 
-/* ── SLIDESHOW / REPLICATOR — fixed beat-role reference chips ── */
+/* ── SLIDESHOW — fixed beat-role reference chips ── */
 .role-chain {
   display: flex;
   flex-wrap: wrap;
@@ -319,27 +318,6 @@ body.is-ads-edit .edit-layout {
 }
 .ads-unit-focus-hit em { margin-left: auto; }
 
-/* ── REPLICATOR — constraint banner + competitor-source rail ── */
-.replicator-constraint-bar {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin: 0 0 1rem;
-  padding: 0.6rem 0.9rem;
-  border: 1px solid color-mix(in srgb, var(--warn) 45%, var(--line));
-  background: color-mix(in srgb, var(--warn) 10%, var(--ink-2));
-  color: var(--warn);
-  font-size: 0.82rem;
-}
-
-.replicator-constraint-bar[hidden] {
-  display: none;
-}
-
-body.is-replicator-edit .edit-layout {
-  grid-template-columns: 260px 1fr 280px;
-}
-
 .canvas-compare-row {
   display: flex;
   gap: 1.5rem;
@@ -347,68 +325,6 @@ body.is-replicator-edit .edit-layout {
 }
 
 .edit-canvas { flex: 1; min-width: 0; }
-
-.replicator-compare-block {
-  flex: 0 0 auto;
-  display: flex;
-  align-items: center;
-  gap: 1.1rem;
-}
-
-.replicator-compare-block[hidden] { display: none; }
-
-.compare-lane {
-  flex: 0 0 190px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 0.6rem;
-}
-
-.compare-lane-label {
-  font-family: var(--font-mono);
-  font-size: 0.62rem;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--paper-dim);
-}
-
-.compare-block {
-  width: 100%;
-  aspect-ratio: 9 / 19.5;
-  border-radius: var(--radius-lg);
-  background: var(--ink-2);
-  border: 1.5px dashed var(--line-strong);
-  display: flex;
-  flex-direction: column;
-  padding: 1rem;
-  gap: 0.6rem;
-}
-
-.compare-block .role-tag {
-  font-family: var(--font-mono);
-  font-size: 0.6rem;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: var(--paper-dim);
-}
-
-.compare-block .bar {
-  height: 8px;
-  border-radius: 4px;
-  background: var(--line-strong);
-}
-
-.compare-block .bar.w60 { width: 60%; }
-.compare-block .bar.w40 { width: 40%; }
-
-.compare-vs {
-  font-family: var(--font-display);
-  font-weight: 800;
-  font-size: 1.1rem;
-  color: var(--paper-dim);
-}
 
 /* Slideshow's real six-beat cycle has no "add a beat" concept in the mockup
    — the generic Sequence row (num+role list + Add frame) would let a user
@@ -419,60 +335,6 @@ body.is-replicator-edit .edit-layout {
 body.is-slideshow-edit .filmstrip-row,
 body.is-slideshow-edit #btn-remove-frame {
   display: none;
-}
-
-.replicator-comp-rail[hidden] {
-  display: none;
-}
-
-.comp-row {
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-  width: 100%;
-  padding: 0.55rem 0.5rem;
-  margin: 0.5rem 0;
-  border: 1px solid var(--line);
-  border-radius: var(--radius-sm);
-  text-align: left;
-  cursor: pointer;
-}
-
-.comp-row.is-active {
-  border-color: var(--signal);
-  background: color-mix(in srgb, var(--signal) 12%, var(--ink-2));
-}
-
-.comp-avatar {
-  display: grid;
-  place-items: center;
-  flex: 0 0 auto;
-  width: 26px;
-  height: 26px;
-  border-radius: var(--radius-sm);
-  background: var(--ink-3);
-  font-family: var(--font-display);
-  font-weight: 800;
-  font-size: 0.78rem;
-  color: var(--paper-dim);
-}
-
-.comp-info {
-  display: flex;
-  flex-direction: column;
-  gap: 0.1rem;
-  min-width: 0;
-}
-
-.comp-info .name {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 0.82rem;
-}
-
-.comp-info .n {
-  font-size: 0.66rem;
-  color: var(--paper-dim);
 }
 
 /* Ads mode: hide device/layout chrome that has no meaning for ad units — the

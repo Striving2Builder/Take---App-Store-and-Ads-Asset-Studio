@@ -9,16 +9,17 @@
     "preview": "vite preview --port 8765"
   },
   "dependencies": {
-    "@take/core": "*",
-    "@take/ad-unit-catalog": "*",
+    "@anthropic-ai/sdk": "^0.127.0",
     "@take/ad-compliance": "*",
+    "@take/ad-unit-catalog": "*",
+    "@take/core": "*",
     "@take/device-catalog": "*",
+    "@take/device-sync": "*",
     "@take/export-presets": "*",
     "@take/modes-sdk": "*",
     "@take/scan-client": "*",
     "@take/storage": "*",
-    "@take/template-engine": "*",
-    "@take/device-sync": "*"
+    "@take/template-engine": "*"
   },
   "devDependencies": {
     "typescript": "^5.9.2",

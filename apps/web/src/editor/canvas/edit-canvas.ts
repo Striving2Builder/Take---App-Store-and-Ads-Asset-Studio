@@ -140,14 +140,7 @@ async function syncLayoutStage() {
   phone.hidden = true;
 
   document.body.classList.toggle("is-ads-edit", state.mode === "ads");
-  document.body.classList.toggle("is-replicator-edit", state.mode === "replicator");
   document.body.classList.toggle("is-slideshow-edit", state.mode === "slideshow");
-  const constraintBar = $("#replicator-constraint-bar") as HTMLElement | null;
-  if (constraintBar) constraintBar.hidden = state.mode !== "replicator";
-  if (state.mode !== "replicator") {
-    const compareBlock = $("#replicator-compare-block") as HTMLElement | null;
-    if (compareBlock) compareBlock.hidden = true;
-  }
 
   if (state.mode === "ads") {
     stage.hidden = true;

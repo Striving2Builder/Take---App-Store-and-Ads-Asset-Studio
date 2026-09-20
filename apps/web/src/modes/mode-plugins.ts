@@ -52,10 +52,6 @@ export function mountModePlugins(): void {
     "#frame-filmstrip-plugin",
     plugins.filter((p) => p.slot === "filmstrip")
   );
-  fillSlot(
-    "#replicator-comp-rail",
-    plugins.filter((p) => p.slot === "rail")
-  );
   updateModeChrome();
   applyExportHints();
 }
@@ -72,24 +68,6 @@ export function syncModePluginHighlights(): void {
   document.querySelectorAll<HTMLElement>("[data-role-chip]").forEach((el) => {
     el.classList.toggle("is-active", el.dataset.roleChip === activeRole);
   });
-  // Replicator's competitor rail: same i % sourceCount cycle the rail's own
-  // render used to assign each frame to a source — recomputed from the real
-  // row count already on the page, no mode-specific import needed here.
-  const compRows = document.querySelectorAll<HTMLElement>("[data-comp-source]");
-  if (compRows.length) {
-    const activeSource = state.activeFrame % compRows.length;
-    compRows.forEach((el) => {
-      el.classList.toggle("is-active", Number(el.dataset.compSource) === activeSource);
-    });
-    // Replicator's compare-block: keep the "{Competitor} · structure" lane
-    // label and role tag in sync with the active frame too, not just the
-    // rail's own row highlight — same active-row's real name, read straight
-    // back off its own DOM rather than re-importing competitor-beats here.
-    const activeRow = document.querySelector<HTMLElement>(`[data-comp-source="${activeSource}"]`);
-    const activeName = activeRow?.querySelector(".name")?.textContent;
-    const laneLabel = document.querySelector<HTMLElement>(".compare-lane-label");
-    if (laneLabel && activeName) laneLabel.textContent = `${activeName} · structure`;
-  }
   const roleTag = document.querySelector<HTMLElement>("[data-role-tag] .role-tag");
   if (roleTag) {
     const frame = currentSet()?.frames[state.activeFrame];

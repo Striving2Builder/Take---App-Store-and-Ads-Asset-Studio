@@ -1,16 +1,13 @@
 /** OWNER: stages/intake — missing field guidance */
 import { $ } from "../../shared/dom";
 import { escapeHtml } from "../../shared/escape";
-import { replicatorReady } from "../../modes/replicator/replicator-ready";
 import { collectIntake } from "./intake.form";
 
 export function updateMissing() {
   const d = collectIntake();
   const missing: string[] = [];
 
-  if (d.mode === "replicator") {
-    if (!replicatorReady(d.uploads)) missing.push("Competitor URL (Extra Sources) or upload refs");
-  } else if (d.mode === "ads") {
+  if (d.mode === "ads") {
     if (!d.url && d.uploads === 0) missing.push("Creative imagery upload, or a URL to scan for copy/palette");
   } else if (!d.url && d.uploads === 0) {
     missing.push("App URL or uploaded screenshots");

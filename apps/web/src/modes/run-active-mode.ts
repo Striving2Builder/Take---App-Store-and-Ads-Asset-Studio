@@ -3,7 +3,6 @@ import { getMode, type ModeRunResult } from "@take/modes-sdk";
 import { state } from "../app/app-state";
 import { collectIntake } from "../stages/intake/intake.form";
 import { selectedScreenshots } from "../stages/export/selected-shots";
-import { replicatorReady } from "./replicator/replicator-ready";
 
 export async function runActiveMode(): Promise<ModeRunResult> {
   const d = collectIntake();
@@ -12,9 +11,6 @@ export async function runActiveMode(): Promise<ModeRunResult> {
   const mode = getMode(d.mode) || getMode("wizard");
   if (!mode) throw new Error("No creation mode registered");
 
-  if (mode.id === "replicator" && !replicatorReady(d.uploads)) {
-    throw new Error("Add a competitor URL (Extra Sources) or upload refs for Replicator");
-  }
   if (mode.capabilities.needsUploads && d.uploads === 0) {
     throw new Error("Upload wireframe / screenshot refs required");
   }

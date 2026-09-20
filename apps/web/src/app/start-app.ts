@@ -64,6 +64,7 @@ import { applyModeRunResult, runActiveMode } from "../modes/run-active-mode";
 import { mountModePlugins, syncModePluginHighlights } from "../modes/mode-plugins";
 import { applyExportHints } from "../modes/apply-export-hints";
 import { bindTemplateArm, syncTemplateArm } from "../modes/template/template-arm";
+import { bindReplicator } from "../modes/replicator/replicator-stage";
 import { syncAdsIntakeUi } from "../stages/intake/intake-ad-units";
 
 function bindGlobalClicks() {
@@ -73,6 +74,10 @@ function bindGlobalClicks() {
     const modePick = t.closest("[data-mode-pick]") as HTMLElement | null;
     if (modePick) {
       const m = modePick.dataset.modePick || "wizard";
+      if (m === "replicator") {
+        showStage("replicate");
+        return;
+      }
       if (m === "template") {
         showStage("library");
         void renderLibrary();
@@ -327,6 +332,7 @@ export function startApp() {
   bindTemplateModal();
   bindLibraryPreview();
   bindTemplateArm();
+  bindReplicator();
   mountDevicePicker({
     onChange: () => {
       renderEditor();

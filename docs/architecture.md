@@ -401,7 +401,7 @@ Intake mode radio + Library Use (templateId)
 | Template **mode** | Landing Template opens **Library**. Intake Template radio is hidden. Grammar `generateLayout` is Library **New layout**. |
 | Template **engine** | REAL — sample-five JSON recipes + strip clip, drag, ExtraSlot, Set view |
 | Library Use | REAL — apply when a brief exists; otherwise Wizard intake with the look armed |
-| Replicator | PARTIAL — competitor structure map; not CV trace |
+| Replicator | PARTIAL — upload a screenshot set; the layout (panels, backgrounds, phone position and tilt, headline area) is read from pixels in the browser and turned into a Library template. Photo backgrounds and overlapping phones are reported as not read, or filled in by Claude on request (own API key, labelled as estimates) |
 | Slideshow | PARTIAL — Wizard `generateSets` + 6 dwells + MediaRecorder; same destination as Wizard |
 
 Verify: `npm run test:modes`

@@ -116,3 +116,28 @@ export {
   getAdWireframe,
   wireframesForFamily,
 } from "./ad-grammar/list-ad-wireframes";
+export {
+  analyseScreenshot,
+  recipeFromAnalysis,
+  panelBand,
+  VISION_PROMPT,
+  VISION_SCHEMA,
+  parseVision,
+  mergeVision,
+  panelsNeedingHelp,
+} from "./derive";
+export type {
+  Analysis,
+  PanelRead,
+  DeviceRead,
+  BackgroundRead,
+  Finding,
+  ReadStatus,
+  SplitMethod,
+  AnalyseOptions,
+  DeriveOptions,
+  DeriveResult,
+  VisionRead,
+  VisionPanel,
+  Pixels,
+} from "./derive";

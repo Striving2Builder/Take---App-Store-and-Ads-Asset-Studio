@@ -113,7 +113,7 @@
         </button>
         <button type="button" class="mode-mini" data-jump="modes">
           <h4>Replicator</h4>
-          <p>Show APPPAL a competitor's structure, fill it with your own content.</p>
+          <p>Upload a layout you like; get it back as a template with the branding stripped.</p>
         </button>
       </div>
       <button type="button" class="see-all" data-jump="modes">See all five modes →</button>
@@ -157,8 +157,8 @@
       <article class="mode-panel" data-mode-pick="replicator">
         <div class="mode-icn"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg></div>
         <h2>Replicator</h2>
-        <p>Map beat structure from competitor listings or upload refs. Your brand and UI stay yours — never clone protected art.</p>
-        <span class="mode-go">Paste a reference<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="13 6 19 12 13 18"/></svg></span>
+        <p>Upload a store-screenshot layout you like. APPPAL reads its structure — panels, phone angles, colours, headline position — strips the branding, and saves it as a template for your own app.</p>
+        <span class="mode-go">Upload a layout<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="13 6 19 12 13 18"/></svg></span>
       </article>
       <article class="mode-panel" data-mode-pick="slideshow">
         <div class="mode-icn"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><line x1="7" y1="5" x2="7" y2="19"/><line x1="17" y1="5" x2="17" y2="19"/></svg></div>
@@ -278,7 +278,6 @@
           <div class="seg wrap" role="radiogroup" aria-label="Creation mode">
             <label class="seg-opt"><input type="radio" name="mode" value="wizard" checked /><span>Wizard</span></label>
             <label class="seg-opt"><input type="radio" name="mode" value="template" /><span>Template</span></label>
-            <label class="seg-opt"><input type="radio" name="mode" value="replicator" /><span>Replicator</span></label>
             <label class="seg-opt"><input type="radio" name="mode" value="slideshow" /><span>Slideshow</span></label>
             <label class="seg-opt"><input type="radio" name="mode" value="ads" /><span>Ads</span></label>
           </div>
@@ -409,14 +408,8 @@
       </div>
     </header>
 
-    <div class="replicator-constraint-bar" id="replicator-constraint-bar" hidden>
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-      Structure map only — competitor screenshots never land on your canvas. Only frame count and sequence are reused.
-    </div>
-
     <div class="edit-layout">
       <aside class="ads-unit-rail" id="ads-unit-rail" hidden></aside>
-      <aside class="replicator-comp-rail" id="replicator-comp-rail" hidden></aside>
       <div class="edit-canvas-wrap">
         <div class="canvas-toolbar">
           <div class="toolbar-cluster toolbar-cluster-identity">
@@ -450,7 +443,6 @@
         </div>
         <p class="device-fit-hint mono" id="device-fit-hint" hidden></p>
         <div class="canvas-compare-row">
-        <div id="replicator-compare-block" class="replicator-compare-block" hidden></div>
         <div class="edit-canvas" id="edit-canvas">
           <div class="phone-mock" id="phone-mock">
             <img class="shell-asset" id="shell-asset" alt="" hidden />
@@ -773,6 +765,50 @@
         </div>
         <div class="palette-showcase" id="palette-showcase"></div>
         <div class="library-grid" id="library-grid"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── REPLICATOR: turn a layout you like into a template ── -->
+  <section id="stage-replicate" class="stage stage-replicate" data-stage="replicate" hidden>
+    <header class="topbar compact">
+      <button type="button" class="back-link" data-jump="modes">← Modes</button>
+      <span class="stage-label mono">REPLICATOR</span>
+      <button type="button" class="btn small ghost" data-jump="library">Template library</button>
+    </header>
+    <div class="rep-layout">
+      <div class="rep-col">
+        <p class="label-caps">1 · The layout you like</p>
+        <h2>Upload a store-screenshot set</h2>
+        <p class="hint">A strip of panels or a single one. Only the structure is kept: panel count, phone size and tilt, background colour, headline position. Never their text, logos, photos or screen content.</p>
+        <label class="btn primary rep-upload">
+          <input type="file" accept="image/*" id="rep-file" hidden />
+          <span>Choose a screenshot</span>
+        </label>
+        <div class="rep-options">
+          <label>Template name<input id="rep-name" type="text" placeholder="Derived layout" maxlength="40" /></label>
+          <label>Panels <span class="hint tight">leave empty to detect</span><input id="rep-count" type="number" min="1" max="12" placeholder="auto" /></label>
+          <label class="filter-toggle"><input type="checkbox" id="rep-fill" /> Keep panels I couldn't read, as a plain centred phone (stand-in). Otherwise they are left out</label>
+        </div>
+        <p class="rep-status" id="rep-status" role="status">Nothing uploaded yet.</p>
+        <div class="rep-source-wrap"><canvas id="rep-source" class="rep-source"></canvas></div>
+        <p class="hint tight rep-legend"><span class="rep-dot" style="background:#1fbf6a"></span>measured <span class="rep-dot" style="background:#ffb020"></span>estimated <span class="rep-dot" style="background:#a78bfa"></span>read by Claude <span class="rep-dot" style="background:#ff5a5a"></span>panel outlined red: not fully read</p>
+      </div>
+      <div class="rep-col" id="rep-results" hidden>
+        <p class="label-caps">2 · What was read</p>
+        <div id="rep-report" class="rep-report"></div>
+        <p class="label-caps">3 · The template it makes</p>
+        <p class="hint tight">A preview with blank phone screens and a placeholder headline. Your own screenshots and words go in when you use it.</p>
+        <div id="rep-preview" class="rep-preview"></div>
+        <div class="rep-actions">
+          <button type="button" class="btn primary" id="rep-save" disabled>Save to Library</button>
+        </div>
+        <div class="rep-claude">
+          <p class="label-caps">Hard panels</p>
+          <p class="hint tight">For panels the local reader could not finish (photo backgrounds, overlapping phones). This sends your uploaded image to Anthropic using your own API key, which stays in this browser. What comes back is labelled as Claude's reading, not a measurement.</p>
+          <label>Anthropic API key<input id="rep-key" type="password" autocomplete="off" placeholder="sk-ant-…" /></label>
+          <button type="button" class="btn ghost" id="rep-claude" disabled>Nothing left for Claude to read</button>
+        </div>
       </div>
     </div>
   </section>

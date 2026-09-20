@@ -40,7 +40,7 @@ export const TRUTH_MARKS: TruthMark[] = [
   {
     sel: '[data-mode-pick="replicator"]',
     status: "partial",
-    why: "Maps competitor pack or uploads to a beat rail — structure only, not pixel-trace",
+    why: "Reads a screenshot set's layout locally (panels, backgrounds, phone position and tilt, headline area). Photo backgrounds and overlapping phones are reported as not read, or handed to Claude on request.",
     place: "corner",
   },
   {
