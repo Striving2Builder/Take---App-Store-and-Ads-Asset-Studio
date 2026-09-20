@@ -1,0 +1,121 @@
+{
+  "tags": [
+    "mobile",
+    "layout",
+    "screenshots"
+  ],
+  "version": 1,
+  "deviceId": "apple.iphone-16-pro-max",
+  "defaultOrientation": "portrait",
+  "typeScale": "m",
+  "lockBrand": false,
+  "provenance": {
+    "source": "seed",
+    "grammarVersion": "2026.08"
+  },
+  "frameCount": 5,
+  "style": "clean",
+  "extras": [],
+  "id": "layout-blue-wave-tilt-5",
+  "name": "Layout · blue wave tilt",
+  "composition": "isolated",
+  "typeFamily": "top",
+  "background": {
+    "kind": "gradient",
+    "colorA": "#ffffff",
+    "colorB": "#4cc3ff"
+  },
+  "palette": [
+    "#0f2a44",
+    "#ffffff",
+    "#33b5f5",
+    "#eaf6fe",
+    "#5a6478"
+  ],
+  "devices": [
+    {
+      "id": "bw0a",
+      "x": 0.28,
+      "y": 0.72,
+      "w": 0.5,
+      "h": 1.08205,
+      "rotationDeg": -18,
+      "z": 1,
+      "shotIndex": 0,
+      "placement": "center",
+      "authored": true
+    },
+    {
+      "id": "bw0b",
+      "x": 0.5,
+      "y": 0.8,
+      "w": 0.5,
+      "h": 1.08205,
+      "rotationDeg": -18,
+      "z": 2,
+      "shotIndex": 0,
+      "placement": "center",
+      "authored": true
+    },
+    {
+      "id": "bw0c",
+      "x": 0.74,
+      "y": 0.64,
+      "w": 0.44,
+      "h": 0.9522,
+      "rotationDeg": -18,
+      "z": 1,
+      "shotIndex": 0,
+      "placement": "center",
+      "authored": true
+    },
+    {
+      "id": "bw1",
+      "x": 1.5,
+      "y": 0.64,
+      "w": 0.66,
+      "h": 1.42831,
+      "rotationDeg": 12,
+      "z": 1,
+      "shotIndex": 1,
+      "placement": "center",
+      "authored": true
+    },
+    {
+      "id": "bw2",
+      "x": 2.5,
+      "y": 0.58,
+      "w": 0.56,
+      "h": 1.2119,
+      "rotationDeg": 0,
+      "z": 1,
+      "shotIndex": 2,
+      "placement": "center",
+      "authored": true
+    },
+    {
+      "id": "bw3",
+      "x": 3.5,
+      "y": 0.58,
+      "w": 0.56,
+      "h": 1.2119,
+      "rotationDeg": -6,
+      "z": 1,
+      "shotIndex": 3,
+      "placement": "center",
+      "authored": true
+    },
+    {
+      "id": "bw4",
+      "x": 4.5,
+      "y": 0.58,
+      "w": 0.56,
+      "h": 1.2119,
+      "rotationDeg": 0,
+      "z": 1,
+      "shotIndex": 4,
+      "placement": "center",
+      "authored": true
+    }
+  ]
+}

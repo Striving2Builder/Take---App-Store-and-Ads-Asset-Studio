@@ -1,0 +1,125 @@
+{
+  "tags": [
+    "mobile",
+    "layout",
+    "screenshots"
+  ],
+  "version": 1,
+  "deviceId": "apple.iphone-16-pro-max",
+  "defaultOrientation": "portrait",
+  "typeScale": "m",
+  "lockBrand": false,
+  "provenance": {
+    "source": "seed",
+    "grammarVersion": "2026.08"
+  },
+  "frameCount": 5,
+  "style": "bold",
+  "extras": [
+    {
+      "id": "ho-dots-0",
+      "kind": "visual",
+      "sliceIndex": 0,
+      "x": 0.2,
+      "y": 0.42,
+      "w": 0.34,
+      "h": 0.24,
+      "rotationDeg": 0,
+      "z": 5,
+      "shape": "dots",
+      "fill": "rgba(255,74,13,0.55)",
+      "authored": true
+    },
+    {
+      "id": "ho-dots-2",
+      "kind": "visual",
+      "sliceIndex": 2,
+      "x": 2.24,
+      "y": 0.5,
+      "w": 0.4,
+      "h": 0.26,
+      "rotationDeg": 0,
+      "z": 5,
+      "shape": "dots",
+      "fill": "rgba(255,74,13,0.5)",
+      "authored": true
+    }
+  ],
+  "id": "layout-halftone-orange-5",
+  "name": "Layout · halftone orange",
+  "composition": "isolated",
+  "typeFamily": "top",
+  "background": {
+    "kind": "solid",
+    "colorA": "#ffffff"
+  },
+  "palette": [
+    "#161512",
+    "#ffffff",
+    "#ff4a0d",
+    "#f3f1ec",
+    "#5a5a5a"
+  ],
+  "devices": [
+    {
+      "id": "ho0",
+      "x": 0.5,
+      "y": 0.6,
+      "w": 0.62,
+      "h": 1.34174,
+      "rotationDeg": 14,
+      "z": 1,
+      "shotIndex": 0,
+      "placement": "center",
+      "authored": true
+    },
+    {
+      "id": "ho1",
+      "x": 1.5,
+      "y": 0.6,
+      "w": 0.6,
+      "h": 1.29846,
+      "rotationDeg": -6,
+      "z": 1,
+      "shotIndex": 1,
+      "placement": "center",
+      "authored": true
+    },
+    {
+      "id": "ho2",
+      "x": 2.5,
+      "y": 0.6,
+      "w": 0.6,
+      "h": 1.29846,
+      "rotationDeg": 0,
+      "z": 1,
+      "shotIndex": 2,
+      "placement": "center",
+      "authored": true
+    },
+    {
+      "id": "ho3",
+      "x": 3.5,
+      "y": 0.6,
+      "w": 0.6,
+      "h": 1.29846,
+      "rotationDeg": -12,
+      "z": 1,
+      "shotIndex": 3,
+      "placement": "center",
+      "authored": true
+    },
+    {
+      "id": "ho4",
+      "x": 4.5,
+      "y": 0.6,
+      "w": 0.6,
+      "h": 1.29846,
+      "rotationDeg": 8,
+      "z": 1,
+      "shotIndex": 4,
+      "placement": "center",
+      "authored": true
+    }
+  ]
+}

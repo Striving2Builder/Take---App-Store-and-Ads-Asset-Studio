@@ -37,6 +37,23 @@ import layout_feature_ribbons_5 from "../../../../catalogs/templates/2026.08/rec
 import layout_peek_stack_5 from "../../../../catalogs/templates/2026.08/recipes/layout-peek-stack-5.json";
 import layout_photo_claim_5 from "../../../../catalogs/templates/2026.08/recipes/layout-photo-claim-5.json";
 
+import layout_aurora_tilt_5 from "../../../../catalogs/templates/2026.08/recipes/layout-aurora-tilt-5.json";
+import layout_blue_wave_tilt_5 from "../../../../catalogs/templates/2026.08/recipes/layout-blue-wave-tilt-5.json";
+import layout_blueprint_quote_5 from "../../../../catalogs/templates/2026.08/recipes/layout-blueprint-quote-5.json";
+import layout_brand_shapes_5 from "../../../../catalogs/templates/2026.08/recipes/layout-brand-shapes-5.json";
+import layout_brand_warm_5 from "../../../../catalogs/templates/2026.08/recipes/layout-brand-warm-5.json";
+import layout_color_blocks_5 from "../../../../catalogs/templates/2026.08/recipes/layout-color-blocks-5.json";
+import layout_color_panels_5 from "../../../../catalogs/templates/2026.08/recipes/layout-color-panels-5.json";
+import layout_format_strip_5 from "../../../../catalogs/templates/2026.08/recipes/layout-format-strip-5.json";
+import layout_halftone_orange_5 from "../../../../catalogs/templates/2026.08/recipes/layout-halftone-orange-5.json";
+import layout_marketplace_light_5 from "../../../../catalogs/templates/2026.08/recipes/layout-marketplace-light-5.json";
+import layout_navy_caption_5 from "../../../../catalogs/templates/2026.08/recipes/layout-navy-caption-5.json";
+import layout_panorama_hero_5 from "../../../../catalogs/templates/2026.08/recipes/layout-panorama-hero-5.json";
+import layout_pastel_tilt_5 from "../../../../catalogs/templates/2026.08/recipes/layout-pastel-tilt-5.json";
+import layout_quiet_beige_5 from "../../../../catalogs/templates/2026.08/recipes/layout-quiet-beige-5.json";
+import layout_slab_bold_5 from "../../../../catalogs/templates/2026.08/recipes/layout-slab-bold-5.json";
+import layout_wave_bands_5 from "../../../../catalogs/templates/2026.08/recipes/layout-wave-bands-5.json";
+
 const RAW: TemplateRecord[] = [
   seed_strip_bleed_hook,
   sys_ios_isolated_5,
@@ -73,6 +90,22 @@ const RAW: TemplateRecord[] = [
   layout_feature_ribbons_5,
   layout_peek_stack_5,
   layout_photo_claim_5,
+  layout_aurora_tilt_5,
+  layout_blue_wave_tilt_5,
+  layout_blueprint_quote_5,
+  layout_brand_shapes_5,
+  layout_brand_warm_5,
+  layout_color_blocks_5,
+  layout_color_panels_5,
+  layout_format_strip_5,
+  layout_halftone_orange_5,
+  layout_marketplace_light_5,
+  layout_navy_caption_5,
+  layout_panorama_hero_5,
+  layout_pastel_tilt_5,
+  layout_quiet_beige_5,
+  layout_slab_bold_5,
+  layout_wave_bands_5,
 ] as TemplateRecord[];
 
 export const STRIP_BLEED_HOOK: TemplateRecord = RAW[0];

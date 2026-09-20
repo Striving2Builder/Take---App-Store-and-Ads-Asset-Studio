@@ -1,0 +1,105 @@
+{
+  "tags": [
+    "mobile",
+    "layout",
+    "screenshots"
+  ],
+  "version": 1,
+  "deviceId": "apple.iphone-16-pro-max",
+  "defaultOrientation": "portrait",
+  "typeScale": "m",
+  "lockBrand": false,
+  "provenance": {
+    "source": "seed",
+    "grammarVersion": "2026.08"
+  },
+  "frameCount": 5,
+  "style": "bold",
+  "extras": [],
+  "id": "layout-color-blocks-5",
+  "name": "Layout · colour blocks",
+  "composition": "strip",
+  "typeFamily": "top",
+  "typeBand": [
+    "top",
+    "top",
+    "bottom",
+    "top",
+    "top"
+  ],
+  "background": {
+    "kind": "image",
+    "colorA": "#1d3fd6",
+    "imageUrl": "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20width%3D'6450'%20height%3D'2796'%20viewBox%3D'0%200%206450%202796'%3E%3Crect%20x%3D'0'%20y%3D'0'%20width%3D'1290'%20height%3D'2796'%20fill%3D'%231d3fd6'%2F%3E%3Crect%20x%3D'1290'%20y%3D'0'%20width%3D'1290'%20height%3D'2796'%20fill%3D'%236d28d9'%2F%3E%3Crect%20x%3D'2580'%20y%3D'0'%20width%3D'1290'%20height%3D'2796'%20fill%3D'%23e11d5c'%2F%3E%3Crect%20x%3D'3870'%20y%3D'0'%20width%3D'1290'%20height%3D'2796'%20fill%3D'%2314141f'%2F%3E%3Crect%20x%3D'5160'%20y%3D'0'%20width%3D'1290'%20height%3D'2796'%20fill%3D'%230b6bcb'%2F%3E%3C%2Fsvg%3E",
+    "fit": "cover"
+  },
+  "palette": [
+    "#ffffff",
+    "#1d3fd6",
+    "#6d28d9",
+    "#e11d5c",
+    "#14141f"
+  ],
+  "devices": [
+    {
+      "id": "cb0",
+      "x": 0.5,
+      "y": 0.6,
+      "w": 0.6,
+      "h": 1.29846,
+      "rotationDeg": -4,
+      "z": 1,
+      "shotIndex": 0,
+      "placement": "center",
+      "authored": true
+    },
+    {
+      "id": "cb1",
+      "x": 1.5,
+      "y": 0.6,
+      "w": 0.6,
+      "h": 1.29846,
+      "rotationDeg": 4,
+      "z": 1,
+      "shotIndex": 1,
+      "placement": "center",
+      "authored": true
+    },
+    {
+      "id": "cb2",
+      "x": 2.5,
+      "y": 0.4,
+      "w": 0.6,
+      "h": 1.29846,
+      "rotationDeg": -4,
+      "z": 1,
+      "shotIndex": 2,
+      "placement": "center",
+      "authored": true
+    },
+    {
+      "id": "cb3",
+      "x": 3.5,
+      "y": 0.6,
+      "w": 0.6,
+      "h": 1.29846,
+      "rotationDeg": 4,
+      "z": 1,
+      "shotIndex": 3,
+      "placement": "center",
+      "authored": true
+    },
+    {
+      "id": "cb4",
+      "x": 4.5,
+      "y": 0.6,
+      "w": 0.6,
+      "h": 1.29846,
+      "rotationDeg": -4,
+      "z": 1,
+      "shotIndex": 4,
+      "placement": "center",
+      "authored": true
+    }
+  ]
+}

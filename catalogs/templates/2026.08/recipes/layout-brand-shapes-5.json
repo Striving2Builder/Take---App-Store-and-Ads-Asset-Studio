@@ -1,0 +1,112 @@
+{
+  "tags": [
+    "mobile",
+    "layout",
+    "screenshots"
+  ],
+  "version": 1,
+  "deviceId": "apple.iphone-16-pro-max",
+  "defaultOrientation": "portrait",
+  "typeScale": "m",
+  "lockBrand": false,
+  "provenance": {
+    "source": "seed",
+    "grammarVersion": "2026.08"
+  },
+  "frameCount": 5,
+  "style": "playful",
+  "extras": [
+    {
+      "id": "bs-rev-3",
+      "kind": "copy",
+      "sliceIndex": 3,
+      "x": 3.5,
+      "y": 0.3,
+      "w": 0.84,
+      "h": 0.22,
+      "rotationDeg": 0,
+      "z": 5,
+      "widget": "review",
+      "fill": "#161512",
+      "authored": true
+    }
+  ],
+  "id": "layout-brand-shapes-5",
+  "name": "Layout · brand shapes",
+  "composition": "isolated",
+  "typeFamily": "top",
+  "background": {
+    "kind": "gradient",
+    "colorA": "#f7b500",
+    "colorB": "#ee7a10"
+  },
+  "palette": [
+    "#161512",
+    "#f7b500",
+    "#e8590c",
+    "#ffffff",
+    "#2b1d0a"
+  ],
+  "devices": [
+    {
+      "id": "bs0",
+      "x": 0.36,
+      "y": 0.64,
+      "w": 0.62,
+      "h": 1.34174,
+      "rotationDeg": -10,
+      "z": 1,
+      "shotIndex": 0,
+      "placement": "center",
+      "authored": true
+    },
+    {
+      "id": "bs1",
+      "x": 1.5,
+      "y": 0.58,
+      "w": 0.58,
+      "h": 1.25518,
+      "rotationDeg": 0,
+      "z": 1,
+      "shotIndex": 1,
+      "placement": "center",
+      "authored": true
+    },
+    {
+      "id": "bs2",
+      "x": 2.5,
+      "y": 0.58,
+      "w": 0.58,
+      "h": 1.25518,
+      "rotationDeg": 4,
+      "z": 1,
+      "shotIndex": 2,
+      "placement": "center",
+      "authored": true
+    },
+    {
+      "id": "bs3",
+      "x": 3.5,
+      "y": 0.76,
+      "w": 0.5,
+      "h": 1.08205,
+      "rotationDeg": 0,
+      "z": 1,
+      "shotIndex": 3,
+      "placement": "center",
+      "authored": true
+    },
+    {
+      "id": "bs4",
+      "x": 4.5,
+      "y": 0.58,
+      "w": 0.58,
+      "h": 1.25518,
+      "rotationDeg": 0,
+      "z": 1,
+      "shotIndex": 4,
+      "placement": "center",
+      "authored": true
+    }
+  ]
+}

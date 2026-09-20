@@ -11,7 +11,7 @@ function assert(cond: boolean, msg: string) {
 }
 
 const recipes = listSystemRecipes();
-assert(recipes.length === 35, "sample five + 20 mobile layouts + 10 competitor-research layouts");
+assert(recipes.length === 51, "sample five + 20 mobile layouts + 10 competitor-research layouts + 16 reference-screenshot layouts");
 assert(
   recipes.every((r) => hasRealLayout(r) && r.frameCount >= 1),
   "every system recipe has real content — a device, or a real extra (device-free compositions are intentional now)"
@@ -36,7 +36,7 @@ assert(!ids.includes("layout-mini-scatter-5"), "mini scatter removed");
 assert(ids.includes("layout-proof-float-5"), "proof float");
 
 const layouts = recipes.filter((r) => r.id.startsWith("layout-"));
-assert(layouts.length === 30, `30 mobile layouts, got ${layouts.length}`);
+assert(layouts.length === 46, `46 mobile layouts, got ${layouts.length}`);
 assert(
   layouts.every((r) => (r.tags || []).includes("mobile") && !(r.tags || []).includes("ios")),
   "geometry pack tagged mobile, not ios-only"

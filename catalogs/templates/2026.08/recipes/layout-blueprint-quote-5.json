@@ -1,0 +1,148 @@
+{
+  "tags": [
+    "mobile",
+    "layout",
+    "screenshots"
+  ],
+  "version": 1,
+  "deviceId": "apple.iphone-16-pro-max",
+  "defaultOrientation": "portrait",
+  "typeScale": "m",
+  "lockBrand": false,
+  "provenance": {
+    "source": "seed",
+    "grammarVersion": "2026.08"
+  },
+  "frameCount": 5,
+  "style": "editorial",
+  "extras": [
+    {
+      "id": "bq-grid-0",
+      "kind": "visual",
+      "sliceIndex": 0,
+      "x": 0.5,
+      "y": 0.55,
+      "w": 1,
+      "h": 0.9,
+      "rotationDeg": 0,
+      "z": 5,
+      "shape": "dots",
+      "fill": "rgba(255,255,255,0.14)",
+      "authored": true
+    },
+    {
+      "id": "bq-arrow-0",
+      "kind": "visual",
+      "sliceIndex": 0,
+      "x": 0.2,
+      "y": 0.86,
+      "w": 0.26,
+      "h": 0.14,
+      "rotationDeg": 0,
+      "z": 6,
+      "shape": "scribble",
+      "fill": "rgba(255,255,255,0.8)",
+      "authored": true
+    },
+    {
+      "id": "bq-grid-2",
+      "kind": "visual",
+      "sliceIndex": 2,
+      "x": 2.5,
+      "y": 0.55,
+      "w": 1,
+      "h": 0.9,
+      "rotationDeg": 0,
+      "z": 5,
+      "shape": "dots",
+      "fill": "rgba(255,255,255,0.14)",
+      "authored": true
+    },
+    {
+      "id": "bq-rev-2",
+      "kind": "copy",
+      "sliceIndex": 2,
+      "x": 2.5,
+      "y": 0.42,
+      "w": 0.84,
+      "h": 0.26,
+      "rotationDeg": 0,
+      "z": 5,
+      "widget": "review",
+      "fill": "#ffffff",
+      "authored": true
+    }
+  ],
+  "id": "layout-blueprint-quote-5",
+  "name": "Layout · blueprint quote",
+  "composition": "isolated",
+  "typeFamily": "top",
+  "typeBand": [
+    "top",
+    "top",
+    "none",
+    "top",
+    "top"
+  ],
+  "background": {
+    "kind": "solid",
+    "colorA": "#2f5fd0"
+  },
+  "palette": [
+    "#ffffff",
+    "#2f5fd0",
+    "#fdf8ec",
+    "#1c3a8a",
+    "#ffe08a"
+  ],
+  "devices": [
+    {
+      "id": "bq0",
+      "x": 0.5,
+      "y": 0.64,
+      "w": 0.62,
+      "h": 1.34174,
+      "rotationDeg": -14,
+      "z": 1,
+      "shotIndex": 0,
+      "placement": "center",
+      "authored": true
+    },
+    {
+      "id": "bq1",
+      "x": 1.5,
+      "y": 0.64,
+      "w": 0.62,
+      "h": 1.34174,
+      "rotationDeg": 16,
+      "z": 1,
+      "shotIndex": 1,
+      "placement": "center",
+      "authored": true
+    },
+    {
+      "id": "bq3",
+      "x": 3.5,
+      "y": 0.58,
+      "w": 0.58,
+      "h": 1.25518,
+      "rotationDeg": 0,
+      "z": 1,
+      "shotIndex": 3,
+      "placement": "center",
+      "authored": true
+    },
+    {
+      "id": "bq4",
+      "x": 4.5,
+      "y": 0.58,
+      "w": 0.58,
+      "h": 1.25518,
+      "rotationDeg": 0,
+      "z": 1,
+      "shotIndex": 4,
+      "placement": "center",
+      "authored": true
+    }
+  ]
+}

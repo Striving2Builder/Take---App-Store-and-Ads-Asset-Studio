@@ -1,0 +1,97 @@
+{
+  "tags": [
+    "mobile",
+    "layout",
+    "screenshots"
+  ],
+  "version": 1,
+  "deviceId": "apple.iphone-16-pro-max",
+  "defaultOrientation": "portrait",
+  "typeScale": "m",
+  "lockBrand": false,
+  "provenance": {
+    "source": "seed",
+    "grammarVersion": "2026.08"
+  },
+  "frameCount": 5,
+  "style": "soft",
+  "extras": [],
+  "id": "layout-pastel-tilt-5",
+  "name": "Layout · pastel tilt",
+  "composition": "strip",
+  "typeFamily": "bottom",
+  "background": {
+    "kind": "gradient",
+    "colorA": "#eaf0fb",
+    "colorB": "#dbe4f4"
+  },
+  "palette": [
+    "#161512",
+    "#eaf0fb",
+    "#6a5cf0",
+    "#ffffff",
+    "#5a6478"
+  ],
+  "devices": [
+    {
+      "id": "pt0",
+      "x": 1,
+      "y": 0.4,
+      "w": 0.84,
+      "h": 1.81784,
+      "rotationDeg": -32,
+      "z": 1,
+      "shotIndex": 0,
+      "placement": "bleed-next",
+      "authored": true
+    },
+    {
+      "id": "pt2",
+      "x": 2.5,
+      "y": 0.36,
+      "w": 0.5,
+      "h": 1.08205,
+      "rotationDeg": 0,
+      "z": 1,
+      "shotIndex": 2,
+      "placement": "center",
+      "authored": true
+    },
+    {
+      "id": "pt3",
+      "x": 3.5,
+      "y": 0.34,
+      "w": 0.5,
+      "h": 1.08205,
+      "rotationDeg": 8,
+      "z": 1,
+      "shotIndex": 3,
+      "placement": "center",
+      "authored": true
+    },
+    {
+      "id": "pt4",
+      "x": 4.5,
+      "y": 0.36,
+      "w": 0.66,
+      "h": 1.42831,
+      "rotationDeg": -14,
+      "z": 1,
+      "shotIndex": 4,
+      "placement": "center",
+      "authored": true
+    },
+    {
+      "id": "pt1",
+      "x": 1.5,
+      "y": 0.4,
+      "w": 0.44,
+      "h": 0.9522,
+      "rotationDeg": 6,
+      "z": 2,
+      "shotIndex": 1,
+      "placement": "center",
+      "authored": true
+    }
+  ]
+}

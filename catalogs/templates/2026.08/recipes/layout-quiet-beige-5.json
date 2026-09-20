@@ -1,0 +1,108 @@
+{
+  "tags": [
+    "mobile",
+    "layout",
+    "screenshots"
+  ],
+  "version": 1,
+  "deviceId": "apple.iphone-16-pro-max",
+  "defaultOrientation": "portrait",
+  "typeScale": "m",
+  "lockBrand": false,
+  "provenance": {
+    "source": "seed",
+    "grammarVersion": "2026.08"
+  },
+  "frameCount": 5,
+  "style": "minimal",
+  "extras": [],
+  "id": "layout-quiet-beige-5",
+  "name": "Layout · quiet beige",
+  "composition": "isolated",
+  "typeFamily": "top",
+  "background": {
+    "kind": "solid",
+    "colorA": "#e9e4dd"
+  },
+  "palette": [
+    "#161512",
+    "#e9e4dd",
+    "#1fbf6a",
+    "#ffffff",
+    "#7a746a"
+  ],
+  "devices": [
+    {
+      "id": "qb0",
+      "x": 0.36,
+      "y": 0.8,
+      "w": 0.62,
+      "h": 1.34174,
+      "rotationDeg": 8,
+      "z": 1,
+      "shotIndex": 0,
+      "placement": "center",
+      "authored": true
+    },
+    {
+      "id": "qb1a",
+      "x": 1.34,
+      "y": 0.72,
+      "w": 0.5,
+      "h": 1.08205,
+      "rotationDeg": -8,
+      "z": 1,
+      "shotIndex": 1,
+      "placement": "center",
+      "authored": true
+    },
+    {
+      "id": "qb1b",
+      "x": 1.72,
+      "y": 0.84,
+      "w": 0.46,
+      "h": 0.99549,
+      "rotationDeg": 12,
+      "z": 2,
+      "shotIndex": 1,
+      "placement": "center",
+      "authored": true
+    },
+    {
+      "id": "qb2",
+      "x": 2.5,
+      "y": 0.58,
+      "w": 0.56,
+      "h": 1.2119,
+      "rotationDeg": 0,
+      "z": 1,
+      "shotIndex": 2,
+      "placement": "center",
+      "authored": true
+    },
+    {
+      "id": "qb3",
+      "x": 3.5,
+      "y": 0.58,
+      "w": 0.56,
+      "h": 1.2119,
+      "rotationDeg": 0,
+      "z": 1,
+      "shotIndex": 3,
+      "placement": "center",
+      "authored": true
+    },
+    {
+      "id": "qb4",
+      "x": 4.5,
+      "y": 0.58,
+      "w": 0.56,
+      "h": 1.2119,
+      "rotationDeg": 0,
+      "z": 1,
+      "shotIndex": 4,
+      "placement": "center",
+      "authored": true
+    }
+  ]
+}
