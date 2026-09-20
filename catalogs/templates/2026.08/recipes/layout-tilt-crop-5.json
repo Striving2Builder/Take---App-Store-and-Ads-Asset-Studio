@@ -25,9 +25,9 @@
     "colorB": "#d9d2c5"
   },
   "palette": [
-    "#1a1a1a",
-    "#f3f1ec",
     "#ff4d1a",
+    "#f3f1ec",
+    "#1a1a1a",
     "#888888",
     "#ffffff"
   ],

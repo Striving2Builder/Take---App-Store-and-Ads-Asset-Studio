@@ -20,7 +20,7 @@ function tiltCrop(): TemplateRecord {
     typeFamily: "top",
     style: "bold",
     background: { kind: "gradient", colorA: "#f3f1ec", colorB: "#d9d2c5" },
-    palette: ["#1a1a1a", "#f3f1ec", "#ff4d1a", "#888888", "#ffffff"],
+    palette: ["#ff4d1a", "#f3f1ec", "#1a1a1a", "#888888", "#ffffff"],
     devices: [
       phone("t0", 0.5, 0.28, 0.58, 0, { rotationDeg: -10 }),
       phone("t1", 1.5, 0.78, 0.58, 1, { rotationDeg: 8 }),
@@ -122,44 +122,11 @@ function overlayPhoto(): TemplateRecord {
     typeFamily: "top",
     style: "minimal",
     background: { kind: "solid", colorA: "#ece8e1" },
-    palette: ["#1a1a1a", "#ece8e1", "#c4b8a8", "#888888", "#ffffff"],
+    palette: ["#c4b8a8", "#ece8e1", "#1a1a1a", "#888888", "#ffffff"],
     devices: Array.from({ length: 5 }, (_, i) => phone(`op-${i}`, i + 0.5, 0.58, 0.56, i)),
     extras: [
       photoPlate("overlay-2", 2, 2.5, 0.42, 0.72, 0.36),
       copyMark("ov-hint", 2, "Drop **your** photo", undefined, 0.16),
-    ],
-  });
-}
-
-function chefSpan(): TemplateRecord {
-  return rec({
-    id: "layout-chef-span-5",
-    name: "Layout · shape + proof",
-    composition: "strip",
-    frameCount: 5,
-    typeFamily: "top",
-    typeBand: ["top", "top", "none", "top", "top"],
-    style: "premium",
-    background: { kind: "gradient", colorA: "#3d1a1a", colorB: "#1a0d0d" },
-    palette: ["#f3f1ec", "#3d1a1a", "#ff4d1a", "#e8c36a", "#ffffff"],
-    devices: [
-      phone("ch0", 0.5, 0.58, 0.56, 0),
-      phone("ch1", 1.5, 0.58, 0.56, 1),
-      phone("ch3", 3.5, 0.58, 0.56, 3),
-      phone("ch4", 4.5, 0.58, 0.56, 4),
-    ],
-    extras: [
-      shapeSlot("span-cut", 0, 1.0, 0.2, 0.8, 0.22, "rgba(243,241,236,0.32)", "wave"),
-      widgetSlot("ch-rate", 2, "rating", 2.5, 0.22, 0.7, 0.16, {
-        storeLabel: SAMPLE_STORE_LABEL,
-      }),
-      widgetSlot("ch-rev", 2, "review", 2.5, 0.5, 0.78, 0.22, {
-        quote: SAMPLE_QUOTE,
-        attribution: SAMPLE_ATTRIBUTION,
-      }),
-      widgetSlot("ch-pills", 2, "pills", 2.5, 0.82, 0.8, 0.1, {
-        pills: ["Cook", "Plan", "Share"],
-      }),
     ],
   });
 }
@@ -321,7 +288,6 @@ export function listLayoutPackRecipes(): TemplateRecord[] {
     photoSpan(),
     yawExtra(),
     overlayPhoto(),
-    chefSpan(),
     bleedIllust(),
     yawStack(),
     panoYaw(),

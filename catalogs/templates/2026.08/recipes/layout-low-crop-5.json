@@ -24,9 +24,9 @@
     "colorA": "#ece8e1"
   },
   "palette": [
-    "#1a1a1a",
-    "#ece8e1",
     "#c4b8a8",
+    "#ece8e1",
+    "#1a1a1a",
     "#888888",
     "#ffffff"
   ],

@@ -20,7 +20,6 @@ import layout_proof_pills_5 from "../../../../catalogs/templates/2026.08/recipes
 import layout_photo_span_5 from "../../../../catalogs/templates/2026.08/recipes/layout-photo-span-5.json";
 import layout_yaw_extra_5 from "../../../../catalogs/templates/2026.08/recipes/layout-yaw-extra-5.json";
 import layout_overlay_photo_5 from "../../../../catalogs/templates/2026.08/recipes/layout-overlay-photo-5.json";
-import layout_chef_span_5 from "../../../../catalogs/templates/2026.08/recipes/layout-chef-span-5.json";
 import layout_bleed_illust_5 from "../../../../catalogs/templates/2026.08/recipes/layout-bleed-illust-5.json";
 import layout_yaw_stack_5 from "../../../../catalogs/templates/2026.08/recipes/layout-yaw-stack-5.json";
 import layout_pano_yaw_5 from "../../../../catalogs/templates/2026.08/recipes/layout-pano-yaw-5.json";
@@ -33,9 +32,7 @@ import layout_fullbleed_hook_5 from "../../../../catalogs/templates/2026.08/reci
 import layout_hero_solid_5 from "../../../../catalogs/templates/2026.08/recipes/layout-hero-solid-5.json";
 import layout_hero_award_badge_5 from "../../../../catalogs/templates/2026.08/recipes/layout-hero-award-badge-5.json";
 import layout_dynamic_tilt_5 from "../../../../catalogs/templates/2026.08/recipes/layout-dynamic-tilt-5.json";
-import layout_feature_ribbons_5 from "../../../../catalogs/templates/2026.08/recipes/layout-feature-ribbons-5.json";
 import layout_peek_stack_5 from "../../../../catalogs/templates/2026.08/recipes/layout-peek-stack-5.json";
-import layout_photo_claim_5 from "../../../../catalogs/templates/2026.08/recipes/layout-photo-claim-5.json";
 
 import layout_aurora_tilt_5 from "../../../../catalogs/templates/2026.08/recipes/layout-aurora-tilt-5.json";
 import layout_blue_wave_tilt_5 from "../../../../catalogs/templates/2026.08/recipes/layout-blue-wave-tilt-5.json";
@@ -74,7 +71,6 @@ const RAW: TemplateRecord[] = [
   layout_photo_span_5,
   layout_yaw_extra_5,
   layout_overlay_photo_5,
-  layout_chef_span_5,
   layout_bleed_illust_5,
   layout_yaw_stack_5,
   layout_pano_yaw_5,
@@ -87,9 +83,7 @@ const RAW: TemplateRecord[] = [
   layout_hero_solid_5,
   layout_hero_award_badge_5,
   layout_dynamic_tilt_5,
-  layout_feature_ribbons_5,
   layout_peek_stack_5,
-  layout_photo_claim_5,
   layout_aurora_tilt_5,
   layout_blue_wave_tilt_5,
   layout_blueprint_quote_5,
