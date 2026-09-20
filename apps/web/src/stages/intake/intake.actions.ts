@@ -4,6 +4,7 @@ import { state } from "../../app/app-state";
 import { toast } from "../../shell/toast";
 import { $, $$ } from "../../shared/dom";
 import { syncDevicePickerToPlatform, syncDevicePickerValue } from "../../editor/device/device-picker";
+import { getDevice } from "@take/device-catalog";
 import { syncOrientationUi } from "../../editor/device/orientation-control";
 import { syncStoreTargetUi } from "../../editor/device/store-target-control";
 import { runScanTheater } from "../generate/generate.controller";
@@ -104,7 +105,16 @@ export function bindIntakeActions() {
     state.platform = d.platform;
     state.mode = d.mode;
     state.qty = d.qty;
-    syncDevicePickerToPlatform(d.platform);
+    // Only reset to the platform's default (biggest) device when the current
+    // one doesn't already match — applyAutoDeviceMatch() may have just picked
+    // a real, resolution-matched device for an uploaded screenshot moments
+    // ago, and resetting here unconditionally silently threw that away,
+    // forcing every export to the default device's size and upscaling
+    // (visibly blurring) any screenshot that wasn't natively that size.
+    const currentPlatform = getDevice(state.deviceId)?.platform;
+    if (currentPlatform !== d.platform) {
+      syncDevicePickerToPlatform(d.platform);
+    }
 
     if (!state.lastScan?.brief && (d.url || d.uploads > 0)) {
       toast(extras.length ? "Scanning pack before generate…" : "Scanning before generate…");

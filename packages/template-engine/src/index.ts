@@ -16,7 +16,7 @@ export type {
   TypeScale,
   TypeBandKind,
 } from "./template.types";
-export { EXTRA_SHAPES, EXTRA_WIDGETS, EXTRA_FACES } from "./template.types";
+export { EXTRA_SHAPES, EXTRA_WIDGETS, EXTRA_FACES, hasRealLayout } from "./template.types";
 export type { GenerateInput, DeviceMetrics } from "./generate/types";
 export type { Grammar, GrammarTokens, GrammarProductions } from "./grammar/tokens";
 export { refreshVariantId, refreshCopy } from "./variant";

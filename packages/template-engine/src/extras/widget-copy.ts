@@ -3,9 +3,11 @@ import type { ExtraSlot } from "../template.types";
 
 export const SAMPLE_SCORE_TEXT = "—";
 export const SAMPLE_STORE_LABEL = "Sample rating";
-export const SAMPLE_QUOTE = "Add your quote";
+export const SAMPLE_QUOTE = "This app changed how I start my mornings.";
 export const SAMPLE_ATTRIBUTION = "Sample";
 export const SAMPLE_PILLS = ["Tag one", "Tag two", "Tag three"];
+export const SAMPLE_AWARD_LABEL = "Editor's Choice";
+export const SAMPLE_AWARD_SUBLABEL = "Sample — add a real award or press mention";
 
 export type WidgetCopy = {
   scoreText: string;
@@ -13,6 +15,8 @@ export type WidgetCopy = {
   quote: string;
   attribution: string;
   pills: string[];
+  label: string;
+  sublabel: string;
   stars: number;
   isSample: boolean;
 };
@@ -21,7 +25,7 @@ function hasScore(score: number | undefined): score is number {
   return typeof score === "number" && Number.isFinite(score);
 }
 
-export function widgetCopy(slot: ExtraSlot): WidgetCopy {
+export function widgetCopy(slot: ExtraSlot, realFeatures?: string[]): WidgetCopy {
   const stars = Math.max(1, Math.min(5, Math.round(slot.stars ?? 5)));
   if (slot.widget === "rating") {
     const score = slot.score;
@@ -32,6 +36,8 @@ export function widgetCopy(slot: ExtraSlot): WidgetCopy {
         quote: "",
         attribution: "",
         pills: [],
+        label: "",
+        sublabel: "",
         stars,
         isSample: true,
       };
@@ -42,6 +48,8 @@ export function widgetCopy(slot: ExtraSlot): WidgetCopy {
       quote: "",
       attribution: "",
       pills: [],
+      label: "",
+      sublabel: "",
       stars,
       isSample: false,
     };
@@ -56,11 +64,55 @@ export function widgetCopy(slot: ExtraSlot): WidgetCopy {
       quote: quote || SAMPLE_QUOTE,
       attribution: attribution || SAMPLE_ATTRIBUTION,
       pills: [],
+      label: "",
+      sublabel: "",
       stars,
       isSample: sample,
     };
   }
-  const pills = slot.pills?.length
+  if (slot.widget === "award") {
+    // Real press mentions / awards aren't something the brief has data for
+    // (nothing scans "which publications featured this app") — this is
+    // honestly sample-until-authored, same treatment as the review quote:
+    // dimmed + marked unless the recipe author (or user) typed something
+    // real in label/sublabel.
+    const label = (slot.label || "").trim();
+    const sublabel = (slot.sublabel || "").trim();
+    const sample = !label;
+    return {
+      scoreText: SAMPLE_SCORE_TEXT,
+      storeLabel: "",
+      quote: "",
+      attribution: "",
+      pills: [],
+      label: label || SAMPLE_AWARD_LABEL,
+      sublabel: sublabel || SAMPLE_AWARD_SUBLABEL,
+      stars,
+      isSample: sample,
+    };
+  }
+  // Real brief features/differentiators always win over a template's
+  // hardcoded pill words when any exist — a recipe's authored pills (e.g.
+  // "Cook, Plan, Share") have no way to know what app they'll actually be
+  // applied to, so they were showing at full opacity on completely
+  // unrelated apps (isSample only ever caught "no pills provided at all",
+  // never "these pills don't describe this app"). Real feature text is
+  // always more honest than a static per-template guess.
+  const fromBrief = (realFeatures || []).map((s) => s.trim()).filter(Boolean).slice(0, 5);
+  if (fromBrief.length) {
+    return {
+      scoreText: SAMPLE_SCORE_TEXT,
+      storeLabel: "",
+      quote: "",
+      attribution: "",
+      pills: fromBrief,
+      label: "",
+      sublabel: "",
+      stars,
+      isSample: false,
+    };
+  }
+  const authoredPills = slot.pills?.length
     ? slot.pills.map((s) => s.trim()).filter(Boolean)
     : (slot.text || "")
         .split(",")
@@ -71,8 +123,13 @@ export function widgetCopy(slot: ExtraSlot): WidgetCopy {
     storeLabel: "",
     quote: "",
     attribution: "",
-    pills: pills.length ? pills : [...SAMPLE_PILLS],
+    pills: authoredPills.length ? authoredPills : [...SAMPLE_PILLS],
+    label: "",
+    sublabel: "",
     stars,
-    isSample: !slot.pills?.length && !(slot.text || "").trim(),
+    // No real brief data to go on — an authored template's own pills are
+    // still an unverified guess at this specific app's features, so mark
+    // them sample too, same honest treatment as an empty slot.
+    isSample: true,
   };
 }

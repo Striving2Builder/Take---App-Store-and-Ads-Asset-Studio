@@ -23,7 +23,13 @@ export {
   extractPlayPackageId,
   normalizeUrl,
 } from "./url-detect";
-export { LOCALE_PRESETS, findLocalePreset, type LocalePreset } from "./locale.presets";
+export {
+  LOCALE_PRESETS,
+  LOCALE_REGIONS,
+  findLocalePreset,
+  type LocalePreset,
+  type Region,
+} from "./locale.presets";
 export type { CapturedPalette, PaletteSwatch } from "./palette.types";
 export type { ScanPack, ScanSourceInput, ScanSourceRole } from "./scan-pack.schema";
 export { buildScanPack, mergeSecondaryIntoPrimary } from "./merge-pack";

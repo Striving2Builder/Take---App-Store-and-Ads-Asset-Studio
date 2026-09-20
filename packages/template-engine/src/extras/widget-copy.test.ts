@@ -1,5 +1,12 @@
 /** OWNER: packages/template-engine — sample vs authored widget copy */
-import { widgetCopy, SAMPLE_ATTRIBUTION, SAMPLE_QUOTE, SAMPLE_SCORE_TEXT, SAMPLE_STORE_LABEL } from "./widget-copy";
+import {
+  widgetCopy,
+  SAMPLE_ATTRIBUTION,
+  SAMPLE_AWARD_LABEL,
+  SAMPLE_QUOTE,
+  SAMPLE_SCORE_TEXT,
+  SAMPLE_STORE_LABEL,
+} from "./widget-copy";
 import type { ExtraSlot } from "../template.types";
 
 function assert(cond: boolean, msg: string) {
@@ -50,6 +57,45 @@ const base: ExtraSlot = {
   assert(copy.quote.includes("morning"), "authored quote");
   assert(copy.attribution === "Jordan", "authored name");
   assert(!copy.isSample, "authored review is not sample");
+}
+
+{
+  const copy = widgetCopy({ ...base, kind: "copy", widget: "pills", pills: ["Cook", "Plan", "Share"] });
+  assert(copy.pills.join(",") === "Cook,Plan,Share", "no real features — falls back to authored pills");
+  assert(copy.isSample, "authored-only pills (no real brief data) are still marked sample");
+}
+
+{
+  const copy = widgetCopy(
+    { ...base, kind: "copy", widget: "pills", pills: ["Cook", "Plan", "Share"] },
+    ["Offline sync", "Dark mode"]
+  );
+  assert(copy.pills.join(",") === "Offline sync,Dark mode", "real brief features win over a template's own pills");
+  assert(!copy.isSample, "real feature-derived pills are not sample");
+}
+
+{
+  const copy = widgetCopy({ ...base, kind: "copy", widget: "pills" });
+  assert(copy.isSample, "no pills and no real features — sample");
+}
+
+{
+  const copy = widgetCopy({ ...base, kind: "copy", widget: "award" });
+  assert(copy.label === SAMPLE_AWARD_LABEL, "empty award label is a sample prompt");
+  assert(copy.isSample, "award without a label is sample");
+}
+
+{
+  const copy = widgetCopy({
+    ...base,
+    kind: "copy",
+    widget: "award",
+    label: "App of the Year",
+    sublabel: "Apple, 2026",
+  });
+  assert(copy.label === "App of the Year", "authored award label paints");
+  assert(copy.sublabel === "Apple, 2026", "authored award sublabel paints");
+  assert(!copy.isSample, "authored award is not sample");
 }
 
 console.log("widget-copy.test ok");

@@ -2,8 +2,7 @@
   "tags": [
     "mobile",
     "layout",
-    "screenshots",
-    "needs-polish"
+    "screenshots"
   ],
   "version": 1,
   "deviceId": "apple.iphone-16-pro-max",
@@ -14,109 +13,112 @@
     "source": "seed",
     "grammarVersion": "2026.08"
   },
-  "id": "layout-pano-yaw-5",
-  "name": "Layout · pano yaw",
-  "composition": "strip",
   "frameCount": 5,
-  "typeFamily": "top",
   "style": "premium",
+  "extras": [
+    {
+      "id": "fr-ribbon-0",
+      "kind": "copy",
+      "sliceIndex": 0,
+      "x": 0.5,
+      "y": 0.14,
+      "w": 0.72,
+      "h": 0.1,
+      "rotationDeg": -8,
+      "z": 21,
+      "widget": "pills",
+      "fill": "#ffb703",
+      "authored": true
+    },
+    {
+      "id": "fr-ribbon-1",
+      "kind": "copy",
+      "sliceIndex": 1,
+      "x": 1.5,
+      "y": 0.85,
+      "w": 0.72,
+      "h": 0.1,
+      "rotationDeg": 8,
+      "z": 21,
+      "widget": "pills",
+      "fill": "#ffb703",
+      "authored": true
+    }
+  ],
+  "id": "layout-feature-ribbons-5",
+  "name": "Layout · feature ribbons",
+  "composition": "isolated",
+  "typeFamily": "top",
   "background": {
-    "kind": "image",
-    "colorA": "#111318",
-    "fit": "cover"
+    "kind": "solid",
+    "colorA": "#0c2b2b"
   },
   "palette": [
     "#f3f1ec",
-    "#111318",
-    "#3de0ff",
-    "#888888",
+    "#0c2b2b",
+    "#ffb703",
+    "#083333",
     "#ffffff"
   ],
   "devices": [
     {
-      "id": "py0",
+      "id": "fr0",
       "x": 0.5,
       "y": 0.58,
-      "w": 0.52,
-      "h": 1.1253333333333333,
+      "w": 0.56,
+      "h": 1.211896,
       "rotationDeg": 0,
-      "rotateYDeg": 20,
-      "depth": 0.05,
       "z": 1,
       "shotIndex": 0,
       "placement": "center",
       "authored": true
     },
     {
-      "id": "py1",
+      "id": "fr1",
       "x": 1.5,
       "y": 0.58,
-      "w": 0.52,
-      "h": 1.1253333333333333,
+      "w": 0.56,
+      "h": 1.211896,
       "rotationDeg": 0,
-      "rotateYDeg": -16,
-      "depth": 0.045,
       "z": 1,
       "shotIndex": 1,
       "placement": "center",
       "authored": true
     },
     {
-      "id": "py2",
+      "id": "fr2",
       "x": 2.5,
       "y": 0.58,
-      "w": 0.52,
-      "h": 1.1253333333333333,
+      "w": 0.56,
+      "h": 1.211896,
       "rotationDeg": 0,
-      "rotateYDeg": 22,
-      "depth": 0.05,
       "z": 1,
       "shotIndex": 2,
       "placement": "center",
       "authored": true
     },
     {
-      "id": "py3",
+      "id": "fr3",
       "x": 3.5,
       "y": 0.58,
-      "w": 0.52,
-      "h": 1.1253333333333333,
+      "w": 0.56,
+      "h": 1.211896,
       "rotationDeg": 0,
-      "rotateYDeg": -18,
-      "depth": 0.045,
       "z": 1,
       "shotIndex": 3,
       "placement": "center",
       "authored": true
     },
     {
-      "id": "py4",
+      "id": "fr4",
       "x": 4.5,
       "y": 0.58,
-      "w": 0.52,
-      "h": 1.1253333333333333,
+      "w": 0.56,
+      "h": 1.211896,
       "rotationDeg": 0,
-      "rotateYDeg": 14,
-      "depth": 0.04,
       "z": 1,
       "shotIndex": 4,
       "placement": "center",
-      "authored": true
-    }
-  ],
-  "extras": [
-    {
-      "id": "pano-hint",
-      "kind": "copy",
-      "sliceIndex": 0,
-      "x": 0.5,
-      "y": 0.88,
-      "w": 0.84,
-      "h": 0.12,
-      "rotationDeg": 0,
-      "z": 22,
-      "fill": "#f3f1ec",
-      "text": "One ++seamless++ flow",
       "authored": true
     }
   ]

@@ -1,6 +1,7 @@
 /** OWNER: modes/replicator — structure set from competitor beats / upload refs */
 import type { InferenceBrief, ProjectSet } from "@take/core";
 import { generateSets } from "../wizard/sets-builder";
+import { kickerFor } from "../wizard/frames-builder";
 import {
   competitorBeatsFromPack,
   replicatorFrameCount,
@@ -51,7 +52,7 @@ export function buildReplicatorSets(
   set.frames.forEach((f, i) => {
     f.index = i;
     f.role = TRACE_ROLES[i % TRACE_ROLES.length];
-    f.kicker = `${String(i + 1).padStart(2, "0")} · TRACE`;
+    f.kicker = kickerFor(f.role, brief);
     if (beats.length) f.headline = beatHeadline(brief, beats, i);
   });
   return sets;

@@ -3,6 +3,7 @@ import type { CreationMode } from "@take/modes-sdk";
 import { scanApp } from "@take/scan-client";
 import {
   bindRecipeShell,
+  hasRealLayout,
   recipeFromSaved,
   storeShellFromPlatform,
 } from "@take/template-engine";
@@ -33,7 +34,7 @@ export const wizardMode: CreationMode = {
     if (ctx.templateId) {
       const tpl = pickTemplate(ctx.templateId);
       let recipe = recipeFromSaved({ ...tpl, layout: tpl?.layout });
-      if (recipe.devices.length) {
+      if (hasRealLayout(recipe)) {
         const mobile =
           (recipe.tags || []).includes("mobile") || tpl?.platform === "mobile";
         if (mobile) {
@@ -41,7 +42,10 @@ export const wizardMode: CreationMode = {
           recipe = bindRecipeShell(recipe, shell);
         }
         const set = projectSetFromRecipe(recipe, brief, {
-          deviceId: recipe.deviceId || ctx.deviceId,
+          // Let projectSetFromRecipe's own resolveDeviceId() weigh the
+          // recipe's device against ctx.deviceId — passing the recipe's
+          // device pre-resolved here would always win and skip that check.
+          deviceId: ctx.deviceId,
           seedPalette: ctx.seedPalette,
         });
         return {

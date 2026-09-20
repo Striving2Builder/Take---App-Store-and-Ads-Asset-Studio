@@ -28,6 +28,7 @@
   },
   "devDependencies": {
     "concurrently": "^9.2.1",
-    "tsx": "^4.20.5"
+    "tsx": "^4.20.5",
+    "world-countries": "^5.1.0"
   }
 }

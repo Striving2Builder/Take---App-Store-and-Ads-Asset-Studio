@@ -31,6 +31,45 @@ function fill(text: string, brief: InferenceBrief): string {
   return out.trim();
 }
 
+/** A real, role-appropriate eyebrow line — reads as marketing copy, not the
+ *  frame's internal position/role label. Mirrors apps/web's
+ *  frames-builder.ts kickerFor() (kept in this package too since
+ *  template-engine can't import from apps/web) — pulls in real brief
+ *  fields where they exist rather than inventing specifics. */
+function kickerFor(role: string, brief: InferenceBrief): string {
+  const category = (brief.category || "").trim().toUpperCase();
+  const feature = (brief.features[0] || "").trim().toUpperCase();
+  const name = (brief.name || "").trim().toUpperCase();
+  switch (role) {
+    case "HOOK":
+      return category || "NEW";
+    case "PROBLEM":
+      return "THE PROBLEM";
+    case "SHIFT":
+      return "A BETTER WAY";
+    case "PROOF":
+      return "REAL RESULTS";
+    case "FEATURE":
+      return feature ? feature.slice(0, 28) : "HOW IT WORKS";
+    case "RITUAL":
+      return "YOUR ROUTINE";
+    case "SOCIAL":
+      return "LOVED BY USERS";
+    case "DETAIL":
+      return "THE DETAILS";
+    case "OUTCOME":
+      return "THE OUTCOME";
+    case "TRUST":
+      return "WHY TRUST IT";
+    case "CTA":
+      return "GET STARTED";
+    case "CLOSE":
+      return name || "READY?";
+    default:
+      return category || "NEW";
+  }
+}
+
 /** One line pair per role — no headline modulo. Empty stays empty. */
 function roleLine(brief: InferenceBrief, role: string): { headline: string; caption: string } {
   const byRole: Record<string, [string, string]> = {
@@ -65,7 +104,7 @@ export function applyTemplate(input: ApplyTemplateInput): ApplyTemplateResult {
       id: `${recipe.id}-f-${i}`,
       index: i,
       role,
-      kicker: `${String(i + 1).padStart(2, "0")} · ${role}`,
+      kicker: kickerFor(role, brief),
       headline: copy.headline,
       caption: copy.caption,
       cta: brief.goal === "trial" ? "Start free trial" : "Get the app",

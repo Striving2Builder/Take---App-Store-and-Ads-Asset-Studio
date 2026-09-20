@@ -105,7 +105,6 @@
       "fill": "#f3f1ec",
       "widget": "review",
       "authored": true,
-      "quote": "Add your quote",
       "attribution": "Sample"
     },
     {
@@ -148,7 +147,7 @@
       "rotationDeg": 0,
       "z": 22,
       "fill": "#f3f1ec",
-      "text": "Proof **floats** here",
+      "text": "See the **proof**",
       "authored": true
     },
     {

@@ -4,6 +4,7 @@ import {
   typeBandRect,
   worldSize,
   backgroundDestSize,
+  hasRealLayout,
   type TemplateRecord,
 } from "@take/template-engine";
 import type { StoryFrame } from "@take/core";
@@ -32,7 +33,7 @@ function asRecipe(raw: unknown): TemplateRecord | null {
   if (!raw || typeof raw !== "object") return null;
   const r = raw as TemplateRecord;
   if (r.composition !== "strip" && r.composition !== "isolated") return null;
-  if (!Array.isArray(r.devices) || !r.devices.length || !r.frameCount) return null;
+  if (!Array.isArray(r.devices) || !r.frameCount || !hasRealLayout(r)) return null;
   return r;
 }
 
@@ -124,7 +125,9 @@ export async function paintStripSlice(
     await paintDevice(ctx, sliceW, sliceH, inst, deviceId, recipe.defaultOrientation);
   }
   const ink = inkForBackground(recipe.background.colorA, recipe.background.colorB);
-  await paintExtras(ctx, recipe.extras, sliceW, sliceH, ink);
+  const inf = state.inference;
+  const realFeatures = inf ? [...inf.features, ...inf.differentiators].filter(Boolean) : undefined;
+  await paintExtras(ctx, recipe.extras, sliceW, sliceH, ink, realFeatures);
   ctx.restore();
 
   if (!opts?.skipType && typeBandForSlice(recipe, sliceIndex) !== "none") {

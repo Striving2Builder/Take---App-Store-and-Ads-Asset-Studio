@@ -64,10 +64,22 @@ export function generateLayout(input: GenerateInput): TemplateRecord {
     resolveMetrics(input.deviceId, input.platform || "ios", input.orientation || "portrait");
   const planRng = rngFromSeed(`${seed}::plan`);
   const plan = planSet(planRng, grammar, input.shotCount, input.palette, input.composition);
+  // Decide composition ONCE per call, honoring the grammar's declared mix
+  // (e.g. 58% strip / 42% isolated) — then only search jitter within that
+  // one composition. Letting each of the K candidates re-roll its own
+  // composition independently (the old behavior) turns "best of K" into an
+  // unfair cross-composition contest: scoreLayout awards +14 for bleed
+  // usage, which only strip candidates can ever earn, so a strip candidate
+  // beats an isolated one on score almost every time regardless of jitter
+  // luck. With K=12 draws, that meant isolated won only ~1.7% of calls in
+  // practice — not its declared 42% — collapsing "5 generated layouts" into
+  // near-identical strip variants differing mainly by background color.
+  const forcedComposition = plan.composition;
+  const candidateInput: GenerateInput = { ...input, composition: forcedComposition };
 
   let best: { recipe: TemplateRecord; score: number } | null = null;
   for (let draw = 0; draw < k; draw++) {
-    const { recipe, sliceW, sliceH } = candidate(seed, draw, input);
+    const { recipe, sliceW, sliceH } = candidate(seed, draw, candidateInput);
     const check = validateLayout(recipe, sliceW, sliceH, metrics);
     if (!check.ok) continue;
     const score = scoreLayout(recipe, sliceW, sliceH);

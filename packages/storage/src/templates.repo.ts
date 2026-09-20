@@ -58,8 +58,13 @@ function recipeToCard(recipe: TemplateRecord): SavedTemplate {
 export function isLayoutRecipe(t: SavedTemplate): boolean {
   const tags = (t.tags || []).map((x) => x.toLowerCase());
   if (tags.includes("device") && tags.includes("shell")) return false;
-  const rec = t.layout as { devices?: unknown[]; frameCount?: number } | undefined;
-  return !!(rec && Array.isArray(rec.devices) && rec.devices.length && rec.frameCount);
+  const rec = t.layout as { devices?: unknown[]; extras?: unknown[]; frameCount?: number } | undefined;
+  // Same "has real content" test as template-engine's hasRealLayout() — a
+  // device, or a real extra (full-bleed screenshot, award badge, ...) —
+  // reimplemented loosely here since this operates on raw untyped JSON,
+  // not a hydrated TemplateRecord.
+  const hasContent = !!(rec?.devices?.length || rec?.extras?.length);
+  return !!(rec && Array.isArray(rec.devices) && rec.frameCount && hasContent);
 }
 
 export function listLayoutTemplates(): SavedTemplate[] {

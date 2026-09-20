@@ -1,6 +1,6 @@
 /** OWNER: stages/review — render concept sets + mode chrome */
 import { getMode } from "@take/modes-sdk";
-import type { TemplateRecord } from "@take/template-engine";
+import { hasRealLayout, type TemplateRecord } from "@take/template-engine";
 import { state } from "../../app/app-state";
 import { $ } from "../../shared/dom";
 import { escapeHtml } from "../../shared/escape";
@@ -19,7 +19,7 @@ const REVIEW_TITLES: Record<string, string> = {
 function asRecipe(raw: unknown): TemplateRecord | null {
   if (!raw || typeof raw !== "object") return null;
   const r = raw as TemplateRecord;
-  if (!Array.isArray(r.devices) || !r.devices.length) return null;
+  if (!Array.isArray(r.devices) || !hasRealLayout(r)) return null;
   return r;
 }
 
@@ -136,7 +136,10 @@ async function paintReviewThumbs() {
       frames: set.frames,
       palette: set.palette,
       deviceId: set.deviceId || state.deviceId,
-      skipType: true,
+      // Was skipType: true — that hid the one thing that actually
+      // distinguishes candidate layouts (headline/caption/kicker text and
+      // the type band's top/bottom/split position), making every card in
+      // this picker look identical regardless of real underlying variety.
     });
   }
 }

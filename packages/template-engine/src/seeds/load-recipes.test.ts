@@ -2,6 +2,7 @@
 import { recipeFromSaved } from "../apply/from-saved";
 import { validateLayout } from "../constraints/validate-layout";
 import { resolveMetrics } from "../generate/metrics";
+import { hasRealLayout } from "../template.types";
 import { bindRecipeShell } from "./layout-android-port";
 import { listSystemRecipes, STRIP_BLEED_HOOK } from "./load-recipes";
 
@@ -10,10 +11,10 @@ function assert(cond: boolean, msg: string) {
 }
 
 const recipes = listSystemRecipes();
-assert(recipes.length === 25, "sample five + 20 mobile layouts (no Play twin cards)");
+assert(recipes.length === 35, "sample five + 20 mobile layouts + 10 competitor-research layouts");
 assert(
-  recipes.every((r) => r.devices.length >= 1 && r.frameCount >= 1),
-  "every system recipe has devices"
+  recipes.every((r) => hasRealLayout(r) && r.frameCount >= 1),
+  "every system recipe has real content — a device, or a real extra (device-free compositions are intentional now)"
 );
 
 const ids = recipes.map((r) => r.id);
@@ -35,7 +36,7 @@ assert(!ids.includes("layout-mini-scatter-5"), "mini scatter removed");
 assert(ids.includes("layout-proof-float-5"), "proof float");
 
 const layouts = recipes.filter((r) => r.id.startsWith("layout-"));
-assert(layouts.length === 20, `20 mobile layouts, got ${layouts.length}`);
+assert(layouts.length === 30, `30 mobile layouts, got ${layouts.length}`);
 assert(
   layouts.every((r) => (r.tags || []).includes("mobile") && !(r.tags || []).includes("ios")),
   "geometry pack tagged mobile, not ios-only"
@@ -90,7 +91,7 @@ for (const recipe of recipes) {
   const hydrated = recipeFromSaved({ id: recipe.id, name: "x", frames: 99 });
   assert(hydrated.id === recipe.id, `hydrate ${recipe.id}`);
   assert(hydrated.frameCount === recipe.frameCount, `count owned by ${recipe.id}`);
-  assert(hydrated.devices.length >= 1, `devices on ${recipe.id}`);
+  assert(hasRealLayout(hydrated), `real content on ${recipe.id}`);
   const platform = (recipe.tags || []).includes("android") ? "android" : "ios";
   const m = resolveMetrics(
     recipe.deviceId || "apple.iphone-16-pro-max",

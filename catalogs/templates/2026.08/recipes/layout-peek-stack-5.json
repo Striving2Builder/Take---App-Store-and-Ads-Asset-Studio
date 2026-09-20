@@ -1,0 +1,157 @@
+{
+  "tags": [
+    "mobile",
+    "layout",
+    "screenshots"
+  ],
+  "version": 1,
+  "deviceId": "apple.iphone-16-pro-max",
+  "defaultOrientation": "portrait",
+  "typeScale": "m",
+  "lockBrand": false,
+  "provenance": {
+    "source": "seed",
+    "grammarVersion": "2026.08"
+  },
+  "frameCount": 5,
+  "style": "premium",
+  "extras": [],
+  "id": "layout-peek-stack-5",
+  "name": "Layout · peek stack",
+  "composition": "isolated",
+  "typeFamily": "top",
+  "background": {
+    "kind": "gradient",
+    "colorA": "#12141a",
+    "colorB": "#1e2129"
+  },
+  "palette": [
+    "#f3f1ec",
+    "#12141a",
+    "#3de0ff",
+    "#1e2129",
+    "#ffffff"
+  ],
+  "devices": [
+    {
+      "id": "ps-main-0",
+      "x": 0.5,
+      "y": 0.62,
+      "w": 0.56,
+      "h": 1.211896,
+      "rotationDeg": 0,
+      "z": 2,
+      "shotIndex": 0,
+      "placement": "center",
+      "authored": true
+    },
+    {
+      "id": "ps-peek-0",
+      "x": 0.5,
+      "y": -0.02,
+      "w": 0.5,
+      "h": 1.08205,
+      "rotationDeg": 0,
+      "z": 1,
+      "shotIndex": 0,
+      "placement": "center",
+      "authored": true
+    },
+    {
+      "id": "ps-main-1",
+      "x": 1.5,
+      "y": 0.62,
+      "w": 0.56,
+      "h": 1.211896,
+      "rotationDeg": 0,
+      "z": 2,
+      "shotIndex": 1,
+      "placement": "center",
+      "authored": true
+    },
+    {
+      "id": "ps-peek-1",
+      "x": 1.5,
+      "y": -0.02,
+      "w": 0.5,
+      "h": 1.08205,
+      "rotationDeg": 0,
+      "z": 1,
+      "shotIndex": 1,
+      "placement": "center",
+      "authored": true
+    },
+    {
+      "id": "ps-main-2",
+      "x": 2.5,
+      "y": 0.62,
+      "w": 0.56,
+      "h": 1.211896,
+      "rotationDeg": 0,
+      "z": 2,
+      "shotIndex": 2,
+      "placement": "center",
+      "authored": true
+    },
+    {
+      "id": "ps-peek-2",
+      "x": 2.5,
+      "y": -0.02,
+      "w": 0.5,
+      "h": 1.08205,
+      "rotationDeg": 0,
+      "z": 1,
+      "shotIndex": 2,
+      "placement": "center",
+      "authored": true
+    },
+    {
+      "id": "ps-main-3",
+      "x": 3.5,
+      "y": 0.62,
+      "w": 0.56,
+      "h": 1.211896,
+      "rotationDeg": 0,
+      "z": 2,
+      "shotIndex": 3,
+      "placement": "center",
+      "authored": true
+    },
+    {
+      "id": "ps-peek-3",
+      "x": 3.5,
+      "y": -0.02,
+      "w": 0.5,
+      "h": 1.08205,
+      "rotationDeg": 0,
+      "z": 1,
+      "shotIndex": 3,
+      "placement": "center",
+      "authored": true
+    },
+    {
+      "id": "ps-main-4",
+      "x": 4.5,
+      "y": 0.62,
+      "w": 0.56,
+      "h": 1.211896,
+      "rotationDeg": 0,
+      "z": 2,
+      "shotIndex": 4,
+      "placement": "center",
+      "authored": true
+    },
+    {
+      "id": "ps-peek-4",
+      "x": 4.5,
+      "y": -0.02,
+      "w": 0.5,
+      "h": 1.08205,
+      "rotationDeg": 0,
+      "z": 1,
+      "shotIndex": 4,
+      "placement": "center",
+      "authored": true
+    }
+  ]
+}
