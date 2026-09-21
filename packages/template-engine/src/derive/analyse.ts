@@ -1,11 +1,14 @@
 /** OWNER: packages/template-engine — read the layout of a listing screenshot (no branding kept) */
 import { downscale, labField, type Pixels } from "./pixels";
-import { readBackground } from "./read-background";
+import { edgeMargin, readBackground } from "./read-background";
+import { detectPhonesInPanel, edgeField } from "./detect-phones";
 import { readDevices } from "./read-devices";
 import { splitPanels } from "./split-panels";
-import type { Analysis, Finding, PanelRead } from "./types";
+import { type Analysis, type DeviceRead, type Finding, type PanelRead } from "./types";
 
 export type AnalyseOptions = {
+  /** Which phone finder to use: outline-based ("edge"), background-based ("mask"), or edge first with the mask as fallback. */
+  engine?: "mask" | "edge" | "both";
   /** Test/debug only: receives the foreground mask. */
   debug?: { mask?: Uint8Array };
   /** Force the panel count when the automatic split is wrong. */
@@ -22,6 +25,49 @@ export function analyseScreenshot(source: Pixels, opts: AnalyseOptions = {}): An
 
   const models = split.panels.map((p) => readBackground(lab, w, h, p.x0, p.x1));
   const devs = readDevices(lab, w, h, split.panels, models, opts.debug);
+
+  const engine = opts.engine ?? "both";
+  if (engine !== "mask") {
+    const valid = new Uint8Array(w * h);
+    for (const p of split.panels) {
+      const m = edgeMargin(p.x1 - p.x0);
+      for (let y = m; y < h - m; y++) for (let x = p.x0 + m; x < p.x1 - m; x++) valid[y * w + x] = 1;
+    }
+    const field = edgeField(lab, w, h, valid);
+    split.panels.forEach((p, i) => {
+      const found = detectPhonesInPanel(field, p.x0, p.x1);
+      const pw = p.x1 - p.x0;
+      const edgeDevices: DeviceRead[] = found.map((f) => {
+        let deg = f.rotationDeg;
+        while (deg > 90) deg -= 180;
+        while (deg <= -90) deg += 180;
+        const r = (f.rotationDeg * Math.PI) / 180;
+        const halfX = (Math.abs(Math.cos(r)) * f.w + Math.abs(Math.sin(r)) * f.h) / 2;
+        const clipped = f.visible < 0.85;
+        return {
+          cx: (f.cx - p.x0) / pw,
+          cy: f.cy / h,
+          w: f.w / pw,
+          rotationDeg: Math.round(deg * 10) / 10,
+          clipped,
+          spansNext: f.cx + halfX > p.x1 + 0.1 * pw,
+          status: f.support >= 0.75 && !clipped ? "measured" : "estimated",
+          note: clipped ? "Part of the outline is cut off by the panel edge; size and position follow the visible edges." : undefined,
+        };
+      });
+      // The background-based read is precise where it works, so it is kept when it found phones
+      // without complaint; the outline finder covers the panels it gave up on.
+      const maskSettled = devs[i].devices.length > 0 && devs[i].unresolved.length === 0;
+      if (engine === "edge" || (engine === "both" && edgeDevices.length && !maskSettled)) {
+        devs[i].devices = edgeDevices;
+        if (edgeDevices.length > 1) {
+          devs[i].unresolved = [`${edgeDevices.length} phones were found here, close together or overlapping. Their boxes are estimates from the outlines; check them.`];
+        }
+        if (!edgeDevices.length) devs[i].unresolved = ["No phone outline was found in this panel."];
+        else if (edgeDevices.length === 1) devs[i].unresolved = [];
+      }
+    });
+  }
 
   const widths = split.panels.map((p) => p.x1 - p.x0).sort((a, b) => a - b);
   const medianW = widths[Math.floor(widths.length / 2)] || 1;
