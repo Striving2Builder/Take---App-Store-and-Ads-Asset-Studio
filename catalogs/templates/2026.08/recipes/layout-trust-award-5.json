@@ -27,7 +27,7 @@
       "rotationDeg": 0,
       "z": 20,
       "widget": "award",
-      "fill": "#f3f1ec",
+      "fill": "#161512",
       "authored": true
     }
   ],
@@ -37,14 +37,14 @@
   "typeFamily": "bottom",
   "background": {
     "kind": "gradient",
-    "colorA": "#7a1f3d",
-    "colorB": "#2c0a18"
+    "colorA": "#f7e3ea",
+    "colorB": "#f1c6d8"
   },
   "palette": [
-    "#f3f1ec",
-    "#7a1f3d",
-    "#ffb703",
-    "#2c0a18",
+    "#e87399",
+    "#f7e3ea",
+    "#161512",
+    "#6b6a66",
     "#ffffff"
   ],
   "devices": [

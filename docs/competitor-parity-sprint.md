@@ -160,8 +160,8 @@ A Library card with `rotateYDeg: 28` exports a PNG where the **side of the phone
 | Prism Glow | (shipped stagger + strip) | keep / alias |
 | Parchment / Botanica | (shipped) | keep |
 | Headway tilt + crop + objects | A1 + user extras | `layout-tilt-crop-5` |
-| AI search + tag cloud PNG | A3 + B1 | `layout-proof-pills-5` |
-| Pulse person-span | user panorama extra | `layout-photo-span-5` (empty extra slot) |
+| AI search + tag cloud PNG | A3 + B1 | `layout-proof-pills-5` (removed) |
+| Pulse person-span | user panorama extra | `layout-photo-span-5` (removed) (empty extra slot) |
 | Trackio objects on bezel | A1 + C1 | `layout-yaw-extra-5` |
 | Insighto hand / person | user extra | `layout-overlay-photo-5` |
 | feasto chef across cut | A1 + B1 | `layout-chef-span-5` (shape + proof wall) |
@@ -174,7 +174,7 @@ A Library card with `rotateYDeg: 28` exports a PNG where the **side of the phone
 | ThinkUp 3-cluster + bubble | B2 + A1 | `layout-fan-3-5` |
 | zeeb 3-stack across 1–2 | B2 + C1 | `layout-yaw-stack-5` |
 | Calm topo + 3 overlap + collage | A1 + B2 + mini extras | `layout-fan-3-5` + `layout-mini-scatter-5` |
-| Shadow Form floating UI | B1 + A3 | `layout-proof-float-5` |
+| Shadow Form floating UI | B1 + A3 | `layout-proof-float-5` (removed) |
 
 If a row still needs a **user photo**, the card ships with an empty visual extra and honest Library copy — not a stock person.
 

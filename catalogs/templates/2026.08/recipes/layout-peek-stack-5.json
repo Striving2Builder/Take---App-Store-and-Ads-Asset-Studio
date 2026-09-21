@@ -22,14 +22,14 @@
   "typeFamily": "top",
   "background": {
     "kind": "gradient",
-    "colorA": "#12141a",
-    "colorB": "#1e2129"
+    "colorA": "#cfd5e8",
+    "colorB": "#e7eaf3"
   },
   "palette": [
-    "#f3f1ec",
-    "#12141a",
-    "#3de0ff",
-    "#1e2129",
+    "#7390e8",
+    "#cfd5e8",
+    "#161512",
+    "#6b6a66",
     "#ffffff"
   ],
   "devices": [

@@ -21,14 +21,14 @@
   "style": "premium",
   "background": {
     "kind": "gradient",
-    "colorA": "#1a1440",
-    "colorB": "#0b1020"
+    "colorA": "#e6e4f7",
+    "colorB": "#c9d2ee"
   },
   "palette": [
-    "#e8dff5",
-    "#1a1440",
-    "#7b6cff",
-    "#f3f1ec",
+    "#8373e8",
+    "#e6e4f7",
+    "#161512",
+    "#6b6a66",
     "#ffffff"
   ],
   "devices": [
@@ -106,7 +106,7 @@
       "h": 0.22,
       "rotationDeg": 0,
       "z": 12,
-      "fill": "rgba(243,241,236,0.22)",
+      "fill": "rgba(22,21,18,0.09)",
       "authored": true
     },
     {
@@ -119,7 +119,7 @@
       "h": 0.12,
       "rotationDeg": 0,
       "z": 22,
-      "fill": "#f3f1ec",
+      "fill": "#161512",
       "text": "Made to ++stand out++",
       "authored": true
     }

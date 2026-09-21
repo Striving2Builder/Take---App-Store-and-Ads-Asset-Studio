@@ -15,7 +15,7 @@
   "typeScale": "m",
   "background": {
     "kind": "solid",
-    "colorA": "#111111"
+    "colorA": "#e2e4e9"
   },
   "devices": [
     {
@@ -133,11 +133,11 @@
   "lockBrand": false,
   "style": "minimal",
   "palette": [
-    "#f3f1ec",
-    "#111111",
-    "#ff4d1a",
-    "#888888",
-    "#222222"
+    "#c4b8a8",
+    "#e2e4e9",
+    "#161512",
+    "#6b6a66",
+    "#ffffff"
   ],
   "provenance": {
     "source": "seed",

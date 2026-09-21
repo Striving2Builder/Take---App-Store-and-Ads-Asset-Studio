@@ -22,15 +22,15 @@
   "typeFamily": "bottom",
   "background": {
     "kind": "gradient",
-    "colorA": "#1b3a6b",
-    "colorB": "#2f5a94"
+    "colorA": "#c7d7f0",
+    "colorB": "#b1c8e7"
   },
   "palette": [
-    "#f3f1ec",
-    "#1b3a6b",
-    "#ffb703",
-    "#ffffff",
-    "#0c1a30"
+    "#73a5e8",
+    "#c7d7f0",
+    "#161512",
+    "#6b6a66",
+    "#ffffff"
   ],
   "devices": [
     {

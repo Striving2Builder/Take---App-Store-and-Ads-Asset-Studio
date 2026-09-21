@@ -11,7 +11,7 @@ function assert(cond: boolean, msg: string) {
 }
 
 const recipes = listSystemRecipes();
-assert(recipes.length === 48, "sample five + 20 mobile layouts + 10 competitor-research layouts + 16 reference-screenshot layouts");
+assert(recipes.length === 42, "sample five + 20 mobile layouts + 10 competitor-research layouts + 16 reference-screenshot layouts");
 assert(
   recipes.every((r) => hasRealLayout(r) && r.frameCount >= 1),
   "every system recipe has real content — a device, or a real extra (device-free compositions are intentional now)"
@@ -29,14 +29,11 @@ assert(ids.includes("layout-proof-mid-5"), "proof mid");
 assert(ids.includes("layout-yaw-bleed-5"), "yaw bleed");
 assert(ids.includes("layout-type-marks-5"), "type marks");
 assert(ids.includes("layout-tilt-crop-5"), "tilt crop");
-assert(ids.includes("layout-proof-pills-5"), "proof pills");
-assert(ids.includes("layout-photo-span-5"), "photo span");
 assert(ids.includes("layout-yaw-stack-5"), "yaw stack");
 assert(!ids.includes("layout-mini-scatter-5"), "mini scatter removed");
-assert(ids.includes("layout-proof-float-5"), "proof float");
 
 const layouts = recipes.filter((r) => r.id.startsWith("layout-"));
-assert(layouts.length === 43, `43 mobile layouts, got ${layouts.length}`);
+assert(layouts.length === 37, `37 mobile layouts, got ${layouts.length}`);
 assert(
   layouts.every((r) => (r.tags || []).includes("mobile") && !(r.tags || []).includes("ios")),
   "geometry pack tagged mobile, not ios-only"
@@ -46,11 +43,6 @@ assert(
   "no *-play-5 twin cards in Library list"
 );
 
-const photo = recipes.find((r) => r.id === "layout-photo-span-5")!;
-assert(
-  photo.extras?.some((e) => e.kind === "visual" && !e.imageUrl && !e.shape && !e.widget),
-  "photo span is an empty plate, not stock art"
-);
 const overlay = recipes.find((r) => r.id === "layout-overlay-photo-5")!;
 assert(
   overlay.extras?.some((e) => e.kind === "visual" && !e.imageUrl && !e.widget),

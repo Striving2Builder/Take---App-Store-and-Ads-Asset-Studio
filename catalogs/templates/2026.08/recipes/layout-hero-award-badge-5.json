@@ -27,7 +27,7 @@
       "rotationDeg": 0,
       "z": 20,
       "widget": "award",
-      "fill": "#ffffff",
+      "fill": "#161512",
       "authored": true
     }
   ],
@@ -37,13 +37,13 @@
   "typeFamily": "top",
   "background": {
     "kind": "solid",
-    "colorA": "#1f3a8f"
+    "colorA": "#d6def5"
   },
   "palette": [
-    "#ffffff",
-    "#1f3a8f",
-    "#ffd166",
-    "#0c1430",
+    "#738fe8",
+    "#d6def5",
+    "#161512",
+    "#6b6a66",
     "#ffffff"
   ],
   "devices": [

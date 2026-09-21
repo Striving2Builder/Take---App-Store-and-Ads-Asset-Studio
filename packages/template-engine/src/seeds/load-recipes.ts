@@ -16,19 +16,13 @@ import layout_proof_mid_5 from "../../../../catalogs/templates/2026.08/recipes/l
 import layout_yaw_bleed_5 from "../../../../catalogs/templates/2026.08/recipes/layout-yaw-bleed-5.json";
 import layout_type_marks_5 from "../../../../catalogs/templates/2026.08/recipes/layout-type-marks-5.json";
 import layout_tilt_crop_5 from "../../../../catalogs/templates/2026.08/recipes/layout-tilt-crop-5.json";
-import layout_proof_pills_5 from "../../../../catalogs/templates/2026.08/recipes/layout-proof-pills-5.json";
-import layout_photo_span_5 from "../../../../catalogs/templates/2026.08/recipes/layout-photo-span-5.json";
 import layout_yaw_extra_5 from "../../../../catalogs/templates/2026.08/recipes/layout-yaw-extra-5.json";
 import layout_overlay_photo_5 from "../../../../catalogs/templates/2026.08/recipes/layout-overlay-photo-5.json";
 import layout_bleed_illust_5 from "../../../../catalogs/templates/2026.08/recipes/layout-bleed-illust-5.json";
 import layout_yaw_stack_5 from "../../../../catalogs/templates/2026.08/recipes/layout-yaw-stack-5.json";
 import layout_pano_yaw_5 from "../../../../catalogs/templates/2026.08/recipes/layout-pano-yaw-5.json";
-import layout_proof_float_5 from "../../../../catalogs/templates/2026.08/recipes/layout-proof-float-5.json";
 import layout_two_up_badge_5 from "../../../../catalogs/templates/2026.08/recipes/layout-two-up-badge-5.json";
 import layout_trust_award_5 from "../../../../catalogs/templates/2026.08/recipes/layout-trust-award-5.json";
-import layout_press_row_5 from "../../../../catalogs/templates/2026.08/recipes/layout-press-row-5.json";
-import layout_fullbleed_raw_5 from "../../../../catalogs/templates/2026.08/recipes/layout-fullbleed-raw-5.json";
-import layout_fullbleed_hook_5 from "../../../../catalogs/templates/2026.08/recipes/layout-fullbleed-hook-5.json";
 import layout_hero_solid_5 from "../../../../catalogs/templates/2026.08/recipes/layout-hero-solid-5.json";
 import layout_hero_award_badge_5 from "../../../../catalogs/templates/2026.08/recipes/layout-hero-award-badge-5.json";
 import layout_dynamic_tilt_5 from "../../../../catalogs/templates/2026.08/recipes/layout-dynamic-tilt-5.json";
@@ -67,19 +61,13 @@ const RAW: TemplateRecord[] = [
   layout_yaw_bleed_5,
   layout_type_marks_5,
   layout_tilt_crop_5,
-  layout_proof_pills_5,
-  layout_photo_span_5,
   layout_yaw_extra_5,
   layout_overlay_photo_5,
   layout_bleed_illust_5,
   layout_yaw_stack_5,
   layout_pano_yaw_5,
-  layout_proof_float_5,
   layout_two_up_badge_5,
   layout_trust_award_5,
-  layout_press_row_5,
-  layout_fullbleed_raw_5,
-  layout_fullbleed_hook_5,
   layout_hero_solid_5,
   layout_hero_award_badge_5,
   layout_dynamic_tilt_5,

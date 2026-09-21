@@ -15,8 +15,8 @@
   "typeScale": "m",
   "background": {
     "kind": "gradient",
-    "colorA": "#3d1a5c",
-    "colorB": "#e07a3a"
+    "colorA": "#ddc7ef",
+    "colorB": "#ecc5ac"
   },
   "lockBrand": false,
   "style": "premium",
@@ -80,5 +80,12 @@
       "shotIndex": 4,
       "placement": "center"
     }
+  ],
+  "palette": [
+    "#e8a073",
+    "#ddc7ef",
+    "#161512",
+    "#6b6a66",
+    "#ffffff"
   ]
 }

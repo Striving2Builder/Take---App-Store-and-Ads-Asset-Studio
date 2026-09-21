@@ -22,14 +22,14 @@
   "style": "premium",
   "background": {
     "kind": "image",
-    "colorA": "#111318",
+    "colorA": "#dde2ee",
     "fit": "cover"
   },
   "palette": [
-    "#f3f1ec",
-    "#111318",
-    "#3de0ff",
-    "#888888",
+    "#7394e8",
+    "#dde2ee",
+    "#161512",
+    "#6b6a66",
     "#ffffff"
   ],
   "devices": [
@@ -115,7 +115,7 @@
       "h": 0.12,
       "rotationDeg": 0,
       "z": 22,
-      "fill": "#f3f1ec",
+      "fill": "#161512",
       "text": "One ++seamless++ flow",
       "authored": true
     }

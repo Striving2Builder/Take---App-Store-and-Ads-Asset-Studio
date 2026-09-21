@@ -29,13 +29,13 @@
   ],
   "background": {
     "kind": "solid",
-    "colorA": "#8a3b1e"
+    "colorA": "#f5ded6"
   },
   "palette": [
-    "#f5efe6",
-    "#8a3b1e",
-    "#e8b04a",
-    "#2a1810",
+    "#e89273",
+    "#f5ded6",
+    "#161512",
+    "#6b6a66",
     "#ffffff"
   ],
   "devices": [

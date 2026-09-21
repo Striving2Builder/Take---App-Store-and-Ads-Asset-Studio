@@ -21,14 +21,14 @@
   "style": "bold",
   "background": {
     "kind": "gradient",
-    "colorA": "#0c1220",
-    "colorB": "#1a2840"
+    "colorA": "#c9d4ed",
+    "colorB": "#e5ebf6"
   },
   "palette": [
-    "#f3f1ec",
-    "#0c1220",
-    "#4d7cff",
-    "#888888",
+    "#7396e8",
+    "#c9d4ed",
+    "#161512",
+    "#6b6a66",
     "#ffffff"
   ],
   "devices": [

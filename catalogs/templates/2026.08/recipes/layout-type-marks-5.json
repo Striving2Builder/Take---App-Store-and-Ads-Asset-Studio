@@ -21,14 +21,14 @@
   "style": "bold",
   "background": {
     "kind": "gradient",
-    "colorA": "#1a1440",
-    "colorB": "#0c0d10"
+    "colorA": "#e6e4f7",
+    "colorB": "#d0d5e7"
   },
   "palette": [
-    "#f3f1ec",
-    "#1a1440",
-    "#e8c36a",
-    "#ff4d1a",
+    "#8373e8",
+    "#e6e4f7",
+    "#161512",
+    "#6b6a66",
     "#ffffff"
   ],
   "devices": [
@@ -104,7 +104,7 @@
       "h": 0.12,
       "rotationDeg": 0,
       "z": 22,
-      "fill": "#f3f1ec",
+      "fill": "#161512",
       "text": "Build **habits** that last",
       "authored": true
     },
@@ -118,7 +118,7 @@
       "h": 0.12,
       "rotationDeg": 0,
       "z": 22,
-      "fill": "#f3f1ec",
+      "fill": "#161512",
       "text": "++Every morning++ starts here",
       "authored": true
     },
@@ -132,7 +132,7 @@
       "h": 0.12,
       "rotationDeg": 0,
       "z": 22,
-      "fill": "#f3f1ec",
+      "fill": "#161512",
       "text": "Make **time** ++for you++",
       "face": "script",
       "authored": true
@@ -147,7 +147,7 @@
       "h": 0.12,
       "rotationDeg": 0,
       "z": 22,
-      "fill": "#f3f1ec",
+      "fill": "#161512",
       "text": "Stay **focused**",
       "authored": true
     },
@@ -161,7 +161,7 @@
       "h": 0.12,
       "rotationDeg": 0,
       "z": 22,
-      "fill": "#f3f1ec",
+      "fill": "#161512",
       "text": "Keep ++going++",
       "authored": true
     }

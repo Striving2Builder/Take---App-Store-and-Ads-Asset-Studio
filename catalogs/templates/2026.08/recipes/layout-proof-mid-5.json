@@ -28,13 +28,13 @@
   "style": "premium",
   "background": {
     "kind": "solid",
-    "colorA": "#1a1440"
+    "colorA": "#dcd8f3"
   },
   "palette": [
-    "#f3f1ec",
-    "#1a1440",
-    "#7b6cff",
-    "#e8c36a",
+    "#8373e8",
+    "#dcd8f3",
+    "#161512",
+    "#6b6a66",
     "#ffffff"
   ],
   "devices": [
@@ -98,7 +98,7 @@
       "h": 0.16,
       "rotationDeg": 0,
       "z": 22,
-      "fill": "#f3f1ec",
+      "fill": "#161512",
       "widget": "rating",
       "stars": 5,
       "storeLabel": "Sample rating",
@@ -114,7 +114,7 @@
       "h": 0.2,
       "rotationDeg": 0,
       "z": 22,
-      "fill": "#f3f1ec",
+      "fill": "#161512",
       "widget": "review",
       "attribution": "Sample",
       "stars": 5,
@@ -130,7 +130,7 @@
       "h": 0.1,
       "rotationDeg": 0,
       "z": 22,
-      "fill": "#f3f1ec",
+      "fill": "#161512",
       "widget": "pills",
       "pills": [
         "Focus",

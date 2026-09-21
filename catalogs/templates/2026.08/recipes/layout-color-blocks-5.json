@@ -29,16 +29,16 @@
   ],
   "background": {
     "kind": "image",
-    "colorA": "#1d3fd6",
-    "imageUrl": "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20width%3D'6450'%20height%3D'2796'%20viewBox%3D'0%200%206450%202796'%3E%3Crect%20x%3D'0'%20y%3D'0'%20width%3D'1290'%20height%3D'2796'%20fill%3D'%231d3fd6'%2F%3E%3Crect%20x%3D'1290'%20y%3D'0'%20width%3D'1290'%20height%3D'2796'%20fill%3D'%236d28d9'%2F%3E%3Crect%20x%3D'2580'%20y%3D'0'%20width%3D'1290'%20height%3D'2796'%20fill%3D'%23e11d5c'%2F%3E%3Crect%20x%3D'3870'%20y%3D'0'%20width%3D'1290'%20height%3D'2796'%20fill%3D'%2314141f'%2F%3E%3Crect%20x%3D'5160'%20y%3D'0'%20width%3D'1290'%20height%3D'2796'%20fill%3D'%230b6bcb'%2F%3E%3C%2Fsvg%3E",
+    "colorA": "#cdd4f3",
+    "imageUrl": "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20width%3D'6450'%20height%3D'2796'%20viewBox%3D'0%200%206450%202796'%3E%3Crect%20x%3D'0'%20y%3D'0'%20width%3D'1290'%20height%3D'2796'%20fill%3D'%23bdc6ef'%2F%3E%3Crect%20x%3D'1290'%20y%3D'0'%20width%3D'1290'%20height%3D'2796'%20fill%3D'%23d1bdef'%2F%3E%3Crect%20x%3D'2580'%20y%3D'0'%20width%3D'1290'%20height%3D'2796'%20fill%3D'%23efbdcd'%2F%3E%3Crect%20x%3D'3870'%20y%3D'0'%20width%3D'1290'%20height%3D'2796'%20fill%3D'%23c7c7e5'%2F%3E%3Crect%20x%3D'5160'%20y%3D'0'%20width%3D'1290'%20height%3D'2796'%20fill%3D'%23bdd6ef'%2F%3E%3C%2Fsvg%3E",
     "fit": "cover"
   },
   "palette": [
-    "#ffffff",
-    "#1d3fd6",
-    "#6d28d9",
-    "#e11d5c",
-    "#14141f"
+    "#7388e8",
+    "#cdd4f3",
+    "#161512",
+    "#6b6a66",
+    "#ffffff"
   ],
   "devices": [
     {

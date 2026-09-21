@@ -21,14 +21,14 @@
   "style": "bold",
   "background": {
     "kind": "gradient",
-    "colorA": "#102018",
-    "colorB": "#1a3d32"
+    "colorA": "#ccebdb",
+    "colorB": "#e5f6f0"
   },
   "palette": [
-    "#f3f1ec",
-    "#102018",
-    "#6dffb0",
-    "#111111",
+    "#73e8ad",
+    "#ccebdb",
+    "#161512",
+    "#6b6a66",
     "#ffffff"
   ],
   "devices": [
@@ -129,7 +129,7 @@
       "h": 0.08,
       "rotationDeg": 0,
       "z": 0,
-      "fill": "rgba(243,241,236,0.4)",
+      "fill": "rgba(22,21,18,0.16)",
       "shape": "scribble",
       "authored": true
     },
@@ -143,7 +143,7 @@
       "h": 0.12,
       "rotationDeg": 0,
       "z": 22,
-      "fill": "#f3f1ec",
+      "fill": "#161512",
       "text": "See it from **every** angle",
       "authored": true
     }

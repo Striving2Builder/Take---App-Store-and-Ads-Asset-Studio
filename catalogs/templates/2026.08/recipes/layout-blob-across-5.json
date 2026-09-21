@@ -21,15 +21,15 @@
   "style": "premium",
   "background": {
     "kind": "gradient",
-    "colorA": "#3d1a5c",
-    "colorB": "#e07a3a"
+    "colorA": "#ddc7ef",
+    "colorB": "#ecc5ac"
   },
   "palette": [
-    "#f3f1ec",
-    "#3d1a5c",
-    "#e07a3a",
-    "#ff4d1a",
-    "#1e2129"
+    "#e8a073",
+    "#ddc7ef",
+    "#161512",
+    "#6b6a66",
+    "#ffffff"
   ],
   "devices": [
     {
@@ -106,7 +106,7 @@
       "h": 0.2,
       "rotationDeg": 0,
       "z": 0,
-      "fill": "rgba(243,241,236,0.35)",
+      "fill": "rgba(22,21,18,0.14)",
       "shape": "blob",
       "authored": true
     },
@@ -120,7 +120,7 @@
       "h": 0.14,
       "rotationDeg": 0,
       "z": 0,
-      "fill": "rgba(243,241,236,0.2)",
+      "fill": "rgba(22,21,18,0.08)",
       "shape": "blob",
       "authored": true
     }

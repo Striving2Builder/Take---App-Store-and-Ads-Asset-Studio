@@ -21,15 +21,15 @@
   "style": "minimal",
   "background": {
     "kind": "gradient",
-    "colorA": "#111318",
-    "colorB": "#2a2038"
+    "colorA": "#cfd6e8",
+    "colorB": "#ece6f4"
   },
   "palette": [
-    "#f3f1ec",
-    "#111318",
-    "#ff4d1a",
-    "#888888",
-    "#1e2129"
+    "#7394e8",
+    "#cfd6e8",
+    "#161512",
+    "#6b6a66",
+    "#ffffff"
   ],
   "devices": [
     {

@@ -36,59 +36,6 @@ function tiltCrop(): TemplateRecord {
   });
 }
 
-function proofPills(): TemplateRecord {
-  return rec({
-    id: "layout-proof-pills-5",
-    name: "Layout · proof pills",
-    composition: "isolated",
-    frameCount: 5,
-    typeFamily: "top",
-    typeBand: ["top", "top", "none", "top", "top"],
-    style: "premium",
-    background: { kind: "solid", colorA: "#0c1220" },
-    palette: ["#f3f1ec", "#0c1220", "#4d7cff", "#e8c36a", "#ffffff"],
-    devices: [
-      phone("pp0", 0.5, 0.56, 0.56, 0),
-      phone("pp1", 1.5, 0.56, 0.56, 1),
-      phone("pp3", 3.5, 0.56, 0.56, 3),
-      phone("pp4", 4.5, 0.56, 0.56, 4),
-    ],
-    extras: [
-      widgetSlot("pills-cloud", 2, "pills", 2.5, 0.28, 0.84, 0.28, {
-        pills: ["Search", "Save", "Share", "Focus", "Goals"],
-      }),
-      widgetSlot("rate-2", 2, "rating", 2.5, 0.62, 0.7, 0.16, {
-        storeLabel: SAMPLE_STORE_LABEL,
-      }),
-      copyMark("pill-copy", 2, "A **tag** wall — no phone", undefined, 0.88),
-    ],
-  });
-}
-
-function photoSpan(): TemplateRecord {
-  return rec({
-    id: "layout-photo-span-5",
-    name: "Layout · photo span",
-    composition: "strip",
-    frameCount: 5,
-    typeFamily: "top",
-    style: "premium",
-    background: { kind: "gradient", colorA: "#1e2129", colorB: "#111318" },
-    palette: ["#f3f1ec", "#1e2129", "#ff4d1a", "#888888", "#ffffff"],
-    devices: [
-      phone("ps0", 0.5, 0.62, 0.5, 0),
-      phone("ps1", 1.5, 0.62, 0.5, 1),
-      phone("ps2", 2.5, 0.58, 0.56, 2),
-      phone("ps3", 3.5, 0.58, 0.56, 3),
-      phone("ps4", 4.5, 0.58, 0.56, 4),
-    ],
-    extras: [
-      photoPlate("photo-cut", 0, 1.0, 0.22, 0.86, 0.28),
-      copyMark("photo-hint", 0, "Your photo ++spans++ this cut", undefined, 0.88, true),
-    ],
-  });
-}
-
 function yawExtra(): TemplateRecord {
   return rec({
     id: "layout-yaw-extra-5",
@@ -217,42 +164,6 @@ function panoYaw(): TemplateRecord {
   });
 }
 
-function proofFloat(): TemplateRecord {
-  return rec({
-    id: "layout-proof-float-5",
-    name: "Layout · proof float",
-    composition: "isolated",
-    frameCount: 5,
-    typeFamily: "top",
-    typeBand: ["top", "none", "top", "none", "top"],
-    style: "premium",
-    background: { kind: "gradient", colorA: "#0b1020", colorB: "#1a1440" },
-    palette: ["#e8dff5", "#0b1020", "#7b6cff", "#f3f1ec", "#ffffff"],
-    devices: [
-      phone("pf0", 0.5, 0.56, 0.56, 0),
-      phone("pf2", 2.5, 0.56, 0.56, 2),
-      phone("pf4", 4.5, 0.56, 0.56, 4),
-    ],
-    extras: [
-      widgetSlot("fl-rate", 1, "rating", 1.5, 0.22, 0.7, 0.16, {
-        storeLabel: SAMPLE_STORE_LABEL,
-      }),
-      widgetSlot("fl-rev", 1, "review", 1.5, 0.52, 0.78, 0.22, {
-        quote: SAMPLE_QUOTE,
-        attribution: SAMPLE_ATTRIBUTION,
-      }),
-      widgetSlot("fl-pills", 1, "pills", 1.5, 0.82, 0.8, 0.1),
-      widgetSlot("fl-rate-3", 3, "rating", 3.5, 0.28, 0.7, 0.18, {
-        storeLabel: SAMPLE_STORE_LABEL,
-      }),
-      copyMark("fl-copy", 3, "Proof **floats** here", undefined, 0.58),
-      widgetSlot("fl-pills-3", 3, "pills", 3.5, 0.8, 0.8, 0.1, {
-        pills: ["Quiet", "Clear", "Fast"],
-      }),
-    ],
-  });
-}
-
 function twoUpBadge(): TemplateRecord {
   return rec({
     id: "layout-two-up-badge-5",
@@ -284,14 +195,11 @@ function twoUpBadge(): TemplateRecord {
 export function listLayoutPackRecipes(): TemplateRecord[] {
   return [
     tiltCrop(),
-    proofPills(),
-    photoSpan(),
     yawExtra(),
     overlayPhoto(),
     bleedIllust(),
     yawStack(),
     panoYaw(),
-    proofFloat(),
     twoUpBadge(),
   ];
 }
