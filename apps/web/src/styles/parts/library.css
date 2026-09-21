@@ -152,8 +152,12 @@
 
 .library-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 1rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.5rem;
+}
+
+@media (max-width: 720px) {
+  .library-grid { grid-template-columns: minmax(0, 1fr); }
 }
 
 .tpl-card {
@@ -174,7 +178,6 @@
 }
 
 .tpl-preview {
-  aspect-ratio: 4/5;
   background: var(--ink);
   position: relative;
   border-bottom: 1px solid var(--line);
@@ -184,7 +187,6 @@
 .tpl-preview-hit {
   display: block;
   width: 100%;
-  height: 100%;
   padding: 0;
   border: 0;
   background: transparent;
@@ -192,22 +194,25 @@
   color: inherit;
 }
 
+/* Each frame keeps the real store-screenshot proportions (1290 x 2796), so nothing is
+   stretched or cropped to fit; the card is wide enough to give every frame room. */
 .tpl-shot-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 3px;
+  grid-template-columns: repeat(var(--slices, 5), minmax(0, 1fr));
+  gap: 0.6rem;
   width: 100%;
-  height: 100%;
-  padding: 6px;
+  padding: 0.9rem;
   background: var(--ink);
+  align-items: start;
 }
 
 .tpl-shot {
   display: block;
   width: 100%;
-  height: 100%;
+  height: auto;
+  aspect-ratio: 1290 / 2796;
   min-width: 0;
-  object-fit: cover;
+  border-radius: 6px;
   background: #0c0d10;
 }
 
@@ -243,13 +248,14 @@
 .tpl-preview canvas.tpl-thumb {
   display: block;
   width: 100%;
-  height: 100%;
-  object-fit: contain;
+  height: auto;
+  aspect-ratio: 1290 / 2796;
   background: #0c0d10;
   pointer-events: none;
 }
 
 .tpl-preview-project {
+  min-height: 9rem;
   background:
     linear-gradient(145deg, rgba(109,255,176,0.25), transparent 55%),
     var(--ink);
@@ -257,8 +263,8 @@
 
 .tpl-preview .tpl-mark {
   position: absolute;
-  left: 10px;
-  bottom: 10px;
+  right: 12px;
+  bottom: 12px;
   font-family: var(--font-display);
   font-weight: 700;
   font-size: 0.68rem;
@@ -266,19 +272,19 @@
   pointer-events: none;
 }
 
-.tpl-body { padding: 0.85rem; }
+.tpl-body { padding: 1.1rem 1.2rem 1.2rem; }
 
 .tpl-body h3 {
   margin: 0 0 0.35rem;
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: 1rem;
+  font-size: 1.15rem;
 }
 
 .tpl-meta {
   font-family: var(--font-display);
   font-weight: 600;
-  font-size: 0.74rem;
+  font-size: 0.8rem;
   letter-spacing: normal;
   text-transform: none;
   color: var(--paper-dim);
@@ -293,13 +299,14 @@
 
 .tpl-actions {
   display: flex;
-  gap: 0.35rem;
-  margin-top: 0.65rem;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.9rem;
 }
 
 .tpl-actions button {
-  flex: 1;
-  padding: 0.45rem;
+  flex: 1 1 5.5rem;
+  padding: 0.55rem 0.6rem;
   border: 1px solid var(--line);
   border-radius: var(--radius-sm);
   font-family: var(--font-display);

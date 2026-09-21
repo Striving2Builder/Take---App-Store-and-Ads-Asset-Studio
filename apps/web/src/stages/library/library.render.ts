@@ -89,8 +89,8 @@ export async function renderLibrary() {
               : ""
           }
           <button type="button" class="tpl-preview-hit" data-action="preview" aria-label="Preview ${escapeHtml(t.name)}">
-            <div class="tpl-shot-grid">
-              ${[0, 1, 2]
+            <div class="tpl-shot-grid" style="--slices:${Math.min(5, Math.max(1, t.frames || 3))}">
+              ${Array.from({ length: Math.min(5, Math.max(1, t.frames || 3)) }, (_, i) => i)
                 .map(
                   (i) => `<canvas class="tpl-shot tpl-thumb" data-thumb="${escapeHtml(t.id)}" data-thumb-slice="${i}" width="180" height="390"></canvas>`
                 )
